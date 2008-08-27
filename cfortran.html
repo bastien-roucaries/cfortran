@@ -4,9 +4,6 @@
 </head>
 
 <BODY BGCOLOR="#FFFFFF">
-<TABLE BORDER=0 CELLSPACING=0 CELLPADDING=5 WIDTH="100%">
-<TR BGCOLOR="#0000FF"><TD><A HREF="http://www.cern.ch/">
-<IMG SRC="cernbanner.gif" BORDER=0></A></TD></TR></TABLE>
 
 <h1>cfortran.h:  Interfacing C or C++ and <i>FORTRAN</i></h1>
 
@@ -29,10 +26,10 @@ C and C++ are generally equivalent as far as <tt>cfortran.h</tt> is concerned.
 Unless explicitly noted otherwise, mention of C implicitly includes C++.
 C++ compilers tested include: 
 <p><FONT COLOR="#993300"><pre>
-  SunOS> CC +p +w      # Clean compiles.
-  IRIX>  CC            # Clean compiles.
-  IRIX>  CC -fullwarn  # Still some warnings to be overcome.
-  GNU>   g++ -Wall     # Compiles are clean, other than warnings for unused
+  SunOS&gt; CC +p +w      # Clean compiles.
+  IRIX&gt;  CC            # Clean compiles.
+  IRIX&gt;  CC -fullwarn  # Still some warnings to be overcome.
+  GNU&gt;   g++ -Wall     # Compiles are clean, other than warnings for unused
                        #   cfortran.h static routines.
 </pre></font>
 
@@ -123,7 +120,7 @@ i.e. structures and COMMON blocks.
 <p>
 The complete <tt>cfortran.h</tt> package consists of 4 files: the documentation in
 cfortran.doc, the engine <tt>cfortran.h</tt>, examples in <tt>cfortest.c</tt> and 
-<tt>cfortex.f</tt>/or. [<tt>cfortex.for</tt> under VMS, 
+<tt>cfortex.f/or</tt>. [<tt>cfortex.for</tt> under VMS, 
 <tt>cfortex.f</tt> on other machines.]
 <p>
 The <tt>cfortran.h</tt> package continues to be developed. 
@@ -142,9 +139,9 @@ The examples may be run using one of the following sets of instructions:
      link a trivial <i>FORTRAN</i> program using the <i>FORTRAN</i> compilers verbose option,
      in order to see how the <i>FORTRAN</i> compiler drives the linker. e.g.
 <FONT COLOR="#993300"><pre>
-       unix> cat f.f
+       unix&gt; cat f.f
                 END
-       unix> f77 -v f.f
+       unix&gt; f77 -v f.f
        .. lots of info. follows ...
 </pre></font>
 <p>
@@ -160,125 +157,125 @@ The examples may be run using one of the following sets of instructions:
      The <tt>f77</tt> verbose option, usually <tt>-v</tt>, may point to a solution.
      
 <FONT COLOR="#993300"><pre>
-RS/6000> # Users are strongly urged to use f77 -qextname and cc -Dextname
-RS/6000> # Use -Dextname=extname if extname is a symbol used in the C code.
-RS/6000> xlf -c -qextname cfortex.f
-RS/6000> cc  -c -Dextname cfortest.c
-RS/6000> xlf -o cfortest cfortest.o cfortex.o && cfortest 
+RS/6000&gt; # Users are strongly urged to use f77 -qextname and cc -Dextname
+RS/6000&gt; # Use -Dextname=extname if extname is a symbol used in the C code.
+RS/6000&gt; xlf -c -qextname cfortex.f
+RS/6000&gt; cc  -c -Dextname cfortest.c
+RS/6000&gt; xlf -o cfortest cfortest.o cfortex.o &amp;&amp; cfortest 
 
-DECFortran> #Only DECstations with DECFortran for Ultrix RISC Systems.
-DECFortran> cc -c -DDECFortran cfortest.c
-DECFortran> f77 -o cfortest cfortest.o cfortex.f  &&  cfortest
+DECFortran&gt; #Only DECstations with DECFortran for Ultrix RISC Systems.
+DECFortran&gt; cc -c -DDECFortran cfortest.c
+DECFortran&gt; f77 -o cfortest cfortest.o cfortex.f  &amp;&amp;  cfortest
 
 IRIX xxxxxx 5.2 02282015 IP20 mips
-MIPS> # DECstations and Silicon Graphics using the MIPS compilers.
-MIPS> cc -o cfortest cfortest.c cfortex.f -lI77 -lU77 -lF77  &&  cfortest
-MIPS> # Can also let f77 drive linking, e.g.
-MIPS> cc -c cfortest.c
-MIPS> f77 -o cfortest cfortest.o cfortex.f  &&  cfortest
+MIPS&gt; # DECstations and Silicon Graphics using the MIPS compilers.
+MIPS&gt; cc -o cfortest cfortest.c cfortex.f -lI77 -lU77 -lF77  &amp;&amp;  cfortest
+MIPS&gt; # Can also let f77 drive linking, e.g.
+MIPS&gt; cc -c cfortest.c
+MIPS&gt; f77 -o cfortest cfortest.o cfortex.f  &amp;&amp;  cfortest
 
-Apollo> # Some 'C compiler 68K Rev6.8' break. <a href="cfortran.html#SIIoApollo">[See Section II o) Notes: Apollo]</a>
-Apollo> f77 -c cfortex.f && cc -o cfortest cfortest.c cfortex.o  &&  cfortest
+Apollo&gt; # Some 'C compiler 68K Rev6.8' break. <a href="cfortran.html#SIIoApollo">[See Section II o) Notes: Apollo]</a>
+Apollo&gt; f77 -c cfortex.f &amp;&amp; cc -o cfortest cfortest.c cfortex.o  &amp;&amp;  cfortest
 
-VMS> define lnk$library sys$library:vaxcrtl
-VMS> cc cfortest.c
-VMS> fortran cfortex.for
-VMS> link/exec=cfortest cfortest,cfortex
-VMS> run cfortest
+VMS&gt; define lnk$library sys$library:vaxcrtl
+VMS&gt; cc cfortest.c
+VMS&gt; fortran cfortex.for
+VMS&gt; link/exec=cfortest cfortest,cfortex
+VMS&gt; run cfortest
 
 OSF1 xxxxxx V3.0 347 alpha
-Alpha/OSF> # Probably better to let cc drive linking, e.g.
-Alpha/OSF> f77 -c cfortex.f
-Alpha/OSF> cc  -o cfortest cfortest.c cfortex.o -lUfor -lfor -lFutil -lots -lm
-Alpha/OSF> cfortest
-Alpha/OSF> # Else may need 'cc -Dmain=MAIN__' to let f77 drive linking.
+Alpha/OSF&gt; # Probably better to let cc drive linking, e.g.
+Alpha/OSF&gt; f77 -c cfortex.f
+Alpha/OSF&gt; cc  -o cfortest cfortest.c cfortex.o -lUfor -lfor -lFutil -lots -lm
+Alpha/OSF&gt; cfortest
+Alpha/OSF&gt; # Else may need 'cc -Dmain=MAIN__' to let f77 drive linking.
 
-Sun> # Some old cc(1) need a little help. <a href="cfortran.html#SIIoSun">[See Section II o) Notes: Sun]</a>
-Sun> f77 -o cfortest cfortest.c cfortex.f -lc -lm  &&  cfortest
-Sun> # Some older f77 may require 'cc -Dmain=MAIN_'.
+Sun&gt; # Some old cc(1) need a little help. <a href="cfortran.html#SIIoSun">[See Section II o) Notes: Sun]</a>
+Sun&gt; f77 -o cfortest cfortest.c cfortex.f -lc -lm  &amp;&amp;  cfortest
+Sun&gt; # Some older f77 may require 'cc -Dmain=MAIN_'.
 
-CRAY> cft77 cfortex.f
-CRAY> cc -c cfortest.c
-CRAY> segldr -o cfortest.e cfortest.o cfortex.o
-CRAY> ./cfortest.e
+CRAY&gt; cft77 cfortex.f
+CRAY&gt; cc -c cfortest.c
+CRAY&gt; segldr -o cfortest.e cfortest.o cfortex.o
+CRAY&gt; ./cfortest.e
 
-NEC> cc -c -Xa cfortest.c
-NEC> f77 -o cfortest cfortest.o cfortex.f  &&  cfortest
+NEC&gt; cc -c -Xa cfortest.c
+NEC&gt; f77 -o cfortest cfortest.o cfortex.f  &amp;&amp;  cfortest
 
-VAX/Ultrix/cc> # For cc on VAX Ultrix only, do the following once to cfortran.h.
-VAX/Ultrix/cc> mv cfortran.h cftmp.h && grep -v "^#pragma" <cftmp.h >cfortran.h
+VAX/Ultrix/cc&gt; # For cc on VAX Ultrix only, do the following once to cfortran.h.
+VAX/Ultrix/cc&gt; mv cfortran.h cftmp.h &amp;&amp; grep -v "^#pragma" &lt;cftmp.h &gt;cfortran.h
                                             
-VAX/Ultrix/f77> # In the following, 'CC' is either 'cc' or 'gcc -ansi'. NOT'vcc'
-VAX/Ultrix/f77> CC -c -Dmain=MAIN_ cfortest.c
-VAX/Ultrix/f77> f77 -o cfortest cfortex.f cfortest.o  &&  cfortest
+VAX/Ultrix/f77&gt; # In the following, 'CC' is either 'cc' or 'gcc -ansi'. NOT'vcc'
+VAX/Ultrix/f77&gt; CC -c -Dmain=MAIN_ cfortest.c
+VAX/Ultrix/f77&gt; f77 -o cfortest cfortex.f cfortest.o  &amp;&amp;  cfortest
 
-LynxOS> # In the following, 'CC' is either 'cc' or 'gcc -ansi'.
-LynxOS> # Unfortunately cc is easily overwhelmed by cfortran.h,
-LynxOS> #  and won't compile some of the cfortest.c demos.
-LynxOS> f2c -R cfortex.f
-LynxOS> CC -Dlynx -o cfortest cfortest.c cfortex.c -lf2c  &&  cfortest
+LynxOS&gt; # In the following, 'CC' is either 'cc' or 'gcc -ansi'.
+LynxOS&gt; # Unfortunately cc is easily overwhelmed by cfortran.h,
+LynxOS&gt; #  and won't compile some of the cfortest.c demos.
+LynxOS&gt; f2c -R cfortex.f
+LynxOS&gt; CC -Dlynx -o cfortest cfortest.c cfortex.c -lf2c  &amp;&amp;  cfortest
 
-HP9000> # Tested with HP-UX 7.05 B 9000/380 and with A.08.07 A 9000/730
-HP9000> # CC may be either 'c89 -Aa' or 'cc -Aa'
-HP9000> #    Depending on the compiler version, you may need to include the
-HP9000> #    option '-tp,/lib/cpp' or worse, you'll have to stick to the K&R C.
-HP9000> #    <a href="cfortran.html#SIIoHP9000">[See Section II o) Notes: HP9000]</a>
-HP9000> # Users are strongly urged to use f77 +ppu and cc -Dextname
-HP9000> # Use -Dextname=extname if extname is a symbol used in the C code.
-HP9000> CC  -Dextname -c cfortest.c
-HP9000> f77 +ppu         cfortex.f  -o cfortest cfortest.o && cfortest
-HP9000> # Older f77 may need
-HP9000> f77 -c cfortex.f
-HP9000> CC -o cfortest cfortest.c cfortex.o -lI77 -lF77 && cfortest
+HP9000&gt; # Tested with HP-UX 7.05 B 9000/380 and with A.08.07 A 9000/730
+HP9000&gt; # CC may be either 'c89 -Aa' or 'cc -Aa'
+HP9000&gt; #    Depending on the compiler version, you may need to include the
+HP9000&gt; #    option '-tp,/lib/cpp' or worse, you'll have to stick to the K&amp;R C.
+HP9000&gt; #    <a href="cfortran.html#SIIoHP9000">[See Section II o) Notes: HP9000]</a>
+HP9000&gt; # Users are strongly urged to use f77 +ppu and cc -Dextname
+HP9000&gt; # Use -Dextname=extname if extname is a symbol used in the C code.
+HP9000&gt; CC  -Dextname -c cfortest.c
+HP9000&gt; f77 +ppu         cfortex.f  -o cfortest cfortest.o &amp;&amp; cfortest
+HP9000&gt; # Older f77 may need
+HP9000&gt; f77 -c cfortex.f
+HP9000&gt; CC -o cfortest cfortest.c cfortex.o -lI77 -lF77 &amp;&amp; cfortest
 
-HP0000> # If old-style f77 +800 compiled objects are required:
-HP9000> # #define hpuxFortran800
-HP9000> cc -c -Aa -DhpuxFortran800 cfortest.c
-HP9000> f77 +800 -o cfortest cfortest.o cfortex.f
+HP9000&gt; # If old-style f77 +800 compiled objects are required:
+HP9000&gt; # #define hpuxFortran800
+HP9000&gt; cc -c -Aa -DhpuxFortran800 cfortest.c
+HP9000&gt; f77 +800 -o cfortest cfortest.o cfortex.f
 
-f2c> # In the following, 'CC' is any C compiler.
-f2c> f2c -R cfortex.f
-f2c> CC -o cfortest -Df2cFortran cfortest.c cfortex.c -lf2c  &&  cfortest
+f2c&gt; # In the following, 'CC' is any C compiler.
+f2c&gt; f2c cfortex.f
+f2c&gt; CC -o cfortest -Df2cFortran cfortest.c cfortex.c -lf2c  &amp;&amp;  cfortest
 
 Portland Group $ # Presumably other C compilers also work.
 Portland Group $ pgcc -DpgiFortran -c cfortest.c
-Portland Group $ pgf77 -o cfortest cfortex.f cfortest.o && cfortest
+Portland Group $ pgf77 -o cfortest cfortex.f cfortest.o &amp;&amp; cfortest
 
-NAGf90> # cfortex.f is distributed with <i>FORTRAN</i> 77 style comments.
-NAGf90> # To convert to f90 style comments do the following once to cfortex.f: 
-NAGf90> mv cfortex.f cf_temp.f && sed 's/^C/\!/g' cf_temp.f > cfortex.f
-NAGf90> # In the following, 'CC' is any C compiler.
-NAGf90> CC -c -DNAGf90Fortran cfortest.c
-NAGf90> f90 -o cfortest cfortest.o cfortex.f &&  cfortest
+NAGf90&gt; # cfortex.f is distributed with <i>FORTRAN</i> 77 style comments.
+NAGf90&gt; # To convert to f90 style comments do the following once to cfortex.f: 
+NAGf90&gt; mv cfortex.f cf_temp.f &amp;&amp; sed 's/^C/\!/g' cf_temp.f &gt; cfortex.f
+NAGf90&gt; # In the following, 'CC' is any C compiler.
+NAGf90&gt; CC -c -DNAGf90Fortran cfortest.c
+NAGf90&gt; f90 -o cfortest cfortest.o cfortex.f &amp;&amp;  cfortest
 
-PC> # On a PC with PowerStation <i>FORTRAN</i> and Visual_C++
-PC> cl /c cftest.c
-PC> fl32  cftest.obj cftex.for
+PC&gt; # On a PC with PowerStation <i>FORTRAN</i> and Visual_C++
+PC&gt; cl /c cftest.c
+PC&gt; fl32  cftest.obj cftex.for
 
-GNU> # GNU <i>FORTRAN</i>
-GNU> # <a href="cfortran.html#gcctrad">See Section VI caveat on using 'gcc -traditional'</a>.
-GNU> gcc -ansi -Wall -O -c -Df2cFortran cfortest.c
-GNU> g77 -ff2c -o cfortest cfortest.o cfortex.f &&  cfortest
+GNU&gt; # GNU <i>FORTRAN</i>
+GNU&gt; # <a href="cfortran.html#gcctrad">See Section VI caveat on using 'gcc -traditional'</a>.
+GNU&gt; gcc -ansi -Wall -O -c -Df2cFortran cfortest.c
+GNU&gt; g77 -ff2c -o cfortest cfortest.o cfortex.f &amp;&amp;  cfortest
 
-AbsoftUNIX> # Absoft <i>FORTRAN</i> for all UNIX based operating systems.
-AbsoftUNIX> # e.g. Linux or Next on Intel or Motorola68000.
-AbsoftUNIX> # Absoft f77 -k allows <i>FORTRAN</i> routines to be safely called from C.
-AbsoftUNIX> gcc -ansi -Wall -O -c -DAbsoftUNIXFortran cfortest.c
-AbsoftUNIX> f77 -k -o cfortest cfortest.o cfortex.f && cfortest
+AbsoftUNIX&gt; # Absoft <i>FORTRAN</i> for all UNIX based operating systems.
+AbsoftUNIX&gt; # e.g. Linux or Next on Intel or Motorola68000.
+AbsoftUNIX&gt; # Absoft f77 -k allows <i>FORTRAN</i> routines to be safely called from C.
+AbsoftUNIX&gt; gcc -ansi -Wall -O -c -DAbsoftUNIXFortran cfortest.c
+AbsoftUNIX&gt; f77 -k -o cfortest cfortest.o cfortex.f &amp;&amp; cfortest
 
-AbsoftPro> # Absoft Pro <i>FORTRAN</i> for MacOS
-AbsoftPro> # Use #define AbsoftProFortran
+AbsoftPro&gt; # Absoft Pro <i>FORTRAN</i> for MacOS
+AbsoftPro&gt; # Use #define AbsoftProFortran
 
-CLIPPER> # INTERGRAPH CLIX using CLIPPER C and <i>FORTRAN</i> compilers.
-CLIPPER> # N.B. - User, not cfortran.h, is responsible for
-CLIPPER> #        f77initio() and f77uninitio() if required.
-CLIPPER> #      - LOGICAL values are not mentioned in CLIPPER doc.s,
-CLIPPER> #        so they may not yet be correct in cfortran.h.
-CLIPPER> #      - K&R mode (-knr or Ac=knr) breaks FLOAT functions
-CLIPPER> #        (see CLIPPER doc.s) and cfortran.h does not fix it up.
-CLIPPER> #        [cfortran.h ok for old sun C which made the same mistake.]
-CLIPPER> acc cfortest.c -c -DCLIPPERFortran
-CLIPPER> af77 cfortex.f cfortest.o -o cfortest
+CLIPPER&gt; # INTERGRAPH CLIX using CLIPPER C and <i>FORTRAN</i> compilers.
+CLIPPER&gt; # N.B. - User, not cfortran.h, is responsible for
+CLIPPER&gt; #        f77initio() and f77uninitio() if required.
+CLIPPER&gt; #      - LOGICAL values are not mentioned in CLIPPER doc.s,
+CLIPPER&gt; #        so they may not yet be correct in cfortran.h.
+CLIPPER&gt; #      - K&amp;R mode (-knr or Ac=knr) breaks FLOAT functions
+CLIPPER&gt; #        (see CLIPPER doc.s) and cfortran.h does not fix it up.
+CLIPPER&gt; #        [cfortran.h ok for old sun C which made the same mistake.]
+CLIPPER&gt; acc cfortest.c -c -DCLIPPERFortran
+CLIPPER&gt; af77 cfortex.f cfortest.o -o cfortest
 </pre></font>
 
 By changing the SELECTion <tt>ifdef</tt> of <tt>cfortest.c</tt> and recompiling one can try out
@@ -359,7 +356,7 @@ PROTOCCALLSFSUB6(HBOOK1,hbook1,INT,STRING,INT,FLOAT,FLOAT,FLOAT)
             are defined and used.
 <FONT COLOR="#993300"><pre>
 /* hbook.h */
-#include "cfortran.h"
+#include &lt;cfortran.h&gt;
         :
 PROTOCCALLSFSUB6(HBOOK1,hbook1,INT,STRING,INT,FLOAT,FLOAT,FLOAT)
 #define HBOOK1(ID,CHTITLE,NX,XMI,XMA,VMX)                        \
@@ -404,7 +401,7 @@ main ()
 <h3>Example 2</h3> Many VMS System calls are most easily called from <i>FORTRAN</i>, but
             <tt>cfortran.h</tt> now gives that ease in C.
 <FONT COLOR="#993300"><pre>
-#include "cfortran.h"
+#include &lt;cfortran.h&gt;
 
 PROTOCCALLSFSUB3(LIB$SPAWN,lib$spawn,STRING,STRING,STRING)
 #define LIB$SPAWN(command,input_file,output_file)          \
@@ -434,8 +431,8 @@ C     EXAMPLE.FOR
       END
 
 /* cstring.c */
-#include <string.h>             /* string.h prototypes memcpy() */
-#include "cfortran.h"
+#include &lt;string.h&gt;             /* string.h prototypes memcpy() */
+#include &lt;cfortran.h&gt;
 
         :
 FCALLSCSUB3(memcpy,MEMCPY,memcpy,PVOID,PVOID,INT)
@@ -461,12 +458,12 @@ for clarification by example.
 <ul>
 <p><li> Specifying the <i>FORTRAN</i> compiler
 <p>
-  <tt>cfortran.h</tt> generates interfaces for the default i
+  <tt>cfortran.h</tt> generates interfaces for the default
   <i>FORTRAN</i> compiler. The default can be overridden by defining with
-  one of the follwoing methods,
+  one of the following methods,
   <ul>
   <p><li> in the code,              e.g.: <tt>#define    NAGf90Fortran</tt>
-  <p><li> in the compile directive, e.g.: <tt>unix> cc -DNAGf90Fortran</tt>
+  <p><li> in the compile directive, e.g.: <tt>unix&gt; cc -DNAGf90Fortran</tt>
    </ul>
 one of the following before including <tt>cfortran.h</tt>:
 <FONT COLOR="#993300"><pre>
@@ -645,11 +642,12 @@ just as <tt>DOUBLE_PRECISION</tt> is introduced for the classic CRAY.
 on all machines, including t3e.
 </ul>
 
-<p><li> <tt>f2c</tt>
+<p><li> <tt>f2c / g77</tt>
 <p>
-  <tt>f2c</tt>, by default promotes <tt>REAL</tt> functions to double. 
-<tt>cfortran.h</tt> does not (yet)
-support this, so the <tt>f2c -R</tt> option must be used to turn this promotion off.
+<tt>f2c</tt> and <tt>g77</tt> by default promote <tt>REAL</tt> functions to
+double.  As of December 9, 2005, the Debian package of cfortran supports this
+behavior, so the <tt>f2c -R</tt> option must <b>NOT</b> be used to turn this
+promotion off.
 
 <p><li> <tt>f2c</tt>
 <p>[Thanks to Dario Autiero for pointing out the following.]
@@ -693,11 +691,19 @@ Names which do contain an underscore may use the following work-around:
 /* Last three lines are a work-around for the strange f2c naming feature. */
 </pre></font>
 
+<p><li> <tt>gfortran</tt>
+<p>
+<tt>gfortran</tt> behaves similarly to <tt>f2c</tt> and <tt>g77</tt>, EXCEPT
+that it does NOT by default promote <tt>REAL</tt> functions to
+double.  Therefore you should use <tt>-DgFortran</tt> instead of
+<tt>-Dg77Fortran</tt> or <tt>-Df2cFortran</tt> to let <tt>cfortran.h</tt>
+know about this difference.
+
 <p><li> NAG f90
 <p>  The <i>FORTRAN</i> 77 subset of <i>FORTRAN</i> 90 is supported. 
 Extending <tt>cfortran.h</tt> to 
 interface C with all of <i>FORTRAN</i> 90 has not yet been examined.
-<br>  The NAG f90 library hij acks the <tt>main()</tt> of any program and starts the user's 
+<br>  The NAG f90 library hijacks the <tt>main()</tt> of any program and starts the user's 
 program with a call to: <tt>void f90_main(void)</tt>;<br>
 While this in itself is only a minor hassle, a major problem arises because
 NAG f90 provides no mechanism to access command line arguments.<br>
@@ -738,10 +744,10 @@ transparent naming schemes when mixing C and <i>FORTRAN</i>.
   At least one release of the HP <tt>/lib/cpp.ansi</tt>
  preprocessor is broken and will
 go into an infinite loop when trying to process <tt>cfortran.h</tt> with the
-<tt>##</tt> catenation operator. The K&R version of <tt>cfortran.h</tt> must then be used and the
-K&R preprocessor must be specified. e.g.
+<tt>##</tt> catenation operator. The K&amp;R version of <tt>cfortran.h</tt> must then be used and the
+K&amp;R preprocessor must be specified. e.g.
 <FONT COLOR="#993300"><pre>
-HP9000> cc -Aa -tp,/lib/cpp -c source.c
+HP9000&gt; cc -Aa -tp,/lib/cpp -c source.c
 </pre></font>
 The same problem with a similar solution exists on the Apollo.
 An irrelevant error message <tt>'0: extraneous name /usr/include'</tt>
@@ -757,10 +763,10 @@ cc -v -c -Aa -tp,/lib/cpp cfortest.c
 <tt>/lib/cpp</tt>
 <p>
 On some machines the above error causes compilation to stop; one must then use
-K&R C, as with old HP compilers which don't support function prototyping.
-<tt>cfortran.h</tt> has to be informed that K&R C is to being used, e.g.
+K&amp;R C, as with old HP compilers which don't support function prototyping.
+<tt>cfortran.h</tt> has to be informed that K&amp;R C is to being used, e.g.
 <FONT COLOR="#993300"><pre>
-HP9000> cc -D__CF__KnR -c source.c
+HP9000&gt; cc -D__CF__KnR -c source.c
 </pre></font>
 
 <p><li> AbsoftUNIXFortran
@@ -785,14 +791,14 @@ using <tt>cfortran.h</tt>. This Apollo bug can be circumvented by using:
 <p>The same problem with a similar solution exists on the HP.
 
 <p><li> <a name="SIIoSun">Sun</a>
-<p>Old versions of cc(1), say <~1986, may require help for <tt>cfortran.h</tt> 
+<p>Old versions of cc(1), say &lt;~1986, may require help for <tt>cfortran.h</tt> 
 applications:
 <ul>
  <p><li> <tt>#pragma</tt> may not be understood, hence <tt>cfortran.h</tt> 
    and <tt>cfortest.c</tt> may require
 <FONT COLOR="#993300"><pre>
-sun> mv <tt>cfortran.h</tt> cftmp.h && grep -v "^#pragma" <cftmp.h >cfortran.h
-sun> mv cfortest.c cftmp.c && grep -v "^#pragma" <cftmp.c >cfortest.c
+sun&gt; mv <tt>cfortran.h</tt> cftmp.h &amp;&amp; grep -v "^#pragma" <cftmp.h >cfortran.h
+sun&gt; mv cfortest.c cftmp.c &amp;&amp; grep -v "^#pragma" <cftmp.c >cfortest.c
 </pre></font>
  <p><li> Old copies of <tt>math.h</tt> may not include the following from a newer <tt>math.h</tt>.
    [For an ancient <tt>math.h</tt> on a 386 or sparc, get similar from a new <tt>math.h</tt>.]
@@ -800,8 +806,8 @@ sun> mv cfortest.c cftmp.c && grep -v "^#pragma" <cftmp.c >cfortest.c
 <FONT COLOR="#993300"><pre>
    #ifdef mc68000     /* 5 lines Copyright (c) 1988 by Sun Microsystems, Inc. */
    #define FLOATFUNCTIONTYPE	int
-   #define RETURNFLOAT(x) 		return (*(int *)(&(x)))
-   #define ASSIGNFLOAT(x,y)	*(int *)(&x) = y
+   #define RETURNFLOAT(x) 	return (*(int *)(&amp;(x)))
+   #define ASSIGNFLOAT(x,y)	*(int *)(&amp;x) = y
    #endif
 </pre></font>
 
@@ -815,8 +821,8 @@ limitation, e.g. gcc, on ANY machine.
 <p><li> VAX Ultrix
 <p> <tt>vcc (1)</tt> with <tt>f77</tt> is not supported. Although: 
 <FONT COLOR="#993300"><pre>
-VAXUltrix> f77 -c cfortex.f
-VAXUltrix> vcc -o cfortest cfortest.c cfortex.o -lI77 -lU77 -lF77  &&  cfortest
+VAXUltrix&gt; f77 -c cfortex.f
+VAXUltrix&gt; vcc -o cfortest cfortest.c cfortex.o -lI77 -lU77 -lF77  &amp;&amp;  cfortest
 </pre></font>
 will link and run. However, the <i>FORTRAN</i> standard I/O is NOT merged 
 with the
@@ -849,7 +855,7 @@ mentions <tt>JBL</tt>, is JBL the only way?
                 At line number 777 in DISK:[DIR]FILE.C;1.
 </pre></font>
 where the line given, '777', includes a call across C and <i>FORTRAN</i> via
-<tt>cfortran.h</tt>, usually with >7 arguments and/or very long argument 
+<tt>cfortran.h</tt>, usually with &gt;7 arguments and/or very long argument 
 expressions.<p>
 This SPR can be staved off, with the simple modification to <tt>cfortran.h</tt>, such
 that the relevant <tt>CCALLSFSUBn</tt> (or <tt>CCALLSFFUNn</tt> or 
@@ -895,7 +901,7 @@ e.g. In the following the <i>FORTRAN</i> routine 'e' will crash when it tries to
 
 <FONT COLOR="#993300"><pre>
 C FORTRAN                           /* C */
-      integer function f()          #include <stdio.h>
+      integer function f()          #include &lt;stdio.h&gt;
       f = 2                         int f_();
       return                        int e_(int (*u)());
       end
@@ -962,7 +968,7 @@ CCALLSFFUNn(ROUTINE_NAME,routine_name,argtype_1,...,argtype_n, \
 </pre></font>
 Where:
 <FONT COLOR="#993300"><pre>
-'n' = 0->14 [SUBROUTINE's ->27] (easily expanded in <tt>cfortran.h</tt> to > 14 [27]) is 
+'n' = 0-&gt;14 [SUBROUTINE's -&gt;27] (easily expanded in <tt>cfortran.h</tt> to &gt; 14 [27]) is 
     the number of arguments to the routine.
 Routine_name = C       name of the routine (IN UPPER CASE LETTERS).[see 2.below]
 ROUTINE_NAME = <i>FORTRAN</i> name of the routine (IN UPPER CASE LETTERS).
@@ -979,7 +985,7 @@ argtype_i    = the type of argument passed to the <i>FORTRAN</i> routine and mus
                STRINGV, ZTRINGV.
              For vectors of vectors, i.e. 2 dim. arrays use
              = BYTEVV, DOUBLEVV, FLOATVV, INTVV, LOGICALVV, LONGVV, SHORTVV.
-             For n-dim. arrays, 1<=n<=7 [7 is the maximum in <i>FORTRAN</i> 77],
+	     For n-dim. arrays, 1&lt;=n&lt;=7 [7 is the maximum in <i>FORTRAN</i> 77],
              = BYTEV..nV's..V, DOUBLEV..V, FLOATV..V, INTV..V, LOGICALV..V, 
                LONGV..V, SHORTV..V.
                 N.B. Array dimensions and types are checked by the C compiler.
@@ -1042,7 +1048,7 @@ Two uses of SIMPLE user defined types are [don't show the 7 verbatim #defines]:
 
 /* Pass the address of a structure, using a type called PSTRUCT */
 #define PSTRUCT_cfN(  T,A)        void *A
-#define PSTRUCT_cfB(  T,A)       (void *) &(A)
+#define PSTRUCT_cfB(  T,A)       (void *) &amp;(A)
 
 /* Pass an integer by value, (not standard F77 ), using a type called INTVAL */
 #define INTVAL_cfN(   T,A)      int A
@@ -1067,7 +1073,7 @@ order to call a <i>FORTRAN</i> routine. In theory <tt>Routine_name</tt> could be
 unique name, but in practice, the name of the <i>FORTRAN</i> routine in UPPER CASE
 works everywhere and would seem to be an obvious choice.
 
-<p><li> <tt>[BYTE|DOUBLE|BYTE|DOUBLE|FLOAT|INT|LOGICAL|LONG|SHORT][V|VV|VVV|...]</tt>
+<p><li> <tt>[BYTE|DOUBLE|FLOAT|INT|LOGICAL|LONG|SHORT][V|VV|VVV|...]</tt>
 <p>
 <tt>cfortran.h</tt> encourages the exact specification of the type and dimension of
 array parameters because it allows the C compiler to detect errors in the
@@ -1262,7 +1268,7 @@ FCALLSCFUNn(routine_type,Routine_name,ROUTINE_NAME,routine_name,argtype_1,...,ar
 </pre></font>
 
 Where:
-'n' = 0->27 (easily expanded to > 27) stands for the number of arguments to the 
+'n' = 0-&gt;27 (easily expanded to &gt; 27) stands for the number of arguments to the 
     routine.
 <FONT COLOR="#993300"><pre>
 Routine_name = the C       name of the routine. [see 9. below]
@@ -1343,7 +1349,7 @@ routine.
 to C, the same holds true for each element in <tt>(P)STRINGV</tt>. Space is malloc'd in
 all cases big enough to hold the original string (elements) as well as C's
 terminating <tt>'\0'</tt>. i.e. The useful size of the string (elements) is the same in
-both languages. <tt>P(N)STRING(V)</tt> => the string (elements) will be copied from the
+both languages. <tt>P(N)STRING(V)</tt> =&gt; the string (elements) will be copied from the
 malloc'd space back into the <i>FORTRAN</i> bytes. If one of the two escape mechanisms
 mentioned below for PNSTRING has been used, the copying back to <i>FORTRAN</i> is
 obviously not relevant.
@@ -1371,7 +1377,7 @@ be <tt>HEX-00</tt>.
 <FONT COLOR="#993300"><pre>
 
 <b>C FORTRAN                                               /* C */</b>
-      character*40 str                                  #include "cfortran.h"
+character*40 str                                        #include &lt;cfortran.h&gt;
 C Set up a NULL as :                                    void cs(char *s) {if (s) printf("%s.\n",s);}
 C    i)  4 NUL characters.                              FCALLSCSUB1(cs,CS,cs,STRING)
 C    ii) NULL pointer.
@@ -1413,7 +1419,7 @@ be passed in. <tt>PNSTRING</tt> behaves like the old <tt>PSTRING</tt>.
 
 <FONT COLOR="#993300"><pre>
 <b>C FORTRAN                                               /* C */</b>
-      character*10 s,sn                                 #include "cfortran.h"
+character*10 s,sn                                       #include &lt;cfortran.h&gt;
                                                         void ps(char *s) {strcpy(s,"hello");}
 C Can   call ps  with undef. s.                         FCALLSCSUB1(ps,PS,ps,PSTRING)
       call ps(s)                                        FCALLSCSUB1(ps,PNS,pns,PNSTRING)
@@ -1542,9 +1548,9 @@ where:
 
 <pre>
        routine_name     is as above.
-       i [i=1->n.]      specifies the argument number of a STRING VECTOR.
+       i [i=1-&gt;n.]      specifies the argument number of a STRING VECTOR.
        j                would specify a fixed number of elements. 
-       k [k=1->n. k!=i] would specify an integer argument which specifies the
+       k [k=1-&gt;n. k!=i] would specify an integer argument which specifies the
                         number of elements.
        l [char]         the terminating character at the beginning of an
                         element, indicating to <tt>cfortran.h</tt> that the preceding
@@ -1798,7 +1804,7 @@ The rules for common blocks are not well defined when linking/loading a mixture
 of C and <i>FORTRAN</i>, but the following information may help 
 resolve problems.
 <p>
-From the 2nd or ANSI ed. of K&R C, p.31, last paragraph:
+From the 2nd or ANSI ed. of K&amp;R C, p.31, last paragraph:
 <p><b>i)</b>
  An external variable must be defined, exactly once, outside of any function;
  this sets aside storage for it.
@@ -1977,7 +1983,7 @@ limitation.
 Therefore, new machinery is required to do:
 
 <FONT COLOR="#993300"><pre>
-application.h + <tt>cfortran.h</tt> => final_application.h
+application.h + <tt>cfortran.h</tt> =&gt; final_application.h
 </pre></font>
 
 The following example may help clarify the means and ends:
@@ -1990,7 +1996,7 @@ constants if creating an <tt>application.h</tt> for compiler other than that of 
 preprocessor being used, e.g. <tt>cpp -Umips -DCRAY ... </tt>] :
 
 <FONT COLOR="#993300"><pre>
-#include "cfortran.h"
+#include &lt;cfortran.h&gt;
 PROTOCCALLSFSUB6(HBOOK1,hbook1,INT,STRING,INT,FLOAT,FLOAT,FLOAT)
 /*#define HBOOK1(ID,CHTITLE,NX,XMI,XMA,VMX)                 \*/
      CCALLSFSUB6(HBOOK1,hbook1,INT,STRING,INT,FLOAT,FLOAT,FLOAT, \
@@ -2075,23 +2081,23 @@ able to offer alternate kludges.
 Condolences to long suffering ultrix users!
 DEC supplies a working C front end for alpha/OSF, but not for ultrix.
 <p>
-From K&R ANSI C p. 231:
+From K&amp;R ANSI C p. 231:
 <FONT COLOR="#993300"><pre>
-   ultrix> cat cat.c
+   ultrix&gt; cat cat.c
    #define cat(x, y) x ## y
    #define xcat(x,y) cat(x,y)
    cat(cat(1,2),3)
    xcat(xcat(1,2),3)
-   ultrix> cc -E cat.c
-   123                  <---- Should be: cat(1,2)3
-   123                  <---- Correct.
-   ultrix> 
+   ultrix&gt; cc -E cat.c
+   123                  &lt;---- Should be: cat(1,2)3
+   123                  &lt;---- Correct.
+   ultrix&gt; 
 </pre></font>
 
 The problem for <tt>cfortran.h</tt>, preventing use of -std and -std1:
 
 <FONT COLOR="#993300"><pre>
-   ultrix> cat c.c
+   ultrix&gt; cat c.c
    #define cat(x, y) x ## y
    #define xcat(x,y) cat(x,y)
    #define AB(X) X+X
@@ -2099,19 +2105,19 @@ The problem for <tt>cfortran.h</tt>, preventing use of -std and -std1:
    #define X(E,F,G) xcat(E,F)(G)
    C(A,B,2)
    X(A,B,2)
-   ultrix> cc -std1 -E c.c
+   ultrix&gt; cc -std1 -E c.c
    2+2  
-   AB  (2)              <---- ?????????????
-   ultrix>
-   ultrix> cc -std0 -E c.c
+   AB  (2)              &lt;---- ?????????????
+   ultrix&gt;
+   ultrix&gt; cc -std0 -E c.c
    2+2  
-   AB(2)                <---- ?????????????
-   ultrix>
+   AB(2)                &lt;---- ?????????????
+   ultrix&gt;
 </pre></font>
 
 Due to further ultrix preprocessor problems,
 for all definitions of definitions with arguments,
-<tt>cfortran.h</tt> >= 3.0 includes the arguments and recommends the same,
+<tt>cfortran.h</tt> &gt;= 3.0 includes the arguments and recommends the same,
 even though it is not required by ANSI C.
 e.g. Users are advised to do
 <FONT COLOR="#993300"><pre>
@@ -2145,17 +2151,17 @@ across all objects compiled by cc and <tt>f77</tt>. [Does gcc provide such optio
         <tt>cc: SC3.0.1 13 Jul 1994</tt>
    or equivalently
    <tt>ULTRIX 4.4 0 RISC</tt> using <tt>cc -oldc</tt>
-   are K&R C preprocessors that suffer from infinite loop macros, e.g.
+   are K&amp;R C preprocessors that suffer from infinite loop macros, e.g.
 
 <FONT COLOR="#993300"><pre>
-  zedy03> cat src.c
-  #include "cfortran.h"
+  zedy03&gt; cat src.c
+  #include &lt;cfortran.h&gt;
                             PROTOCCALLSFFUN1(INT,FREV,frev, INTV)
   #define FREV(A1)               CCALLSFFUN1(    FREV,frev, INTV, A1)
   /* To avoid the problem, deletete these ---^^^^--- spaces.    */
   main() { static int a[] = {1,2}; FREV(a); return EXIT_SUCCESS; }
 
-  zedy03> cc -c -Xs -v -DMAX_PREPRO_ARGS=31 -D__CF__KnR src.c
+  zedy03&gt; cc -c -Xs -v -DMAX_PREPRO_ARGS=31 -D__CF__KnR src.c
   "src.c", line 4: FREV: actuals too long
   "src.c", line 4: FREV: actuals too long
   .... 3427 more lines of the same message
@@ -2190,20 +2196,20 @@ or to change <tt>cfortran.h</tt> to <tt>#define</tt>
 <p>
 Unlike all other C compilers supported by <tt>cfortran.h</tt>,
 <tt>'gcc -traditional'</tt> promotes to double all functions returning float
-as demonstrated bu the following example.
+as demonstrated by the following example.
 
 <FONT COLOR="#993300"><pre>
 /* m.c */
-#include <stdio.h>
+#include &lt;stdio.h&gt;
 int main() { FLOAT_FUNCTION d(); float f; f = d(); printf("%f\n",f); return 0; }
 
 /* d.c */
 float d() { return -123.124; }
 
 burow[29] gcc -c -traditional d.c
-burow[30] gcc -DFLOAT_FUNCTION=float m.c d.o && a.out
+burow[30] gcc -DFLOAT_FUNCTION=float m.c d.o &amp;&amp; a.out
 0.000000
-burow[31] gcc -DFLOAT_FUNCTION=double m.c d.o && a.out
+burow[31] gcc -DFLOAT_FUNCTION=double m.c d.o &amp;&amp; a.out
 -123.124001
 burow[32]
 </pre></font>
@@ -2298,7 +2304,7 @@ work-around within <tt>cfortran.h</tt> also circumvents the bug:
 </td><td>July '91.</td></tr>
 <tr><td> 2.0 </td><td>
 <ul>
-    <li> Improved code generation machinery creates K&R or ANSI C.
+    <li> Improved code generation machinery creates K&amp;R or ANSI C.
     <li> Supports Sun, CRAY. <tt>f2c</tt> with vcc on VAX Ultrix.
     <li> <tt>cfortran.h</tt> macros now require routine and COMMON block names in both 
       upper and lower case. No changes required to applications though.
@@ -2366,7 +2372,7 @@ work-around within <tt>cfortran.h</tt> also circumvents the bug:
 </td><td>April'93.</td></tr>
 <tr><td> 3.0 </td><td>
 <ul>
-    <li> Automagic handling of ANSI ## versus K&R /**/ preprocessor op.
+    <li> Automagic handling of ANSI ## versus K&amp;R /**/ preprocessor op.
     <li> Less chance of name space collisions between <tt>cfortran.h</tt> and other codes.
     <li> SIMPLE macros, supporting user defined types, have changed names.
 </ul>
@@ -2494,7 +2500,8 @@ work-around within <tt>cfortran.h</tt> also circumvents the bug:
 <FONT COLOR="#993300"><pre>
 THIS PACKAGE, I.E. CFORTRAN.H, THIS DOCUMENT, AND THE CFORTRAN.H EXAMPLE
 PROGRAMS ARE PROPERTY OF THE AUTHOR WHO RESERVES ALL RIGHTS. THIS PACKAGE AND
-THE CODE IT PRODUCES MAY BE FREELY DISTRIBUTED WITHOUT FEES, SUBJECT TO THE
+THE CODE IT PRODUCES MAY BE FREELY DISTRIBUTED WITHOUT FEES, SUBJECT 
+(AT YOUR CHOICE) EITHER TO THE <a href = "file:///usr/share/common-licenses/LGPL">GNU LIBRARY GENERAL PUBLIC LICENSE</a> OR TO THE
 FOLLOWING RESTRICTIONS:
 - YOU MUST ACCOMPANY ANY COPIES OR DISTRIBUTION WITH THIS (UNALTERED) NOTICE.
 - YOU MAY NOT RECEIVE MONEY FOR THE DISTRIBUTION OR FOR ITS MEDIA 

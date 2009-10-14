@@ -1,3 +1,19 @@
+Name: cfortran
+Maintainer: Debian Science Maintainers <debian-science-maintainers@lists.alioth.debian.org>
+source: http://wwwinfo.cern.ch/asd/cernlib/download/2003_source/tar/src_cfortran.tar.gz
+
+Files: debian/*
+Copyright: Copyright 2002-2009, Kevin McCarty <kmccarty@debian.org>
+           Copyright 2009, Bastien ROUCARIÈS <roucaries.bastien+debian@gmail.com>
+License: LGPL-2+
+ The Debian packaging is licensed under the GPL, version 2 or later,
+ see below.
+
+Files: *
+Copyright: Copyright 1990-2003, Burkhard D Steinmacher-burow
+License: LGPL-2 or other
+  See below
+
 This package was debianized by Kevin McCarty <kmccarty@debian.org> on
 Sat,  9 Nov 2002 23:30:19 +0100.
 

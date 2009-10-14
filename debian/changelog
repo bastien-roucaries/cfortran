@@ -1,6 +1,7 @@
 cfortran (4.4-14) unstable; urgency=low
 
   *  Add license text to cfortran.h (Closes: #507429).
+  *  Warm if user does not use -D flags as documented in README.debian (Closes: #497023).
 
  --  Bastien ROUCARIÈS <roucaries.bastien+debian@gmail.com>  Wed, 14 Oct 2009 14:56:50 +0200
 

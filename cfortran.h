@@ -46,6 +46,7 @@ FOR ANY SUPPORT OR SERVICE OF THE CFORTRAN.H PACKAGE.
  * LEB = Lee E Brotzman
  * MR  = Martin Reinecke
  * WDP = William D Pence
+ * BR  = Bastien ROUCARIES
  * -- Kevin McCarty, for Debian (19 Dec. 2005) */
 
 /*******
@@ -82,6 +83,7 @@ FOR ANY SUPPORT OR SERVICE OF THE CFORTRAN.H PACKAGE.
       Aug 2008: If __GNUC__ is defined and no FORTRAN compiler is specified
 		via a #define or -D, default to gfortran behavior rather than
 		g77 behavior. (KMCCARTY)
+      Oct 2009: Add warning if guessing default fortran. Move g77 above guessing bloc
  *******/
 
 /* 
@@ -176,11 +178,18 @@ only C calling FORTRAN subroutines will work using K&R style.*/
 #define f2cFortran
 #endif
 
+#if defined(g77Fortran)                        /* 11/03/97 PDW (CFITSIO) */
+#define f2cFortran
+#endif
+
 /* VAX/VMS does not let us \-split long #if lines. */ 
 /* Split #if into 2 because some HP-UX can't handle long #if */
 #if !(defined(NAGf90Fortran)||defined(f2cFortran)||defined(hpuxFortran)||defined(apolloFortran)||defined(sunFortran)||defined(IBMR2Fortran)||defined(CRAYFortran))
 #if !(defined(mipsFortran)||defined(DECFortran)||defined(vmsFortran)||defined(CONVEXFortran)||defined(PowerStationFortran)||defined(AbsoftUNIXFortran)||defined(AbsoftProFortran)||defined(SXFortran))
 /* If no Fortran compiler is given, we choose one for the machines we know.   */
+#if defined(__GNUC__) || defined(WIN32) /* 10/2009 BR: warm if guess */
+#warning "Please specify the fortran compiler using -D flags. Try to guess the compiler used"
+#endif
 #if defined(lynx) || defined(VAXUltrix)
 #define f2cFortran    /* Lynx:      Only support f2c at the moment.
                          VAXUltrix: f77 behaves like f2c.
@@ -192,9 +201,6 @@ only C calling FORTRAN subroutines will work using K&R style.*/
 #if defined(WIN32) && !defined(__CYGWIN__)
 #define PowerStationFortran   
 #define VISUAL_CPLUSPLUS
-#endif
-#if defined(g77Fortran)                        /* 11/03/97 PDW (CFITSIO) */
-#define f2cFortran
 #endif
 #if        defined(__CYGWIN__)                 /* 04/11/02 LEB (CFITSIO) */
 #define       f2cFortran 

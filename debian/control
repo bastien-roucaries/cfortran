@@ -8,7 +8,7 @@ Vcs-Browser: http://git.debian.org/?p=debian-science/packages/cfortran.git
 DM-Upload-Allowed: yes
 Homepage: http://www-zeus.desy.de/~burow/cfortran/
 Build-Depends: debhelper (>= 5.0.0)
-Standards-Version: 3.8.0
+Standards-Version: 3.8.3
 
 Package: cfortran
 Architecture: all

@@ -1,6 +1,7 @@
 /* cfortran.h  4.4 */
 /* http://www-zeus.desy.de/~burow/cfortran/                   */
-/* Burkhard Burow  burow@desy.de                 1990 - 2002. */
+/* Copyright (C) 1990 - 2002 Burkhard Burow  burow@desy.de    */
+/* Copyright (C) 2011 Bastien ROUCARIÈS                       */
 
 #ifndef __CFORTRAN_LOADED
 #define __CFORTRAN_LOADED
@@ -10,7 +11,12 @@
 #define CFORTRAN_VERSION 20110615UL
 #endif
 
-/* 
+
+/* This file could be used under at your choice two license: */
+
+/* FIRST OPTION */
+
+/*
    THIS FILE IS PROPERTY OF BURKHARD BUROW. IF YOU ARE USING THIS FILE YOU
    SHOULD ALSO HAVE ACCESS TO CFORTRAN.DOC WHICH PROVIDES TERMS FOR USING,
    MODIFYING, COPYING AND DISTRIBUTING THE CFORTRAN.H PACKAGE.
@@ -43,6 +49,24 @@ FOR ANY SUPPORT OR SERVICE OF THE CFORTRAN.H PACKAGE.
                                               Burkhard Burow 
                                               burow@desy.de
 */
+
+/* SECOND OPTION */
+
+/**********************************************************************************/
+/* This library is free software; you can redistribute it and/or		  */
+/* modify it under the terms of the GNU Library General Public			  */
+/* License as published by the Free Software Foundation; either			  */
+/* version 2 of the License, or (at your option) any later version.		  */
+/* 										  */
+/* This library is distributed in the hope that it will be useful,		  */
+/* but WITHOUT ANY WARRANTY; without even the implied warranty of		  */
+/* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU		  */
+/* Library General Public License for more details.				  */
+/* 										  */
+/* You should have received a copy of the GNU Library General Public		  */
+/* License along with this library; if not, write to the Free Software		  */
+/* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA */
+/**********************************************************************************/
 
 /* The following modifications were made by the authors of CFITSIO or by me. 
  * They are flagged below with CFITSIO, the author's initials, or KMCCARTY.

@@ -60,6 +60,7 @@ e.g. Prototyping a <i>FORTRAN</i> subroutine for C:
                                 \    | PPSTRING   LOGICAL PLOGICAL LOGICALV(..)|
                                  \   |  PSTRINGV  LONG    PLONG       LONGV(..)|
                                   \  |   ZTRINGV  SHORT   PSHORT     SHORTV(..)|
+                                     | LONGLONG   PLONGLONG  LONGLONG(..)
                                      |  PZTRINGV  ROUTINE PVOID      SIMPLE    |
                                       -                                       -
 </pre></font>
@@ -87,7 +88,7 @@ FCALLSCSUB1(csub_name,CSUB_NAME,csub_name,INTVVVVVVV)
 e.g. Creating a <i>FORTRAN</i>-callable wrapper for other C functions:
 <FONT COLOR="#993300"><pre>
 FCALLSCFUN1(STRING,cfun_name,CFUN_NAME,cfun_name,INT)
-           [ ^-- BYTE, DOUBLE, FLOAT, INT, LOGICAL, LONG, SHORT, VOID  
+           [ ^-- BYTE, DOUBLE, FLOAT, INT, LOGICAL, LONG, LONGLONG, SHORT, VOID  
              are other types returned by functions.       ]
 </pre></font>       
 
@@ -974,24 +975,24 @@ Routine_name = C       name of the routine (IN UPPER CASE LETTERS).[see 2.below]
 ROUTINE_NAME = <i>FORTRAN</i> name of the routine (IN UPPER CASE LETTERS).
 routine_name = <i>FORTRAN</i> name of the routine (IN lower case LETTERS).
 routine_type = the type of argument returned by <i>FORTRAN</i> functions.
-             = BYTE, DOUBLE, FLOAT, INT, LOGICAL, LONG, SHORT, STRING, VOID.
+             = BYTE, DOUBLE, FLOAT, INT, LOGICAL, LONG, LONGLONG, SHORT, STRING, VOID.
                [Instead of VOID one would usually use CCALLSFSUBn.
                 VOID forces a wrapper function to be used.]
 argtype_i    = the type of argument passed to the <i>FORTRAN</i> routine and must be
                consistent in the definition and prototyping of the routine s.a.
-             = BYTE, DOUBLE, FLOAT, INT, LOGICAL, LONG, SHORT, STRING.
+             = BYTE, DOUBLE, FLOAT, INT, LOGICAL, LONG, LONGLONG, SHORT, STRING.
              For vectors, i.e. 1 dim. arrays use 
-             = BYTEV, DOUBLEV, FLOATV, INTV, LOGICALV, LONGV, SHORTV, 
+             = BYTEV, DOUBLEV, FLOATV, INTV, LOGICALV, LONGV, LONGLONGV, SHORTV, 
                STRINGV, ZTRINGV.
              For vectors of vectors, i.e. 2 dim. arrays use
-             = BYTEVV, DOUBLEVV, FLOATVV, INTVV, LOGICALVV, LONGVV, SHORTVV.
+             = BYTEVV, DOUBLEVV, FLOATVV, INTVV, LOGICALVV, LONGVV, LONGLONGVV, SHORTVV.
 	     For n-dim. arrays, 1&lt;=n&lt;=7 [7 is the maximum in <i>FORTRAN</i> 77],
              = BYTEV..nV's..V, DOUBLEV..V, FLOATV..V, INTV..V, LOGICALV..V, 
-               LONGV..V, SHORTV..V.
+               LONGV..V, SHORTV..V, LONGV..V.
                 N.B. Array dimensions and types are checked by the C compiler.
              For routines changing the values of an argument, the keyword is 
                   prepended by a 'P'.
-             = PBYTE, PDOUBLE, PFLOAT, PINT, PLOGICAL, PLONG, PSHORT,
+             = PBYTE, PDOUBLE, PFLOAT, PINT, PLOGICAL, PLONG, PSHORT, PLONGLONG
                PSTRING, PSTRINGV, PZTRINGV.
              For EXTERNAL procedures passed as arguments use
              = ROUTINE.
@@ -1073,7 +1074,7 @@ order to call a <i>FORTRAN</i> routine. In theory <tt>Routine_name</tt> could be
 unique name, but in practice, the name of the <i>FORTRAN</i> routine in UPPER CASE
 works everywhere and would seem to be an obvious choice.
 
-<p><li> <tt>[BYTE|DOUBLE|FLOAT|INT|LOGICAL|LONG|SHORT][V|VV|VVV|...]</tt>
+<p><li> <tt>[BYTE|DOUBLE|FLOAT|INT|LOGICAL|LONG|SHORT|LONGLONG][V|VV|VVV|...]</tt>
 <p>
 <tt>cfortran.h</tt> encourages the exact specification of the type and dimension of
 array parameters because it allows the C compiler to detect errors in the
@@ -1184,7 +1185,7 @@ Where:
        j            [1-n], is the argument being specifying.
        k            [1-n], the value of the k'th argument is the dynamic number
                     of elements for argument j. The k'th argument must be
-                    of type BYTE, DOUBLE, FLOAT, INT, LONG or SHORT.
+                    of type BYTE, DOUBLE, FLOAT, INT, LONG, LONGLONG or SHORT.
        l            the number of elements for argument j. This must be an
                     integer constant available at compile time.
                     i.e. it is static.
@@ -1275,21 +1276,21 @@ Routine_name = the C       name of the routine. [see 9. below]
 ROUTINE_NAME = the <i>FORTRAN</i> name of the routine (IN UPPER CASE LETTERS).
 routine_name = the <i>FORTRAN</i> name of the routine (IN lower case LETTERS).
 routine_type = the type of argument returned by C functions.
-             = BYTE, DOUBLE, FLOAT, INT, LOGICAL, LONG, SHORT, STRING, VOID.
+             = BYTE, DOUBLE, FLOAT, INT, LOGICAL, LONG, LONGLONG, SHORT, STRING, VOID.
                [Instead of VOID, FCALLSCSUBn is recommended.]
 argtype_i    = the type of argument passed to the <i>FORTRAN</i> routine and must be
                consistent in the definition and prototyping of the routine
-             = BYTE, DOUBLE, FLOAT, INT, LOGICAL, LONG, SHORT, STRING.
+             = BYTE, DOUBLE, FLOAT, INT, LOGICAL, LONG, LONGLONG, SHORT, STRING.
              For vectors, i.e. 1 dim. arrays use 
-             = BYTEV, DOUBLEV, FLOATV, INTV, LOGICALV, LONGV, SHORTV, STRINGV.
+             = BYTEV, DOUBLEV, FLOATV, INTV, LOGICALV, LONGLONG, LONGV, SHORTV, STRINGV.
              For vectors of vectors, 2 dim. arrays use
-             = BYTEVV, DOUBLEVV, FLOATVV, INTVV, LOGICALVV, LONGVV, SHORTVV.
+             = BYTEVV, DOUBLEVV, FLOATVV, INTVV, LOGICALVV, LONGVV, LONGLONGVV, SHORTVV.
              For n-dim. arrays use
              = BYTEV..nV's..V, DOUBLEV..V, FLOATV..V, INTV..V, LOGICALV..V, 
-               LONGV..V, SHORTV..V.
+               LONGV..V, LONGV..V, SHORTV..V.
              For routines changing the values of an argument, the keyword is 
                   prepended by a 'P'.
-             = PBYTE, PDOUBLE, PFLOAT, PINT, PLOGICAL, PLONG, PSHORT, 
+             = PBYTE, PDOUBLE, PFLOAT, PINT, PLOGICAL, PLONG, PLONGLONG, PSHORT, 
                PSTRING, PNSTRING, PPSTRING, PSTRINGV.
              For EXTERNAL procedures passed as arguments use
              = ROUTINE.
@@ -1304,8 +1305,8 @@ Notes:
 <ol>
 <p><li> For <i>FORTRAN</i> calling C++ routines, C++ does NOT easily allow support for: 
    <tt>STRINGV</tt>.
-   <tt>BYTEVV</tt>, <tt>DOUBLEVV</tt>, <tt>FLOATVV</tt>, <tt>INTVV</tt>, <tt>LOGICALVV</tt>, <tt>LONGVV</tt>, <tt>SHORTVV</tt>.
-   <tt>BYTEV..V</tt>, <tt>DOUBLEV..V</tt>, <tt>FLOATV..V</tt>, <tt>INTV..V</tt>, <tt>LOGICALV..V</tt>, <tt>LONGV..V</tt>, <tt>SHORTV..V</tt>.
+   <tt>BYTEVV</tt>, <tt>DOUBLEVV</tt>, <tt>FLOATVV</tt>, <tt>INTVV</tt>, <tt>LOGICALVV</tt>, <tt>LONGVV</tt>, <tt>LONGLONGVV</tt>, <tt>SHORTVV</tt>.
+   <tt>BYTEV..V</tt>, <tt>DOUBLEV..V</tt>, <tt>FLOATV..V</tt>, <tt>INTV..V</tt>, <tt>LOGICALV..V</tt>, <tt>LONGV..V</tt>, <tt>LONGLONGV..V</tt>, <tt>SHORTV..V</tt>.
 Though there are ways to get around this restriction,
 the restriction is not serious since these types are unlikely to be used as
 arguments for a C++ routine.
@@ -1319,7 +1320,7 @@ the above.
 
 
 <a name="IIii4"></a>
-<p><li> <tt>[BYTE|DOUBLE|BYTE|DOUBLE|FLOAT|INT|LOGICAL|LONG|SHORT][V|VV|VVV|...]</tt>
+<p><li> <tt>[BYTE|DOUBLE|BYTE|DOUBLE|FLOAT|INT|LOGICAL|LONG|LONGLONG|SHORT][V|VV|VVV|...]</tt>
 <p>
 <tt>cfortran.h</tt> encourages the exact specification of the type and dimension of
 array parameters because it allows the C compiler to detect errors in the
@@ -2324,7 +2325,7 @@ work-around within <tt>cfortran.h</tt> also circumvents the bug:
 <ul>
     <li> SHORT, i.e. INTEGER*2, and BYTE now supported.
     <li> <tt>LOGICAL_STRICT</tt> introduced. More compact and robust internal tables.
-    <li> typeV and typeVV for type = BYTE, DOUBLE, FLOAT, INT, <tt>LOGICAL</tt>, LONG,SHORT.
+    <li> typeV and typeVV for type = BYTE, DOUBLE, FLOAT, INT, <tt>LOGICAL</tt>, LONG, LONGLONG, SHORT.
     <li> <i>FORTRAN</i> passing strings and NULL pointer to C routines improved. 
 </ul>
 </td><td>Dec. '91.</td></tr>

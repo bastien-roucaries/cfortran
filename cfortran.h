@@ -127,20 +127,20 @@ FOR ANY SUPPORT OR SERVICE OF THE CFORTRAN.H PACKAGE.
   MS Visual C++ compilers before V7.0 use '__int64' instead. (WDP)
 */
 
-#ifndef LONGLONG_TYPE   /* this may have been previously defined */
+#ifndef CFORTRAN_LONGLONG_TYPE   /* this may have been previously defined */
 #if defined(_MSC_VER)   /* Microsoft Visual C++ */
 
 #if (_MSC_VER < 1300)   /* versions earlier than V7.0 do not have 'long long' */
-    typedef __int64 LONGLONG;
+    typedef __int64 CFORTRAN_LONGLONG;
 #else                   /* newer versions do support 'long long' */
-    typedef long long LONGLONG; 
+    typedef long long CFORTRAN_LONGLONG; 
 #endif
 
 #else
-    typedef long long LONGLONG; 
+    typedef long long CFORTRAN_LONGLONG; 
 #endif
 
-#define LONGLONG_TYPE
+#define CFORTRAN_LONGLONG_TYPE
 #endif  
 
 
@@ -1479,21 +1479,21 @@ do{VVCF(T1,A1,B1)  VVCF(T2,A2,B2)  VVCF(T3,A3,B3)  VVCF(T4,A4,B4)  VVCF(T5,A5,B5
 #else
 #define INTEGER_BYTE        unsigned char
 #endif
-#define    BYTEVVVVVVV_cfTYPE INTEGER_BYTE
-#define  DOUBLEVVVVVVV_cfTYPE DOUBLE_PRECISION 
-#define   FLOATVVVVVVV_cfTYPE FORTRAN_REAL
-#define     INTVVVVVVV_cfTYPE int
-#define LOGICALVVVVVVV_cfTYPE int
-#define    LONGVVVVVVV_cfTYPE long
-#define LONGLONGVVVVVVV_cfTYPE LONGLONG   /* added by MR December 2005 */
-#define   SHORTVVVVVVV_cfTYPE short
-#define          PBYTE_cfTYPE INTEGER_BYTE
-#define        PDOUBLE_cfTYPE DOUBLE_PRECISION 
-#define         PFLOAT_cfTYPE FORTRAN_REAL
-#define           PINT_cfTYPE int
-#define       PLOGICAL_cfTYPE int
-#define          PLONG_cfTYPE long
-#define      PLONGLONG_cfTYPE LONGLONG  /* added by MR December 2005 */
+#define     BYTEVVVVVVV_cfTYPE INTEGER_BYTE
+#define   DOUBLEVVVVVVV_cfTYPE DOUBLE_PRECISION 
+#define    FLOATVVVVVVV_cfTYPE FORTRAN_REAL
+#define      INTVVVVVVV_cfTYPE int
+#define  LOGICALVVVVVVV_cfTYPE int
+#define     LONGVVVVVVV_cfTYPE long
+#define LONGLONGVVVVVVV_cfTYPE CFORTRAN_LONGLONG   /* added by MR December 2005 */
+#define    SHORTVVVVVVV_cfTYPE short
+#define           PBYTE_cfTYPE INTEGER_BYTE
+#define         PDOUBLE_cfTYPE DOUBLE_PRECISION 
+#define          PFLOAT_cfTYPE FORTRAN_REAL
+#define            PINT_cfTYPE int
+#define        PLOGICAL_cfTYPE int
+#define           PLONG_cfTYPE long
+#define       PLONGLONG_cfTYPE CFORTRAN_LONGLONG  /* added by MR December 2005 */
 #define         PSHORT_cfTYPE short
 
 #define CFARGS0(A,T,V,W,X,Y,Z) _3(T,_cf,A)
@@ -2284,7 +2284,7 @@ static _Icf(2,U,F,CFFUN(UN),0)() {_(F,_cfE) _Icf(3,GZ,F,UN,LN) ABSOFT_cf1(F));_(
 #define     INT_cfFZ(UN,LN) int   FCALLSC_QUALIFIER fcallsc(UN,LN)(
 #define LOGICAL_cfFZ(UN,LN) int   FCALLSC_QUALIFIER fcallsc(UN,LN)(
 #define    LONG_cfFZ(UN,LN) long  FCALLSC_QUALIFIER fcallsc(UN,LN)(
-#define LONGLONG_cfFZ(UN,LN) LONGLONG FCALLSC_QUALIFIER fcallsc(UN,LN)( /* added by MR December 2005 */
+#define LONGLONG_cfFZ(UN,LN) CFORTRAN_LONGLONG FCALLSC_QUALIFIER fcallsc(UN,LN)( /* added by MR December 2005 */
 #define   SHORT_cfFZ(UN,LN) short FCALLSC_QUALIFIER fcallsc(UN,LN)(
 #define    VOID_cfFZ(UN,LN) void  FCALLSC_QUALIFIER fcallsc(UN,LN)(
 #ifndef __CF__KnR

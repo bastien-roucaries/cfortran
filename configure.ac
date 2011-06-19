@@ -1,4 +1,4 @@
-AC_INIT([cfortran], [2011], [cfortran-devel@lists.sourceforge.net])
+AC_INIT([cfortran], [20110615], [cfortran-devel@lists.sourceforge.net])
 AM_INIT_AUTOMAKE([foreign])
 AC_CONFIG_MACRO_DIR([m4])
 

@@ -9,6 +9,8 @@
 /* cfortran version year month day */
 #ifdef __STDC__
 #define CFORTRAN_VERSION 20110615UL
+#else
+#error "cfortran need an AINSI C Compiler"
 #endif
 
 
@@ -145,32 +147,10 @@ FOR ANY SUPPORT OR SERVICE OF THE CFORTRAN.H PACKAGE.
 
 
 /* First prepare for the C compiler. */
-
-#ifndef ANSI_C_preprocessor /* i.e. user can override. */
-#ifdef __CF__KnR
-#define ANSI_C_preprocessor 0
-#else
-#ifdef __STDC__
-#define ANSI_C_preprocessor 1
-#else
-#define _cfleft             1
-#define _cfright 
-#define _cfleft_cfright     0
-#define ANSI_C_preprocessor _cfleft/**/_cfright
-#endif
-#endif
-#endif
-
-#if ANSI_C_preprocessor
 #define _0(A,B)   A##B
 #define  _(A,B)   _0(A,B)  /* see cat,xcat of K&R ANSI C p. 231 */
 #define _2(A,B)   A##B     /* K&R ANSI C p.230: .. identifier is not replaced */
 #define _3(A,B,C) _(A,_(B,C))
-#else                      /* if it turns up again during rescanning.         */
-#define  _(A,B)   A/**/B
-#define _2(A,B)   A/**/B
-#define _3(A,B,C) A/**/B/**/C
-#endif
 
 #if (defined(vax)&&defined(unix)) || (defined(__vax__)&&defined(__unix__))
 #define VAXUltrix

@@ -123,6 +123,15 @@ FOR ANY SUPPORT OR SERVICE OF THE CFORTRAN.H PACKAGE.
 
 */
 
+/*! Concatenate two string */
+#define CFORTRAN_CAT_(A,B)   A##B
+/*! Well known xcat : concatenate after expansion */
+#define CFORTRAN_XCAT_(A,B)  CFORTRAN_CAT_(A,B)  
+/*! Concatenate two string */
+#define CFORTRAN_CAT_2(A,B)   A##B  
+/*! xcat but for three strings */
+#define CFORTRAN_XCAT_3(A,B,C) CFORTRAN_XCAT_(A, CFORTRAN_XCAT_(B,C)) 
+
 /* 
    Determine what 8-byte integer data type is available.
   'long long' is now supported by most compilers, but older
@@ -147,10 +156,6 @@ FOR ANY SUPPORT OR SERVICE OF THE CFORTRAN.H PACKAGE.
 
 
 /* First prepare for the C compiler. */
-#define _0(A,B)   A##B
-#define CFORTRAN_XCAT_(A,B)   _0(A,B)  /* see cat,xcat of K&R ANSI C p. 231 */
-#define _2(A,B)   A##B     /* K&R ANSI C p.230: .. identifier is not replaced */
-#define _3(A,B,C) CFORTRAN_XCAT_(A, CFORTRAN_XCAT_(B,C)) 
 
 #if (defined(vax)&&defined(unix)) || (defined(__vax__)&&defined(__unix__))
 #define VAXUltrix
@@ -350,7 +355,7 @@ only C calling FORTRAN subroutines will work using K&R style.*/
 #define COMMON_BLOCK(UN,LN)          CFORTRAN_XCAT_(LN,__)
 #endif  /* CLIPPERFortran */
 #else
-#define COMMON_BLOCK(UN,LN)          _3(_,LN,_)
+#define COMMON_BLOCK(UN,LN)          CFORTRAN_XCAT_3(_,LN,_)
 #endif  /* CONVEXFortran */
 #endif  /* COMMON_BLOCK */
 
@@ -658,7 +663,7 @@ typedef DSC$DESCRIPTOR_A(1) fstringvector;
 #define _NUM_ELEMS      -1
 #define _NUM_ELEM_ARG   -2
 #define NUM_ELEMS(A)    A,_NUM_ELEMS
-#define NUM_ELEM_ARG(B) *_2(A,B),_NUM_ELEM_ARG
+#define NUM_ELEM_ARG(B) *CFORTRAN_CAT_2(A,B),_NUM_ELEM_ARG
 #define TERM_CHARS(A,B) A,B
 #ifndef __CF__KnR
 static int num_elem(char *strv, unsigned elem_len, int term_char, int num_term)
@@ -726,12 +731,12 @@ return (int)num;
 #endif
 
 #define ZTRINGV_NUM(I)       I
-#define ZTRINGV_ARGFP(I) (*(_2(A,I))) /* Undocumented. For PINT, etc. */
-#define ZTRINGV_ARGF(I) _2(A,I)
+#define ZTRINGV_ARGFP(I) (*(CFORTRAN_CAT_2(A,I))) /* Undocumented. For PINT, etc. */
+#define ZTRINGV_ARGF(I) CFORTRAN_CAT_2(A,I)
 #ifdef CFSUBASFUN
 #define ZTRINGV_ARGS(I) ZTRINGV_ARGF(I)
 #else
-#define ZTRINGV_ARGS(I) _2(B,I)
+#define ZTRINGV_ARGS(I) CFORTRAN_CAT_2(B,I)
 #endif
 
 #define    PBYTE_cfVP(A,B) PINT_cfVP(A,B)
@@ -832,11 +837,11 @@ typedef void (*cfCAST_FUNCTION)(CF_NULL_PROTO);
 #define  PSTRINGV_cfA(M,I,A,B)                                                 \
    APATRINGV_cfA((char *)A,B,sizeof(A),firstindexlength(A),secondindexlength(A))
 #define   ZTRINGV_cfA(M,I,A,B)  AATRINGV_cfA( (char *)A,B,                     \
-                    (_3(M,_ELEMS_,I))*(( _3(M,_ELEMLEN_,I))+1),                \
-                              (_3(M,_ELEMS_,I)),(_3(M,_ELEMLEN_,I))+1)
+                    (CFORTRAN_XCAT_3(M,_ELEMS_,I))*(( CFORTRAN_XCAT_3(M,_ELEMLEN_,I))+1),                \
+                              (CFORTRAN_XCAT_3(M,_ELEMS_,I)),(CFORTRAN_XCAT_3(M,_ELEMLEN_,I))+1)
 #define  PZTRINGV_cfA(M,I,A,B) APATRINGV_cfA( (char *)A,B,                     \
-                    (_3(M,_ELEMS_,I))*(( _3(M,_ELEMLEN_,I))+1),                \
-                              (_3(M,_ELEMS_,I)),(_3(M,_ELEMLEN_,I))+1)
+                    (CFORTRAN_XCAT_3(M,_ELEMS_,I))*(( CFORTRAN_XCAT_3(M,_ELEMLEN_,I))+1),                \
+                              (CFORTRAN_XCAT_3(M,_ELEMS_,I)),(CFORTRAN_XCAT_3(M,_ELEMLEN_,I))+1)
 
 #define    PBYTE_cfAAP(A,B) &A
 #define  PDOUBLE_cfAAP(A,B) &A
@@ -1476,12 +1481,12 @@ do{VVCF(T1,A1,B1)  VVCF(T2,A2,B2)  VVCF(T3,A3,B3)  VVCF(T4,A4,B4)  VVCF(T5,A5,B5
 #define       PLONGLONG_cfTYPE CFORTRAN_LONGLONG  /* added by MR December 2005 */
 #define         PSHORT_cfTYPE short
 
-#define CFARGS0(A,T,V,W,X,Y,Z) _3(T,_cf,A)
-#define CFARGS1(A,T,V,W,X,Y,Z) _3(T,_cf,A)(V)
-#define CFARGS2(A,T,V,W,X,Y,Z) _3(T,_cf,A)(V,W)
-#define CFARGS3(A,T,V,W,X,Y,Z) _3(T,_cf,A)(V,W,X)
-#define CFARGS4(A,T,V,W,X,Y,Z) _3(T,_cf,A)(V,W,X,Y)
-#define CFARGS5(A,T,V,W,X,Y,Z) _3(T,_cf,A)(V,W,X,Y,Z)
+#define CFARGS0(A,T,V,W,X,Y,Z) CFORTRAN_XCAT_3(T,_cf,A)
+#define CFARGS1(A,T,V,W,X,Y,Z) CFORTRAN_XCAT_3(T,_cf,A)(V)
+#define CFARGS2(A,T,V,W,X,Y,Z) CFORTRAN_XCAT_3(T,_cf,A)(V,W)
+#define CFARGS3(A,T,V,W,X,Y,Z) CFORTRAN_XCAT_3(T,_cf,A)(V,W,X)
+#define CFARGS4(A,T,V,W,X,Y,Z) CFORTRAN_XCAT_3(T,_cf,A)(V,W,X,Y)
+#define CFARGS5(A,T,V,W,X,Y,Z) CFORTRAN_XCAT_3(T,_cf,A)(V,W,X,Y,Z)
 
 #define  _Icf(N,T,I,X,Y)                 CFORTRAN_XCAT_(I,_cfINT)(N,T,I,X,Y,0)
 #define _Icf4(N,T,I,X,Y,Z)               CFORTRAN_XCAT_(I,_cfINT)(N,T,I,X,Y,Z)
@@ -1857,11 +1862,11 @@ do{VVCF(T1,A1,B1)  VVCF(T2,A2,B2)  VVCF(T3,A3,B3)  VVCF(T4,A4,B4)  VVCF(T5,A5,B5
 #define PSTRINGV_cfC(M,I,A,B,C) \
        APATRINGV_cfA(    A,B,(C/0xFFFF)*(C%0xFFFF),C/0xFFFF,C%0xFFFF)
 #define  ZTRINGV_cfC(M,I,A,B,C) \
-        AATRINGV_cfA(    A,B, (_3(M,_ELEMS_,I))*((_3(M,_ELEMLEN_,I))+1),       \
-                              (_3(M,_ELEMS_,I)), (_3(M,_ELEMLEN_,I))+1   )
+        AATRINGV_cfA(    A,B, (CFORTRAN_XCAT_3(M,_ELEMS_,I))*((CFORTRAN_XCAT_3(M,_ELEMLEN_,I))+1),       \
+                              (CFORTRAN_XCAT_3(M,_ELEMS_,I)), (CFORTRAN_XCAT_3(M,_ELEMLEN_,I))+1   )
 #define PZTRINGV_cfC(M,I,A,B,C) \
-       APATRINGV_cfA(    A,B, (_3(M,_ELEMS_,I))*((_3(M,_ELEMLEN_,I))+1),       \
-                              (_3(M,_ELEMS_,I)), (_3(M,_ELEMLEN_,I))+1   )
+       APATRINGV_cfA(    A,B, (CFORTRAN_XCAT_3(M,_ELEMS_,I))*((CFORTRAN_XCAT_3(M,_ELEMLEN_,I))+1),       \
+                              (CFORTRAN_XCAT_3(M,_ELEMS_,I)), (CFORTRAN_XCAT_3(M,_ELEMLEN_,I))+1   )
 
 #define     BYTE_cfCCC(A,B) &A
 #define   DOUBLE_cfCCC(A,B) &A
@@ -2220,12 +2225,12 @@ static _Icf(2,U,F,CFFUN(UN),0)() { CFORTRAN_XCAT_(F,_cfE) _Icf(3,GZ,F,UN,LN) ABS
 #ifdef CRAYFortran
 #define         STRING_cfT(M,I,A,B,D)  TTTTSTR( _fcdtocp(A),B,_fcdlen(A))
 #define        STRINGV_cfT(M,I,A,B,D)  TTTTSTRV(_fcdtocp(A),B,_fcdlen(A),      \
-                              num_elem(_fcdtocp(A),_fcdlen(A),_3(M,_STRV_A,I)))
+                              num_elem(_fcdtocp(A),_fcdlen(A),CFORTRAN_XCAT_3(M,_STRV_A,I)))
 #define        PSTRING_cfT(M,I,A,B,D)    TTSTR( _fcdtocp(A),B,_fcdlen(A))
 #define       PPSTRING_cfT(M,I,A,B,D)           _fcdtocp(A)
 #else
 #define         STRING_cfT(M,I,A,B,D)  TTTTSTR( A,B,D)
-#define        STRINGV_cfT(M,I,A,B,D)  TTTTSTRV(A,B,D, num_elem(A,D,_3(M,_STRV_A,I)))
+#define        STRINGV_cfT(M,I,A,B,D)  TTTTSTRV(A,B,D, num_elem(A,D,CFORTRAN_XCAT_3(M,_STRV_A,I)))
 #define        PSTRING_cfT(M,I,A,B,D)    TTSTR( A,B,D)
 #define       PPSTRING_cfT(M,I,A,B,D)           A
 #endif

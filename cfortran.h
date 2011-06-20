@@ -144,23 +144,13 @@ FOR ANY SUPPORT OR SERVICE OF THE CFORTRAN.H PACKAGE.
   'long long' is now supported by most compilers, but older
   MS Visual C++ compilers before V7.0 use '__int64' instead. (WDP)
 */
-
-#ifndef CFORTRAN_LONGLONG_TYPE   /* this may have been previously defined */
 #if defined(_MSC_VER)   /* Microsoft Visual C++ */
-
 #if (_MSC_VER < 1300)   /* versions earlier than V7.0 do not have 'long long' */
     typedef __int64 CFORTRAN_LONGLONG;
-#else                   /* newer versions do support 'long long' */
-    typedef long long CFORTRAN_LONGLONG; 
 #endif
-
 #else
     typedef long long CFORTRAN_LONGLONG; 
 #endif
-
-#define CFORTRAN_LONGLONG_TYPE
-#endif  
-
 
 /* First prepare for the C compiler. */
 

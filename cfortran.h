@@ -186,7 +186,12 @@ FOR ANY SUPPORT OR SERVICE OF THE CFORTRAN.H PACKAGE.
 #if !(defined(NAGf90Fortran)||defined(f2cFortran)||defined(hpuxFortran)||defined(sunFortran)||defined(IBMR2Fortran)||defined(CRAYFortran))
 #if !(defined(mipsFortran)||defined(DECFortran)||defined(vmsFortran)||defined(CONVEXFortran)||defined(PowerStationFortran)||defined(AbsoftUNIXFortran)||defined(AbsoftProFortran)||defined(SXFortran))
 /* If no Fortran compiler is given, we choose one for the machines we know.   */
-#if defined(__GNUC__) || defined(WIN32) /* 10/2009 BR: warm if guess */
+#if defined(__GNUC__)
+#if __GNUC__ == 3
+#warning "Please specify the fortran compiler using -D flags. Try to guess the compiler used"
+#endif
+#endif
+#if defined(WIN32) /* 10/2009 BR: warm if guess */
 #warning "Please specify the fortran compiler using -D flags. Try to guess the compiler used"
 #endif
 #if defined(lynx)

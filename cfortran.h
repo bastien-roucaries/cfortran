@@ -6,8 +6,10 @@
 #ifndef __CFORTRAN_LOADED
 #define __CFORTRAN_LOADED
 
+
+
 /* cfortran version year month day */
-#ifdef __STDC__
+#if defined __STDC__ || defined __cplusplus
 #define CFORTRAN_VERSION 20110615UL
 #else
 #error "cfortran need an AINSI C Compiler"

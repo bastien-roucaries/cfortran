@@ -148,9 +148,9 @@ FOR ANY SUPPORT OR SERVICE OF THE CFORTRAN.H PACKAGE.
 
 /* First prepare for the C compiler. */
 #define _0(A,B)   A##B
-#define  _(A,B)   _0(A,B)  /* see cat,xcat of K&R ANSI C p. 231 */
+#define CFORTRAN_XCAT_(A,B)   _0(A,B)  /* see cat,xcat of K&R ANSI C p. 231 */
 #define _2(A,B)   A##B     /* K&R ANSI C p.230: .. identifier is not replaced */
-#define _3(A,B,C) _(A,_(B,C))
+#define _3(A,B,C) CFORTRAN_XCAT_(A, CFORTRAN_XCAT_(B,C)) 
 
 #if (defined(vax)&&defined(unix)) || (defined(__vax__)&&defined(__unix__))
 #define VAXUltrix
@@ -307,7 +307,7 @@ only C calling FORTRAN subroutines will work using K&R style.*/
 
 /* "extname" changed to "appendus" below (CFITSIO) */
 #if defined(f2cFortran) || defined(NAGf90Fortran) || defined(DECFortran) || defined(mipsFortran) || defined(apolloFortran) || defined(sunFortran) || defined(CONVEXFortran) || defined(SXFortran) || defined(appendus)
-#define CFC_(UN,LN)            _(LN,_)      /* Lowercase FORTRAN symbols.     */
+#define CFC_(UN,LN)            CFORTRAN_XCAT_(LN,_)      /* Lowercase FORTRAN symbols.     */
 #define orig_fcallsc(UN,LN)    CFC_(UN,LN)
 #else 
 #if defined(CRAYFortran) || defined(PowerStationFortran) || defined(AbsoftProFortran)
@@ -332,8 +332,8 @@ only C calling FORTRAN subroutines will work using K&R style.*/
 #endif /* ....Fortran */
 
 #define fcallsc(UN,LN)               orig_fcallsc(UN,LN)
-#define preface_fcallsc(P,p,UN,LN)   CFC_(_(P,UN),_(p,LN))
-#define  append_fcallsc(P,p,UN,LN)   CFC_(_(UN,P),_(LN,p))
+#define preface_fcallsc(P,p,UN,LN)   CFC_( CFORTRAN_XCAT_(P,UN), CFORTRAN_XCAT_(p,LN)) 
+#define  append_fcallsc(P,p,UN,LN)   CFC_( CFORTRAN_XCAT_(UN,P), CFORTRAN_XCAT_(LN,p)) 
 
 #define C_FUNCTION(UN,LN)            fcallsc(UN,LN)      
 #define FORTRAN_FUNCTION(UN,LN)      CFC_(UN,LN)
@@ -344,10 +344,10 @@ only C calling FORTRAN subroutines will work using K&R style.*/
 #if     !(defined(AbsoftUNIXFortran)||defined(AbsoftProFortran))
 #define COMMON_BLOCK(UN,LN)          CFC_(UN,LN)
 #else
-#define COMMON_BLOCK(UN,LN)          _(_C,LN)
+#define COMMON_BLOCK(UN,LN)          CFORTRAN_XCAT_(_C,LN)
 #endif  /* AbsoftUNIXFortran or AbsoftProFortran */
 #else
-#define COMMON_BLOCK(UN,LN)          _(LN,__)
+#define COMMON_BLOCK(UN,LN)          CFORTRAN_XCAT_(LN,__)
 #endif  /* CLIPPERFortran */
 #else
 #define COMMON_BLOCK(UN,LN)          _3(_,LN,_)
@@ -713,7 +713,7 @@ return (int)num;
 #define cfDEREFERENCE3 ***
 #define cfDEREFERENCE4 ****
 #define cfDEREFERENCE5 *****
-#define cfelementsof(A,D) (sizeof(A)/sizeof(_(cfDEREFERENCE,D)(A)))
+#define cfelementsof(A,D) (sizeof(A)/sizeof( CFORTRAN_XCAT_(cfDEREFERENCE,D)(A)))
 
 /*-------------------------------------------------------------------------*/
 
@@ -749,8 +749,8 @@ return (int)num;
 #define    PLONG_cfVP(A,B) PINT_cfVP(A,B)
 #define   PSHORT_cfVP(A,B) PINT_cfVP(A,B)
 
-#define        VCF_INT_S(T,A,B) _(T,VVVVVVV_cfTYPE) B = A;
-#define        VCF_INT_F(T,A,B) _(T,_cfVCF)(A,B)
+#define        VCF_INT_S(T,A,B) CFORTRAN_XCAT_(T,VVVVVVV_cfTYPE) B = A;
+#define        VCF_INT_F(T,A,B) CFORTRAN_XCAT_(T,_cfVCF)(A,B)
 /* _cfVCF table is directly mapped to _cfCCC table. */
 #define     BYTE_cfVCF(A,B)
 #define   DOUBLE_cfVCF(A,B)
@@ -771,9 +771,9 @@ return (int)num;
  */
 typedef void (*cfCAST_FUNCTION)(CF_NULL_PROTO);
 
-#define VCF(TN,I)       _Icf4(4,V,TN,_(A,I),_(B,I),F)
+#define VCF(TN,I)       _Icf4(4,V,TN, CFORTRAN_XCAT_(A,I), CFORTRAN_XCAT_(B,I),F)  
 #define VVCF(TN,AI,BI)  _Icf4(4,V,TN,AI,BI,S)
-#define        INT_cfV(T,A,B,F) _(VCF_INT_,F)(T,A,B)
+#define        INT_cfV(T,A,B,F) CFORTRAN_XCAT_(VCF_INT_,F)(T,A,B)
 #define       INTV_cfV(T,A,B,F)
 #define      INTVV_cfV(T,A,B,F)
 #define     INTVVV_cfV(T,A,B,F)
@@ -781,7 +781,7 @@ typedef void (*cfCAST_FUNCTION)(CF_NULL_PROTO);
 #define   INTVVVVV_cfV(T,A,B,F)
 #define  INTVVVVVV_cfV(T,A,B,F)
 #define INTVVVVVVV_cfV(T,A,B,F)
-#define PINT_cfV(      T,A,B,F) _(T,_cfVP)(A,B)
+#define PINT_cfV(      T,A,B,F) CFORTRAN_XCAT_(T,_cfVP)(A,B)
 #define PVOID_cfV(     T,A,B,F)
 #if defined(apolloFortran) || defined(hpuxFortran800) || defined(AbsoftUNIXFortran) || defined(AbsoftProFortran)
 #define    ROUTINE_cfV(T,A,B,F) void (*B)(CF_NULL_PROTO) = (cfCAST_FUNCTION)A;
@@ -809,7 +809,7 @@ typedef void (*cfCAST_FUNCTION)(CF_NULL_PROTO);
 /* Note that the actions of the A table were performed inside the AA table.
    VAX Ultrix vcc, and HP-UX cc, didn't evaluate arguments to functions left to
    right, so we had to split the original table into the current robust two. */
-#define ACF(NAME,TN,AI,I)      _(TN,_cfSTR)(4,A,NAME,I,AI,_(B,I),0)
+#define ACF(NAME,TN,AI,I)      CFORTRAN_XCAT_(TN,_cfSTR)(4,A,NAME,I,AI, CFORTRAN_XCAT_(B,I),0) 
 #define   DEFAULT_cfA(M,I,A,B)
 #define   LOGICAL_cfA(M,I,A,B) B=C2FLOGICAL(B);
 #define  PLOGICAL_cfA(M,I,A,B) A=C2FLOGICAL(A);
@@ -846,16 +846,16 @@ typedef void (*cfCAST_FUNCTION)(CF_NULL_PROTO);
 #define    PLONG_cfAAP(A,B) &A
 #define   PSHORT_cfAAP(A,B) &A
 
-#define AACF(TN,AI,I,C) _SEP_(TN,C,cfCOMMA) _Icf(3,AA,TN,AI,_(B,I))
+#define AACF(TN,AI,I,C) _SEP_(TN,C,cfCOMMA) _Icf(3,AA,TN,AI, CFORTRAN_XCAT_(B,I)) 
 #define        INT_cfAA(T,A,B) &B
-#define       INTV_cfAA(T,A,B) _(T,VVVVVV_cfPP) A
-#define      INTVV_cfAA(T,A,B) _(T,VVVVV_cfPP)  A[0]
-#define     INTVVV_cfAA(T,A,B) _(T,VVVV_cfPP)   A[0][0]
-#define    INTVVVV_cfAA(T,A,B) _(T,VVV_cfPP)    A[0][0][0]
-#define   INTVVVVV_cfAA(T,A,B) _(T,VV_cfPP)     A[0][0][0][0]
-#define  INTVVVVVV_cfAA(T,A,B) _(T,V_cfPP)      A[0][0][0][0][0]
-#define INTVVVVVVV_cfAA(T,A,B) _(T,_cfPP)       A[0][0][0][0][0][0]
-#define       PINT_cfAA(T,A,B) _(T,_cfAAP)(A,B)
+#define       INTV_cfAA(T,A,B) CFORTRAN_XCAT_(T,VVVVVV_cfPP) A
+#define      INTVV_cfAA(T,A,B) CFORTRAN_XCAT_(T,VVVVV_cfPP)  A[0]
+#define     INTVVV_cfAA(T,A,B) CFORTRAN_XCAT_(T,VVVV_cfPP)   A[0][0]
+#define    INTVVVV_cfAA(T,A,B) CFORTRAN_XCAT_(T,VVV_cfPP)    A[0][0][0]
+#define   INTVVVVV_cfAA(T,A,B) CFORTRAN_XCAT_(T,VV_cfPP)     A[0][0][0][0]
+#define  INTVVVVVV_cfAA(T,A,B) CFORTRAN_XCAT_(T,V_cfPP)      A[0][0][0][0][0]
+#define INTVVVVVVV_cfAA(T,A,B) CFORTRAN_XCAT_(T,_cfPP)       A[0][0][0][0][0][0]
+#define       PINT_cfAA(T,A,B) CFORTRAN_XCAT_(T,_cfAAP)(A,B)
 #define      PVOID_cfAA(T,A,B) (void *) A
 #if defined(apolloFortran) || defined(hpuxFortran800) || defined(AbsoftUNIXFortran)
 #define    ROUTINE_cfAA(T,A,B) &B
@@ -881,7 +881,7 @@ typedef void (*cfCAST_FUNCTION)(CF_NULL_PROTO);
 #define JCF(TN,I)
 #define KCF(TN,I)
 #else
-#define JCF(TN,I)    _(TN,_cfSTR)(1,J,_(B,I), 0,0,0,0)
+#define JCF(TN,I)    CFORTRAN_XCAT_(TN,_cfSTR)(1,J, CFORTRAN_XCAT_(B,I), 0,0,0,0) 
 #if defined(AbsoftUNIXFortran)
 #define  DEFAULT_cfJ(B) ,0
 #else
@@ -897,7 +897,7 @@ typedef void (*cfCAST_FUNCTION)(CF_NULL_PROTO);
 #define PZTRINGV_cfJ(B) STRING_cfJ(B)
 
 /* KCF is identical to DCF, except that KCF ZTRING is not empty. */
-#define KCF(TN,I)    _(TN,_cfSTR)(1,KK,_(B,I), 0,0,0,0)
+#define KCF(TN,I)    CFORTRAN_XCAT_(TN,_cfSTR)(1,KK, CFORTRAN_XCAT_(B,I), 0,0,0,0) 
 #if defined(AbsoftUNIXFortran)
 #define  DEFAULT_cfKK(B) , unsigned B
 #else
@@ -913,7 +913,7 @@ typedef void (*cfCAST_FUNCTION)(CF_NULL_PROTO);
 #define PZTRINGV_cfKK(B) STRING_cfKK(B)
 #endif
 
-#define WCF(TN,AN,I)      _(TN,_cfSTR)(2,W,AN,_(B,I), 0,0,0)
+#define WCF(TN,AN,I)      CFORTRAN_XCAT_(TN,_cfSTR)(2,W,AN, CFORTRAN_XCAT_(B,I), 0,0,0) 
 #define  DEFAULT_cfW(A,B)
 #define  LOGICAL_cfW(A,B)
 #define PLOGICAL_cfW(A,B) *B=F2CLOGICAL(*B);
@@ -933,18 +933,18 @@ typedef void (*cfCAST_FUNCTION)(CF_NULL_PROTO);
 #define  ZTRINGV_cfW(A,B)      STRINGV_cfW(A,B)
 #define PZTRINGV_cfW(A,B)     PSTRINGV_cfW(A,B)
 
-#define   NCF(TN,I,C)       _SEP_(TN,C,cfCOMMA) _Icf(2,N,TN,_(A,I),0) 
+#define   NCF(TN,I,C)       _SEP_(TN,C,cfCOMMA) _Icf(2,N,TN, CFORTRAN_XCAT_(A,I),0)  
 #define  NNCF(TN,I,C)        UUCF(TN,I,C)
-#define NNNCF(TN,I,C)       _SEP_(TN,C,cfCOLON) _Icf(2,N,TN,_(A,I),0) 
-#define        INT_cfN(T,A) _(T,VVVVVVV_cfTYPE) * A
-#define       INTV_cfN(T,A) _(T,VVVVVV_cfTYPE)  * A
-#define      INTVV_cfN(T,A) _(T,VVVVV_cfTYPE)   * A
-#define     INTVVV_cfN(T,A) _(T,VVVV_cfTYPE)    * A
-#define    INTVVVV_cfN(T,A) _(T,VVV_cfTYPE)     * A
-#define   INTVVVVV_cfN(T,A) _(T,VV_cfTYPE)      * A
-#define  INTVVVVVV_cfN(T,A) _(T,V_cfTYPE)       * A
-#define INTVVVVVVV_cfN(T,A) _(T,_cfTYPE)        * A
-#define       PINT_cfN(T,A) _(T,_cfTYPE)        * A
+#define NNNCF(TN,I,C)       _SEP_(TN,C,cfCOLON) _Icf(2,N,TN, CFORTRAN_XCAT_(A,I),0)  
+#define        INT_cfN(T,A) CFORTRAN_XCAT_(T,VVVVVVV_cfTYPE) * A
+#define       INTV_cfN(T,A) CFORTRAN_XCAT_(T,VVVVVV_cfTYPE)  * A
+#define      INTVV_cfN(T,A) CFORTRAN_XCAT_(T,VVVVV_cfTYPE)   * A
+#define     INTVVV_cfN(T,A) CFORTRAN_XCAT_(T,VVVV_cfTYPE)    * A
+#define    INTVVVV_cfN(T,A) CFORTRAN_XCAT_(T,VVV_cfTYPE)     * A
+#define   INTVVVVV_cfN(T,A) CFORTRAN_XCAT_(T,VV_cfTYPE)      * A
+#define  INTVVVVVV_cfN(T,A) CFORTRAN_XCAT_(T,V_cfTYPE)       * A
+#define INTVVVVVVV_cfN(T,A) CFORTRAN_XCAT_(T,_cfTYPE)        * A
+#define       PINT_cfN(T,A) CFORTRAN_XCAT_(T,_cfTYPE)        * A
 #define      PVOID_cfN(T,A) void *                A
 #if defined(apolloFortran) || defined(hpuxFortran800) || defined(AbsoftUNIXFortran)
 #define    ROUTINE_cfN(T,A) void (**A)(CF_NULL_PROTO)
@@ -994,9 +994,9 @@ typedef void (*cfCAST_FUNCTION)(CF_NULL_PROTO);
      DEFAULT could have been called e.g. INT, but keep it for clarity.
    - M term in CFARGT14 and CFARGT14FS.
  */
-#define ABSOFT_cf1(T0) _(T0,_cfSTR)(0,ABSOFT1,0,0,0,0,0)
-#define ABSOFT_cf2(T0) _(T0,_cfSTR)(0,ABSOFT2,0,0,0,0,0)
-#define ABSOFT_cf3(T0) _(T0,_cfSTR)(0,ABSOFT3,0,0,0,0,0)
+#define ABSOFT_cf1(T0) CFORTRAN_XCAT_(T0,_cfSTR)(0,ABSOFT1,0,0,0,0,0)
+#define ABSOFT_cf2(T0) CFORTRAN_XCAT_(T0,_cfSTR)(0,ABSOFT2,0,0,0,0,0)
+#define ABSOFT_cf3(T0) CFORTRAN_XCAT_(T0,_cfSTR)(0,ABSOFT3,0,0,0,0,0)
 #define DEFAULT_cfABSOFT1
 #define LOGICAL_cfABSOFT1
 #define  STRING_cfABSOFT1 ,MAX_LEN_FORTRAN_FUNCTION_STRING
@@ -1226,14 +1226,14 @@ typedef void (*cfCAST_FUNCTION)(CF_NULL_PROTO);
 /* Note: Prevent compiler warnings, null #define PROTOCCALLSFSUB14/20 after 
    #include-ing cfortran.h if calling the FORTRAN wrapper within the same 
    source code where the wrapper is created. */
-#define PROTOCCALLSFSUB0(UN,LN)     _(VOID,_cfPU)(CFC_(UN,LN))();
+#define PROTOCCALLSFSUB0(UN,LN)     CFORTRAN_XCAT_(VOID,_cfPU)(CFC_(UN,LN))();
 #ifndef __CF__KnR
 #define PROTOCCALLSFSUB14(UN,LN,T1,T2,T3,T4,T5,T6,T7,T8,T9,TA,TB,TC,TD,TE) \
- _(VOID,_cfPU)(CFC_(UN,LN))( CFARGT14(NCF,KCF,_Z,T1,T2,T3,T4,T5,T6,T7,T8,T9,TA,TB,TC,TD,TE) );
+ CFORTRAN_XCAT_(VOID,_cfPU)(CFC_(UN,LN))( CFARGT14(NCF,KCF,_Z,T1,T2,T3,T4,T5,T6,T7,T8,T9,TA,TB,TC,TD,TE) );
 #define PROTOCCALLSFSUB20(UN,LN,T1,T2,T3,T4,T5,T6,T7,T8,T9,TA,TB,TC,TD,TE,TF,TG,TH,TI,TJ,TK)\
- _(VOID,_cfPU)(CFC_(UN,LN))( CFARGT20(NCF,KCF,_Z,T1,T2,T3,T4,T5,T6,T7,T8,T9,TA,TB,TC,TD,TE,TF,TG,TH,TI,TJ,TK) );
+ CFORTRAN_XCAT_(VOID,_cfPU)(CFC_(UN,LN))( CFARGT20(NCF,KCF,_Z,T1,T2,T3,T4,T5,T6,T7,T8,T9,TA,TB,TC,TD,TE,TF,TG,TH,TI,TJ,TK) );
 #define PROTOCCALLSFSUB27(UN,LN,T1,T2,T3,T4,T5,T6,T7,T8,T9,TA,TB,TC,TD,TE,TF,TG,TH,TI,TJ,TK,TL,TM,TN,TO,TP,TQ,TR)\
- _(VOID,_cfPU)(CFC_(UN,LN))( CFARGT27(NCF,KCF,_Z,T1,T2,T3,T4,T5,T6,T7,T8,T9,TA,TB,TC,TD,TE,TF,TG,TH,TI,TJ,TK,TL,TM,TN,TO,TP,TQ,TR) );
+ CFORTRAN_XCAT_(VOID,_cfPU)(CFC_(UN,LN))( CFARGT27(NCF,KCF,_Z,T1,T2,T3,T4,T5,T6,T7,T8,T9,TA,TB,TC,TD,TE,TF,TG,TH,TI,TJ,TK,TL,TM,TN,TO,TP,TQ,TR) );
 #else
 #define PROTOCCALLSFSUB14(UN,LN,T1,T2,T3,T4,T5,T6,T7,T8,T9,TA,TB,TC,TD,TE)     \
          PROTOCCALLSFSUB0(UN,LN)
@@ -1425,10 +1425,10 @@ do{VVCF(T1,A1,B1)  VVCF(T2,A2,B2)  VVCF(T3,A3,B3)  VVCF(T4,A4,B4)  VVCF(T5,A5,B5
 #pragma nostandard
 #endif
 
-#define _SEP_(TN,C,cfCOMMA)     _(__SEP_,C)(TN,cfCOMMA)
+#define _SEP_(TN,C,cfCOMMA)     CFORTRAN_XCAT_(__SEP_,C)(TN,cfCOMMA)
 #define __SEP_0(TN,cfCOMMA)  
 #define __SEP_1(TN,cfCOMMA)     _Icf(2,SEP,TN,cfCOMMA,0)
-#define        INT_cfSEP(T,B) _(A,B)
+#define        INT_cfSEP(T,B) CFORTRAN_XCAT_(A,B)
 #define       INTV_cfSEP(T,B) INT_cfSEP(T,B)
 #define      INTVV_cfSEP(T,B) INT_cfSEP(T,B)
 #define     INTVVV_cfSEP(T,B) INT_cfSEP(T,B)
@@ -1483,10 +1483,10 @@ do{VVCF(T1,A1,B1)  VVCF(T2,A2,B2)  VVCF(T3,A3,B3)  VVCF(T4,A4,B4)  VVCF(T5,A5,B5
 #define CFARGS4(A,T,V,W,X,Y,Z) _3(T,_cf,A)(V,W,X,Y)
 #define CFARGS5(A,T,V,W,X,Y,Z) _3(T,_cf,A)(V,W,X,Y,Z)
 
-#define  _Icf(N,T,I,X,Y)                 _(I,_cfINT)(N,T,I,X,Y,0)
-#define _Icf4(N,T,I,X,Y,Z)               _(I,_cfINT)(N,T,I,X,Y,Z)
+#define  _Icf(N,T,I,X,Y)                 CFORTRAN_XCAT_(I,_cfINT)(N,T,I,X,Y,0)
+#define _Icf4(N,T,I,X,Y,Z)               CFORTRAN_XCAT_(I,_cfINT)(N,T,I,X,Y,Z)
 #define           BYTE_cfINT(N,A,B,X,Y,Z)        DOUBLE_cfINT(N,A,B,X,Y,Z)
-#define         DOUBLE_cfINT(N,A,B,X,Y,Z) _(CFARGS,N)(A,INT,B,X,Y,Z,0)
+#define         DOUBLE_cfINT(N,A,B,X,Y,Z) CFORTRAN_XCAT_(CFARGS,N)(A,INT,B,X,Y,Z,0)
 #define          FLOAT_cfINT(N,A,B,X,Y,Z)        DOUBLE_cfINT(N,A,B,X,Y,Z)
 #define            INT_cfINT(N,A,B,X,Y,Z)        DOUBLE_cfINT(N,A,B,X,Y,Z)
 #define        LOGICAL_cfINT(N,A,B,X,Y,Z)        DOUBLE_cfINT(N,A,B,X,Y,Z)
@@ -1494,7 +1494,7 @@ do{VVCF(T1,A1,B1)  VVCF(T2,A2,B2)  VVCF(T3,A3,B3)  VVCF(T4,A4,B4)  VVCF(T5,A5,B5
 #define       LONGLONG_cfINT(N,A,B,X,Y,Z)        DOUBLE_cfINT(N,A,B,X,Y,Z) /* added by MR December 2005 */
 #define          SHORT_cfINT(N,A,B,X,Y,Z)        DOUBLE_cfINT(N,A,B,X,Y,Z)
 #define          PBYTE_cfINT(N,A,B,X,Y,Z)       PDOUBLE_cfINT(N,A,B,X,Y,Z)
-#define        PDOUBLE_cfINT(N,A,B,X,Y,Z) _(CFARGS,N)(A,PINT,B,X,Y,Z,0)
+#define        PDOUBLE_cfINT(N,A,B,X,Y,Z) CFORTRAN_XCAT_(CFARGS,N)(A,PINT,B,X,Y,Z,0)
 #define         PFLOAT_cfINT(N,A,B,X,Y,Z)       PDOUBLE_cfINT(N,A,B,X,Y,Z)
 #define           PINT_cfINT(N,A,B,X,Y,Z)       PDOUBLE_cfINT(N,A,B,X,Y,Z)
 #define       PLOGICAL_cfINT(N,A,B,X,Y,Z)       PDOUBLE_cfINT(N,A,B,X,Y,Z)
@@ -1508,13 +1508,13 @@ do{VVCF(T1,A1,B1)  VVCF(T2,A2,B2)  VVCF(T3,A3,B3)  VVCF(T4,A4,B4)  VVCF(T5,A5,B5
 #define      BYTEVVVVV_cfINT(N,A,B,X,Y,Z)   DOUBLEVVVVV_cfINT(N,A,B,X,Y,Z)
 #define     BYTEVVVVVV_cfINT(N,A,B,X,Y,Z)  DOUBLEVVVVVV_cfINT(N,A,B,X,Y,Z)
 #define    BYTEVVVVVVV_cfINT(N,A,B,X,Y,Z) DOUBLEVVVVVVV_cfINT(N,A,B,X,Y,Z)
-#define        DOUBLEV_cfINT(N,A,B,X,Y,Z) _(CFARGS,N)(A,INTV,B,X,Y,Z,0)
-#define       DOUBLEVV_cfINT(N,A,B,X,Y,Z) _(CFARGS,N)(A,INTVV,B,X,Y,Z,0)
-#define      DOUBLEVVV_cfINT(N,A,B,X,Y,Z) _(CFARGS,N)(A,INTVVV,B,X,Y,Z,0)
-#define     DOUBLEVVVV_cfINT(N,A,B,X,Y,Z) _(CFARGS,N)(A,INTVVVV,B,X,Y,Z,0)
-#define    DOUBLEVVVVV_cfINT(N,A,B,X,Y,Z) _(CFARGS,N)(A,INTVVVVV,B,X,Y,Z,0)
-#define   DOUBLEVVVVVV_cfINT(N,A,B,X,Y,Z) _(CFARGS,N)(A,INTVVVVVV,B,X,Y,Z,0)
-#define  DOUBLEVVVVVVV_cfINT(N,A,B,X,Y,Z) _(CFARGS,N)(A,INTVVVVVVV,B,X,Y,Z,0)
+#define        DOUBLEV_cfINT(N,A,B,X,Y,Z) CFORTRAN_XCAT_(CFARGS,N)(A,INTV,B,X,Y,Z,0)
+#define       DOUBLEVV_cfINT(N,A,B,X,Y,Z) CFORTRAN_XCAT_(CFARGS,N)(A,INTVV,B,X,Y,Z,0)
+#define      DOUBLEVVV_cfINT(N,A,B,X,Y,Z) CFORTRAN_XCAT_(CFARGS,N)(A,INTVVV,B,X,Y,Z,0)
+#define     DOUBLEVVVV_cfINT(N,A,B,X,Y,Z) CFORTRAN_XCAT_(CFARGS,N)(A,INTVVVV,B,X,Y,Z,0)
+#define    DOUBLEVVVVV_cfINT(N,A,B,X,Y,Z) CFORTRAN_XCAT_(CFARGS,N)(A,INTVVVVV,B,X,Y,Z,0)
+#define   DOUBLEVVVVVV_cfINT(N,A,B,X,Y,Z) CFORTRAN_XCAT_(CFARGS,N)(A,INTVVVVVV,B,X,Y,Z,0)
+#define  DOUBLEVVVVVVV_cfINT(N,A,B,X,Y,Z) CFORTRAN_XCAT_(CFARGS,N)(A,INTVVVVVVV,B,X,Y,Z,0)
 #define         FLOATV_cfINT(N,A,B,X,Y,Z)       DOUBLEV_cfINT(N,A,B,X,Y,Z)
 #define        FLOATVV_cfINT(N,A,B,X,Y,Z)      DOUBLEVV_cfINT(N,A,B,X,Y,Z)
 #define       FLOATVVV_cfINT(N,A,B,X,Y,Z)     DOUBLEVVV_cfINT(N,A,B,X,Y,Z)
@@ -1557,7 +1557,7 @@ do{VVCF(T1,A1,B1)  VVCF(T2,A2,B2)  VVCF(T3,A3,B3)  VVCF(T4,A4,B4)  VVCF(T5,A5,B5
 #define     SHORTVVVVV_cfINT(N,A,B,X,Y,Z)   DOUBLEVVVVV_cfINT(N,A,B,X,Y,Z)
 #define    SHORTVVVVVV_cfINT(N,A,B,X,Y,Z)  DOUBLEVVVVVV_cfINT(N,A,B,X,Y,Z)
 #define   SHORTVVVVVVV_cfINT(N,A,B,X,Y,Z) DOUBLEVVVVVVV_cfINT(N,A,B,X,Y,Z)
-#define          PVOID_cfINT(N,A,B,X,Y,Z) _(CFARGS,N)(A,B,B,X,Y,Z,0)
+#define          PVOID_cfINT(N,A,B,X,Y,Z) CFORTRAN_XCAT_(CFARGS,N)(A,B,B,X,Y,Z,0)
 #define        ROUTINE_cfINT(N,A,B,X,Y,Z)         PVOID_cfINT(N,A,B,X,Y,Z)
 /*CRAY coughs on the first,
   i.e. the usual trouble of not being able to
@@ -1578,18 +1578,18 @@ do{VVCF(T1,A1,B1)  VVCF(T2,A2,B2)  VVCF(T3,A3,B3)  VVCF(T4,A4,B4)  VVCF(T5,A5,B5
 #define           CF_0_cfINT(N,A,B,X,Y,Z)
                          
 
-#define   UCF(TN,I,C)  _SEP_(TN,C,cfCOMMA) _Icf(2,U,TN,_(A,I),0)
+#define   UCF(TN,I,C)  _SEP_(TN,C,cfCOMMA) _Icf(2,U,TN, CFORTRAN_XCAT_(A,I),0) 
 #define  UUCF(TN,I,C)  _SEP_(TN,C,cfCOMMA) _SEP_(TN,1,I) 
-#define UUUCF(TN,I,C)  _SEP_(TN,C,cfCOLON) _Icf(2,U,TN,_(A,I),0)
-#define        INT_cfU(T,A) _(T,VVVVVVV_cfTYPE)   A
-#define       INTV_cfU(T,A) _(T,VVVVVV_cfTYPE)  * A
-#define      INTVV_cfU(T,A) _(T,VVVVV_cfTYPE)   * A
-#define     INTVVV_cfU(T,A) _(T,VVVV_cfTYPE)    * A
-#define    INTVVVV_cfU(T,A) _(T,VVV_cfTYPE)     * A
-#define   INTVVVVV_cfU(T,A) _(T,VV_cfTYPE)      * A
-#define  INTVVVVVV_cfU(T,A) _(T,V_cfTYPE)       * A
-#define INTVVVVVVV_cfU(T,A) _(T,_cfTYPE)        * A
-#define       PINT_cfU(T,A) _(T,_cfTYPE)        * A
+#define UUUCF(TN,I,C)  _SEP_(TN,C,cfCOLON) _Icf(2,U,TN, CFORTRAN_XCAT_(A,I),0) 
+#define        INT_cfU(T,A) CFORTRAN_XCAT_(T,VVVVVVV_cfTYPE)   A
+#define       INTV_cfU(T,A) CFORTRAN_XCAT_(T,VVVVVV_cfTYPE)  * A
+#define      INTVV_cfU(T,A) CFORTRAN_XCAT_(T,VVVVV_cfTYPE)   * A
+#define     INTVVV_cfU(T,A) CFORTRAN_XCAT_(T,VVVV_cfTYPE)    * A
+#define    INTVVVV_cfU(T,A) CFORTRAN_XCAT_(T,VVV_cfTYPE)     * A
+#define   INTVVVVV_cfU(T,A) CFORTRAN_XCAT_(T,VV_cfTYPE)      * A
+#define  INTVVVVVV_cfU(T,A) CFORTRAN_XCAT_(T,V_cfTYPE)       * A
+#define INTVVVVVVV_cfU(T,A) CFORTRAN_XCAT_(T,_cfTYPE)        * A
+#define       PINT_cfU(T,A) CFORTRAN_XCAT_(T,_cfTYPE)        * A
 #define      PVOID_cfU(T,A) void  *A 
 #define    ROUTINE_cfU(T,A) void (*A)(CF_NULL_PROTO) 
 #define       VOID_cfU(T,A) void   A    /* Needed for C calls FORTRAN sub.s.  */
@@ -1601,7 +1601,7 @@ do{VVCF(T1,A1,B1)  VVCF(T2,A2,B2)  VVCF(T3,A3,B3)  VVCF(T4,A4,B4)  VVCF(T5,A5,B5
 #define   PZTRINGV_cfU(T,A) char  *A
 
 /* VOID breaks U into U and UU. */
-#define       INT_cfUU(T,A) _(T,VVVVVVV_cfTYPE) A
+#define       INT_cfUU(T,A) CFORTRAN_XCAT_(T,VVVVVVV_cfTYPE) A
 #define      VOID_cfUU(T,A)             /* Needed for FORTRAN calls C sub.s.  */
 #define    STRING_cfUU(T,A) char *A 
 
@@ -1696,7 +1696,7 @@ do{VVCF(T1,A1,B1)  VVCF(T2,A2,B2)  VVCF(T3,A3,B3)  VVCF(T4,A4,B4)  VVCF(T5,A5,B5
 #define         PFLOAT_cfPP FLOATVVVVVVV_cfPP
 
 #define BCF(TN,AN,C)        _SEP_(TN,C,cfCOMMA) _Icf(2,B,TN,AN,0)
-#define        INT_cfB(T,A) (_(T,VVVVVVV_cfTYPE)) A
+#define        INT_cfB(T,A) ( CFORTRAN_XCAT_(T,VVVVVVV_cfTYPE)) A
 #define       INTV_cfB(T,A)            A
 #define      INTVV_cfB(T,A)           (A)[0]
 #define     INTVVV_cfB(T,A)           (A)[0][0]
@@ -1704,7 +1704,7 @@ do{VVCF(T1,A1,B1)  VVCF(T2,A2,B2)  VVCF(T3,A3,B3)  VVCF(T4,A4,B4)  VVCF(T5,A5,B5
 #define   INTVVVVV_cfB(T,A)           (A)[0][0][0][0]
 #define  INTVVVVVV_cfB(T,A)           (A)[0][0][0][0][0]
 #define INTVVVVVVV_cfB(T,A)           (A)[0][0][0][0][0][0]
-#define       PINT_cfB(T,A) _(T,_cfPP)&A
+#define       PINT_cfB(T,A) CFORTRAN_XCAT_(T,_cfPP)&A
 #define     STRING_cfB(T,A) (char *)   A
 #define    STRINGV_cfB(T,A) (char *)   A
 #define    PSTRING_cfB(T,A) (char *)   A
@@ -1714,7 +1714,7 @@ do{VVCF(T1,A1,B1)  VVCF(T2,A2,B2)  VVCF(T3,A3,B3)  VVCF(T4,A4,B4)  VVCF(T5,A5,B5
 #define    ZTRINGV_cfB(T,A) (char *)   A
 #define   PZTRINGV_cfB(T,A) (char *)   A
                                                               	
-#define SCF(TN,NAME,I,A)    _(TN,_cfSTR)(3,S,NAME,I,A,0,0)
+#define SCF(TN,NAME,I,A)    CFORTRAN_XCAT_(TN,_cfSTR)(3,S,NAME,I,A,0,0)
 #define  DEFAULT_cfS(M,I,A)
 #define  LOGICAL_cfS(M,I,A)
 #define PLOGICAL_cfS(M,I,A)
@@ -1726,15 +1726,15 @@ do{VVCF(T1,A1,B1)  VVCF(T2,A2,B2)  VVCF(T3,A3,B3)  VVCF(T4,A4,B4)  VVCF(T5,A5,B5
 #define  ZTRINGV_cfS(M,I,A)
 #define PZTRINGV_cfS(M,I,A)
 
-#define   HCF(TN,I)         _(TN,_cfSTR)(3,H,cfCOMMA, H,_(C,I),0,0)
-#define  HHCF(TN,I)         _(TN,_cfSTR)(3,H,cfCOMMA,HH,_(C,I),0,0)
-#define HHHCF(TN,I)         _(TN,_cfSTR)(3,H,cfCOLON, H,_(C,I),0,0)
+#define   HCF(TN,I)         CFORTRAN_XCAT_(TN,_cfSTR)(3,H,cfCOMMA, H, CFORTRAN_XCAT_(C,I),0,0) 
+#define  HHCF(TN,I)         CFORTRAN_XCAT_(TN,_cfSTR)(3,H,cfCOMMA,HH, CFORTRAN_XCAT_(C,I),0,0) 
+#define HHHCF(TN,I)         CFORTRAN_XCAT_(TN,_cfSTR)(3,H,cfCOLON, H, CFORTRAN_XCAT_(C,I),0,0) 
 #define  H_CF_SPECIAL       unsigned
 #define HH_CF_SPECIAL
 #define  DEFAULT_cfH(M,I,A)
 #define  LOGICAL_cfH(S,U,B)
 #define PLOGICAL_cfH(S,U,B)
-#define   STRING_cfH(S,U,B) _(A,S) _(U,_CF_SPECIAL) B
+#define   STRING_cfH(S,U,B) CFORTRAN_XCAT_(A,S) CFORTRAN_XCAT_(U,_CF_SPECIAL) B
 #define  STRINGV_cfH(S,U,B) STRING_cfH(S,U,B)
 #define  PSTRING_cfH(S,U,B) STRING_cfH(S,U,B)
 #define PSTRINGV_cfH(S,U,B) STRING_cfH(S,U,B)
@@ -1745,94 +1745,94 @@ do{VVCF(T1,A1,B1)  VVCF(T2,A2,B2)  VVCF(T3,A3,B3)  VVCF(T4,A4,B4)  VVCF(T5,A5,B5
 
 /* Need VOID_cfSTR because Absoft forced function types go through _cfSTR. */
 /* No spaces inside expansion. They screws up macro catenation kludge.     */
-#define           VOID_cfSTR(N,T,A,B,C,D,E) _(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
-#define           BYTE_cfSTR(N,T,A,B,C,D,E) _(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
-#define         DOUBLE_cfSTR(N,T,A,B,C,D,E) _(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
-#define          FLOAT_cfSTR(N,T,A,B,C,D,E) _(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
-#define            INT_cfSTR(N,T,A,B,C,D,E) _(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
-#define        LOGICAL_cfSTR(N,T,A,B,C,D,E) _(CFARGS,N)(T,LOGICAL,A,B,C,D,E)
-#define           LONG_cfSTR(N,T,A,B,C,D,E) _(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
-#define       LONGLONG_cfSTR(N,T,A,B,C,D,E) _(CFARGS,N)(T,DEFAULT,A,B,C,D,E) /* added by MR December 2005 */
-#define          SHORT_cfSTR(N,T,A,B,C,D,E) _(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
-#define          BYTEV_cfSTR(N,T,A,B,C,D,E) _(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
-#define         BYTEVV_cfSTR(N,T,A,B,C,D,E) _(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
-#define        BYTEVVV_cfSTR(N,T,A,B,C,D,E) _(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
-#define       BYTEVVVV_cfSTR(N,T,A,B,C,D,E) _(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
-#define      BYTEVVVVV_cfSTR(N,T,A,B,C,D,E) _(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
-#define     BYTEVVVVVV_cfSTR(N,T,A,B,C,D,E) _(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
-#define    BYTEVVVVVVV_cfSTR(N,T,A,B,C,D,E) _(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
-#define        DOUBLEV_cfSTR(N,T,A,B,C,D,E) _(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
-#define       DOUBLEVV_cfSTR(N,T,A,B,C,D,E) _(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
-#define      DOUBLEVVV_cfSTR(N,T,A,B,C,D,E) _(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
-#define     DOUBLEVVVV_cfSTR(N,T,A,B,C,D,E) _(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
-#define    DOUBLEVVVVV_cfSTR(N,T,A,B,C,D,E) _(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
-#define   DOUBLEVVVVVV_cfSTR(N,T,A,B,C,D,E) _(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
-#define  DOUBLEVVVVVVV_cfSTR(N,T,A,B,C,D,E) _(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
-#define         FLOATV_cfSTR(N,T,A,B,C,D,E) _(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
-#define        FLOATVV_cfSTR(N,T,A,B,C,D,E) _(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
-#define       FLOATVVV_cfSTR(N,T,A,B,C,D,E) _(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
-#define      FLOATVVVV_cfSTR(N,T,A,B,C,D,E) _(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
-#define     FLOATVVVVV_cfSTR(N,T,A,B,C,D,E) _(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
-#define    FLOATVVVVVV_cfSTR(N,T,A,B,C,D,E) _(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
-#define   FLOATVVVVVVV_cfSTR(N,T,A,B,C,D,E) _(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
-#define           INTV_cfSTR(N,T,A,B,C,D,E) _(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
-#define          INTVV_cfSTR(N,T,A,B,C,D,E) _(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
-#define         INTVVV_cfSTR(N,T,A,B,C,D,E) _(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
-#define        INTVVVV_cfSTR(N,T,A,B,C,D,E) _(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
-#define       INTVVVVV_cfSTR(N,T,A,B,C,D,E) _(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
-#define      INTVVVVVV_cfSTR(N,T,A,B,C,D,E) _(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
-#define     INTVVVVVVV_cfSTR(N,T,A,B,C,D,E) _(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
-#define       LOGICALV_cfSTR(N,T,A,B,C,D,E) _(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
-#define      LOGICALVV_cfSTR(N,T,A,B,C,D,E) _(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
-#define     LOGICALVVV_cfSTR(N,T,A,B,C,D,E) _(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
-#define    LOGICALVVVV_cfSTR(N,T,A,B,C,D,E) _(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
-#define   LOGICALVVVVV_cfSTR(N,T,A,B,C,D,E) _(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
-#define  LOGICALVVVVVV_cfSTR(N,T,A,B,C,D,E) _(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
-#define LOGICALVVVVVVV_cfSTR(N,T,A,B,C,D,E) _(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
-#define          LONGV_cfSTR(N,T,A,B,C,D,E) _(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
-#define         LONGVV_cfSTR(N,T,A,B,C,D,E) _(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
-#define        LONGVVV_cfSTR(N,T,A,B,C,D,E) _(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
-#define       LONGVVVV_cfSTR(N,T,A,B,C,D,E) _(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
-#define      LONGVVVVV_cfSTR(N,T,A,B,C,D,E) _(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
-#define     LONGVVVVVV_cfSTR(N,T,A,B,C,D,E) _(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
-#define    LONGVVVVVVV_cfSTR(N,T,A,B,C,D,E) _(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
-#define      LONGLONGV_cfSTR(N,T,A,B,C,D,E) _(CFARGS,N)(T,DEFAULT,A,B,C,D,E) /* added by MR December 2005 */
-#define     LONGLONGVV_cfSTR(N,T,A,B,C,D,E) _(CFARGS,N)(T,DEFAULT,A,B,C,D,E) /* added by MR December 2005 */
-#define    LONGLONGVVV_cfSTR(N,T,A,B,C,D,E) _(CFARGS,N)(T,DEFAULT,A,B,C,D,E) /* added by MR December 2005 */
-#define   LONGLONGVVVV_cfSTR(N,T,A,B,C,D,E) _(CFARGS,N)(T,DEFAULT,A,B,C,D,E) /* added by MR December 2005 */
-#define  LONGLONGVVVVV_cfSTR(N,T,A,B,C,D,E) _(CFARGS,N)(T,DEFAULT,A,B,C,D,E) /* added by MR December 2005 */
-#define LONGLONGVVVVVV_cfSTR(N,T,A,B,C,D,E) _(CFARGS,N)(T,DEFAULT,A,B,C,D,E) /* added by MR December 2005 */
-#define LONGLONGVVVVVVV_cfSTR(N,T,A,B,C,D,E) _(CFARGS,N)(T,DEFAULT,A,B,C,D,E) /* added by MR December 2005 */
-#define         SHORTV_cfSTR(N,T,A,B,C,D,E) _(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
-#define        SHORTVV_cfSTR(N,T,A,B,C,D,E) _(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
-#define       SHORTVVV_cfSTR(N,T,A,B,C,D,E) _(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
-#define      SHORTVVVV_cfSTR(N,T,A,B,C,D,E) _(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
-#define     SHORTVVVVV_cfSTR(N,T,A,B,C,D,E) _(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
-#define    SHORTVVVVVV_cfSTR(N,T,A,B,C,D,E) _(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
-#define   SHORTVVVVVVV_cfSTR(N,T,A,B,C,D,E) _(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
-#define          PBYTE_cfSTR(N,T,A,B,C,D,E) _(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
-#define        PDOUBLE_cfSTR(N,T,A,B,C,D,E) _(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
-#define         PFLOAT_cfSTR(N,T,A,B,C,D,E) _(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
-#define           PINT_cfSTR(N,T,A,B,C,D,E) _(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
-#define       PLOGICAL_cfSTR(N,T,A,B,C,D,E) _(CFARGS,N)(T,PLOGICAL,A,B,C,D,E)
-#define          PLONG_cfSTR(N,T,A,B,C,D,E) _(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
-#define      PLONGLONG_cfSTR(N,T,A,B,C,D,E) _(CFARGS,N)(T,DEFAULT,A,B,C,D,E) /* added by MR December 2005 */
-#define         PSHORT_cfSTR(N,T,A,B,C,D,E) _(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
-#define         STRING_cfSTR(N,T,A,B,C,D,E) _(CFARGS,N)(T,STRING,A,B,C,D,E)
-#define        PSTRING_cfSTR(N,T,A,B,C,D,E) _(CFARGS,N)(T,PSTRING,A,B,C,D,E)
-#define        STRINGV_cfSTR(N,T,A,B,C,D,E) _(CFARGS,N)(T,STRINGV,A,B,C,D,E)
-#define       PSTRINGV_cfSTR(N,T,A,B,C,D,E) _(CFARGS,N)(T,PSTRINGV,A,B,C,D,E)
-#define       PNSTRING_cfSTR(N,T,A,B,C,D,E) _(CFARGS,N)(T,PNSTRING,A,B,C,D,E)
-#define       PPSTRING_cfSTR(N,T,A,B,C,D,E) _(CFARGS,N)(T,PPSTRING,A,B,C,D,E)
-#define          PVOID_cfSTR(N,T,A,B,C,D,E) _(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
-#define        ROUTINE_cfSTR(N,T,A,B,C,D,E) _(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
-#define         SIMPLE_cfSTR(N,T,A,B,C,D,E) _(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
-#define        ZTRINGV_cfSTR(N,T,A,B,C,D,E) _(CFARGS,N)(T,ZTRINGV,A,B,C,D,E)
-#define       PZTRINGV_cfSTR(N,T,A,B,C,D,E) _(CFARGS,N)(T,PZTRINGV,A,B,C,D,E)
+#define           VOID_cfSTR(N,T,A,B,C,D,E) CFORTRAN_XCAT_(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
+#define           BYTE_cfSTR(N,T,A,B,C,D,E) CFORTRAN_XCAT_(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
+#define         DOUBLE_cfSTR(N,T,A,B,C,D,E) CFORTRAN_XCAT_(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
+#define          FLOAT_cfSTR(N,T,A,B,C,D,E) CFORTRAN_XCAT_(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
+#define            INT_cfSTR(N,T,A,B,C,D,E) CFORTRAN_XCAT_(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
+#define        LOGICAL_cfSTR(N,T,A,B,C,D,E) CFORTRAN_XCAT_(CFARGS,N)(T,LOGICAL,A,B,C,D,E)
+#define           LONG_cfSTR(N,T,A,B,C,D,E) CFORTRAN_XCAT_(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
+#define       LONGLONG_cfSTR(N,T,A,B,C,D,E) CFORTRAN_XCAT_(CFARGS,N)(T,DEFAULT,A,B,C,D,E) /* added by MR December 2005 */
+#define          SHORT_cfSTR(N,T,A,B,C,D,E) CFORTRAN_XCAT_(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
+#define          BYTEV_cfSTR(N,T,A,B,C,D,E) CFORTRAN_XCAT_(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
+#define         BYTEVV_cfSTR(N,T,A,B,C,D,E) CFORTRAN_XCAT_(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
+#define        BYTEVVV_cfSTR(N,T,A,B,C,D,E) CFORTRAN_XCAT_(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
+#define       BYTEVVVV_cfSTR(N,T,A,B,C,D,E) CFORTRAN_XCAT_(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
+#define      BYTEVVVVV_cfSTR(N,T,A,B,C,D,E) CFORTRAN_XCAT_(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
+#define     BYTEVVVVVV_cfSTR(N,T,A,B,C,D,E) CFORTRAN_XCAT_(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
+#define    BYTEVVVVVVV_cfSTR(N,T,A,B,C,D,E) CFORTRAN_XCAT_(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
+#define        DOUBLEV_cfSTR(N,T,A,B,C,D,E) CFORTRAN_XCAT_(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
+#define       DOUBLEVV_cfSTR(N,T,A,B,C,D,E) CFORTRAN_XCAT_(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
+#define      DOUBLEVVV_cfSTR(N,T,A,B,C,D,E) CFORTRAN_XCAT_(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
+#define     DOUBLEVVVV_cfSTR(N,T,A,B,C,D,E) CFORTRAN_XCAT_(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
+#define    DOUBLEVVVVV_cfSTR(N,T,A,B,C,D,E) CFORTRAN_XCAT_(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
+#define   DOUBLEVVVVVV_cfSTR(N,T,A,B,C,D,E) CFORTRAN_XCAT_(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
+#define  DOUBLEVVVVVVV_cfSTR(N,T,A,B,C,D,E) CFORTRAN_XCAT_(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
+#define         FLOATV_cfSTR(N,T,A,B,C,D,E) CFORTRAN_XCAT_(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
+#define        FLOATVV_cfSTR(N,T,A,B,C,D,E) CFORTRAN_XCAT_(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
+#define       FLOATVVV_cfSTR(N,T,A,B,C,D,E) CFORTRAN_XCAT_(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
+#define      FLOATVVVV_cfSTR(N,T,A,B,C,D,E) CFORTRAN_XCAT_(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
+#define     FLOATVVVVV_cfSTR(N,T,A,B,C,D,E) CFORTRAN_XCAT_(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
+#define    FLOATVVVVVV_cfSTR(N,T,A,B,C,D,E) CFORTRAN_XCAT_(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
+#define   FLOATVVVVVVV_cfSTR(N,T,A,B,C,D,E) CFORTRAN_XCAT_(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
+#define           INTV_cfSTR(N,T,A,B,C,D,E) CFORTRAN_XCAT_(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
+#define          INTVV_cfSTR(N,T,A,B,C,D,E) CFORTRAN_XCAT_(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
+#define         INTVVV_cfSTR(N,T,A,B,C,D,E) CFORTRAN_XCAT_(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
+#define        INTVVVV_cfSTR(N,T,A,B,C,D,E) CFORTRAN_XCAT_(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
+#define       INTVVVVV_cfSTR(N,T,A,B,C,D,E) CFORTRAN_XCAT_(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
+#define      INTVVVVVV_cfSTR(N,T,A,B,C,D,E) CFORTRAN_XCAT_(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
+#define     INTVVVVVVV_cfSTR(N,T,A,B,C,D,E) CFORTRAN_XCAT_(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
+#define       LOGICALV_cfSTR(N,T,A,B,C,D,E) CFORTRAN_XCAT_(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
+#define      LOGICALVV_cfSTR(N,T,A,B,C,D,E) CFORTRAN_XCAT_(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
+#define     LOGICALVVV_cfSTR(N,T,A,B,C,D,E) CFORTRAN_XCAT_(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
+#define    LOGICALVVVV_cfSTR(N,T,A,B,C,D,E) CFORTRAN_XCAT_(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
+#define   LOGICALVVVVV_cfSTR(N,T,A,B,C,D,E) CFORTRAN_XCAT_(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
+#define  LOGICALVVVVVV_cfSTR(N,T,A,B,C,D,E) CFORTRAN_XCAT_(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
+#define LOGICALVVVVVVV_cfSTR(N,T,A,B,C,D,E) CFORTRAN_XCAT_(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
+#define          LONGV_cfSTR(N,T,A,B,C,D,E) CFORTRAN_XCAT_(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
+#define         LONGVV_cfSTR(N,T,A,B,C,D,E) CFORTRAN_XCAT_(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
+#define        LONGVVV_cfSTR(N,T,A,B,C,D,E) CFORTRAN_XCAT_(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
+#define       LONGVVVV_cfSTR(N,T,A,B,C,D,E) CFORTRAN_XCAT_(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
+#define      LONGVVVVV_cfSTR(N,T,A,B,C,D,E) CFORTRAN_XCAT_(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
+#define     LONGVVVVVV_cfSTR(N,T,A,B,C,D,E) CFORTRAN_XCAT_(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
+#define    LONGVVVVVVV_cfSTR(N,T,A,B,C,D,E) CFORTRAN_XCAT_(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
+#define      LONGLONGV_cfSTR(N,T,A,B,C,D,E) CFORTRAN_XCAT_(CFARGS,N)(T,DEFAULT,A,B,C,D,E) /* added by MR December 2005 */
+#define     LONGLONGVV_cfSTR(N,T,A,B,C,D,E) CFORTRAN_XCAT_(CFARGS,N)(T,DEFAULT,A,B,C,D,E) /* added by MR December 2005 */
+#define    LONGLONGVVV_cfSTR(N,T,A,B,C,D,E) CFORTRAN_XCAT_(CFARGS,N)(T,DEFAULT,A,B,C,D,E) /* added by MR December 2005 */
+#define   LONGLONGVVVV_cfSTR(N,T,A,B,C,D,E) CFORTRAN_XCAT_(CFARGS,N)(T,DEFAULT,A,B,C,D,E) /* added by MR December 2005 */
+#define  LONGLONGVVVVV_cfSTR(N,T,A,B,C,D,E) CFORTRAN_XCAT_(CFARGS,N)(T,DEFAULT,A,B,C,D,E) /* added by MR December 2005 */
+#define LONGLONGVVVVVV_cfSTR(N,T,A,B,C,D,E) CFORTRAN_XCAT_(CFARGS,N)(T,DEFAULT,A,B,C,D,E) /* added by MR December 2005 */
+#define LONGLONGVVVVVVV_cfSTR(N,T,A,B,C,D,E) CFORTRAN_XCAT_(CFARGS,N)(T,DEFAULT,A,B,C,D,E) /* added by MR December 2005 */
+#define         SHORTV_cfSTR(N,T,A,B,C,D,E) CFORTRAN_XCAT_(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
+#define        SHORTVV_cfSTR(N,T,A,B,C,D,E) CFORTRAN_XCAT_(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
+#define       SHORTVVV_cfSTR(N,T,A,B,C,D,E) CFORTRAN_XCAT_(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
+#define      SHORTVVVV_cfSTR(N,T,A,B,C,D,E) CFORTRAN_XCAT_(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
+#define     SHORTVVVVV_cfSTR(N,T,A,B,C,D,E) CFORTRAN_XCAT_(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
+#define    SHORTVVVVVV_cfSTR(N,T,A,B,C,D,E) CFORTRAN_XCAT_(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
+#define   SHORTVVVVVVV_cfSTR(N,T,A,B,C,D,E) CFORTRAN_XCAT_(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
+#define          PBYTE_cfSTR(N,T,A,B,C,D,E) CFORTRAN_XCAT_(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
+#define        PDOUBLE_cfSTR(N,T,A,B,C,D,E) CFORTRAN_XCAT_(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
+#define         PFLOAT_cfSTR(N,T,A,B,C,D,E) CFORTRAN_XCAT_(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
+#define           PINT_cfSTR(N,T,A,B,C,D,E) CFORTRAN_XCAT_(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
+#define       PLOGICAL_cfSTR(N,T,A,B,C,D,E) CFORTRAN_XCAT_(CFARGS,N)(T,PLOGICAL,A,B,C,D,E)
+#define          PLONG_cfSTR(N,T,A,B,C,D,E) CFORTRAN_XCAT_(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
+#define      PLONGLONG_cfSTR(N,T,A,B,C,D,E) CFORTRAN_XCAT_(CFARGS,N)(T,DEFAULT,A,B,C,D,E) /* added by MR December 2005 */
+#define         PSHORT_cfSTR(N,T,A,B,C,D,E) CFORTRAN_XCAT_(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
+#define         STRING_cfSTR(N,T,A,B,C,D,E) CFORTRAN_XCAT_(CFARGS,N)(T,STRING,A,B,C,D,E)
+#define        PSTRING_cfSTR(N,T,A,B,C,D,E) CFORTRAN_XCAT_(CFARGS,N)(T,PSTRING,A,B,C,D,E)
+#define        STRINGV_cfSTR(N,T,A,B,C,D,E) CFORTRAN_XCAT_(CFARGS,N)(T,STRINGV,A,B,C,D,E)
+#define       PSTRINGV_cfSTR(N,T,A,B,C,D,E) CFORTRAN_XCAT_(CFARGS,N)(T,PSTRINGV,A,B,C,D,E)
+#define       PNSTRING_cfSTR(N,T,A,B,C,D,E) CFORTRAN_XCAT_(CFARGS,N)(T,PNSTRING,A,B,C,D,E)
+#define       PPSTRING_cfSTR(N,T,A,B,C,D,E) CFORTRAN_XCAT_(CFARGS,N)(T,PPSTRING,A,B,C,D,E)
+#define          PVOID_cfSTR(N,T,A,B,C,D,E) CFORTRAN_XCAT_(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
+#define        ROUTINE_cfSTR(N,T,A,B,C,D,E) CFORTRAN_XCAT_(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
+#define         SIMPLE_cfSTR(N,T,A,B,C,D,E) CFORTRAN_XCAT_(CFARGS,N)(T,DEFAULT,A,B,C,D,E)
+#define        ZTRINGV_cfSTR(N,T,A,B,C,D,E) CFORTRAN_XCAT_(CFARGS,N)(T,ZTRINGV,A,B,C,D,E)
+#define       PZTRINGV_cfSTR(N,T,A,B,C,D,E) CFORTRAN_XCAT_(CFARGS,N)(T,PZTRINGV,A,B,C,D,E)
 #define           CF_0_cfSTR(N,T,A,B,C,D,E)
 
 /* See ACF table comments, which explain why CCF was split into two. */
-#define CCF(NAME,TN,I)     _(TN,_cfSTR)(5,C,NAME,I,_(A,I),_(B,I),_(C,I))
+#define CCF(NAME,TN,I)     CFORTRAN_XCAT_(TN,_cfSTR)(5,C,NAME,I, CFORTRAN_XCAT_(A,I), CFORTRAN_XCAT_(B,I), CFORTRAN_XCAT_(C,I))   
 #define  DEFAULT_cfC(M,I,A,B,C)
 #define  LOGICAL_cfC(M,I,A,B,C)  A=C2FLOGICAL( A);
 #define PLOGICAL_cfC(M,I,A,B,C) *A=C2FLOGICAL(*A);
@@ -1883,8 +1883,8 @@ do{VVCF(T1,A1,B1)  VVCF(T2,A2,B2)  VVCF(T3,A3,B3)  VVCF(T4,A4,B4)  VVCF(T5,A5,B5
 #define    PLONG_cfCCC(A,B)  A
 #define   PSHORT_cfCCC(A,B)  A
 
-#define CCCF(TN,I,M)           _SEP_(TN,M,cfCOMMA) _Icf(3,CC,TN,_(A,I),_(B,I))
-#define        INT_cfCC(T,A,B) _(T,_cfCCC)(A,B) 
+#define CCCF(TN,I,M)           _SEP_(TN,M,cfCOMMA) _Icf(3,CC,TN, CFORTRAN_XCAT_(A,I), CFORTRAN_XCAT_(B,I))  
+#define        INT_cfCC(T,A,B) CFORTRAN_XCAT_(T,_cfCCC)(A,B) 
 #define       INTV_cfCC(T,A,B)  A
 #define      INTVV_cfCC(T,A,B)  A
 #define     INTVVV_cfCC(T,A,B)  A
@@ -1892,7 +1892,7 @@ do{VVCF(T1,A1,B1)  VVCF(T2,A2,B2)  VVCF(T3,A3,B3)  VVCF(T4,A4,B4)  VVCF(T5,A5,B5
 #define   INTVVVVV_cfCC(T,A,B)  A
 #define  INTVVVVVV_cfCC(T,A,B)  A
 #define INTVVVVVVV_cfCC(T,A,B)  A
-#define       PINT_cfCC(T,A,B) _(T,_cfCCC)(A,B) 
+#define       PINT_cfCC(T,A,B) CFORTRAN_XCAT_(T,_cfCCC)(A,B) 
 #define      PVOID_cfCC(T,A,B)  A
 #if defined(apolloFortran) || defined(hpuxFortran800) || defined(AbsoftUNIXFortran)
 #define    ROUTINE_cfCC(T,A,B) &A
@@ -1941,7 +1941,7 @@ do{VVCF(T1,A1,B1)  VVCF(T2,A2,B2)  VVCF(T3,A3,B3)  VVCF(T4,A4,B4)  VVCF(T5,A5,B5
                                       kill_trailing( A0,CFORTRAN_NON_CHAR),' ');
 #endif
 
-#define CFFUN(NAME) _(__cf__,NAME)
+#define CFFUN(NAME) CFORTRAN_XCAT_(__cf__,NAME)
 
 /* Note that we don't use LN here, but we keep it for consistency. */
 #define CCALLSFFUN0(UN,LN) CFFUN(UN)()
@@ -2000,8 +2000,8 @@ for the same function in the same source code. Something done by the experts in
 debugging only.*/    
 
 #define PROTOCCALLSFFUN0(F,UN,LN)                                              \
-_(F,_cfPU)( CFC_(UN,LN))(CF_NULL_PROTO);                                       \
-static _Icf(2,U,F,CFFUN(UN),0)() {_(F,_cfE) _Icf(3,GZ,F,UN,LN) ABSOFT_cf1(F));_(F,_cfX)}
+CFORTRAN_XCAT_(F,_cfPU)( CFC_(UN,LN))(CF_NULL_PROTO);                                       \
+static _Icf(2,U,F,CFFUN(UN),0)() { CFORTRAN_XCAT_(F,_cfE) _Icf(3,GZ,F,UN,LN) ABSOFT_cf1(F)); CFORTRAN_XCAT_(F,_cfX)}
 
 #define PROTOCCALLSFFUN1( T0,UN,LN,T1)                                         \
         PROTOCCALLSFFUN5 (T0,UN,LN,T1,CF_0,CF_0,CF_0,CF_0)
@@ -2034,29 +2034,29 @@ static _Icf(2,U,F,CFFUN(UN),0)() {_(F,_cfE) _Icf(3,GZ,F,UN,LN) ABSOFT_cf1(F));_(
 
 #ifndef __CF__KnR
 #define PROTOCCALLSFFUN14(T0,UN,LN,T1,T2,T3,T4,T5,T6,T7,T8,T9,TA,TB,TC,TD,TE)  \
- _(T0,_cfPU)(CFC_(UN,LN))(CF_NULL_PROTO); static _Icf(2,U,T0,CFFUN(UN),0)(     \
+ CFORTRAN_XCAT_(T0,_cfPU)(CFC_(UN,LN))(CF_NULL_PROTO); static _Icf(2,U,T0,CFFUN(UN),0)(     \
    CFARGT14FS(UCF,HCF,_Z,T1,T2,T3,T4,T5,T6,T7,T8,T9,TA,TB,TC,TD,TE) )          \
-{       CFARGT14S(VCF,T1,T2,T3,T4,T5,T6,T7,T8,T9,TA,TB,TC,TD,TE)    _(T0,_cfE) \
+{       CFARGT14S(VCF,T1,T2,T3,T4,T5,T6,T7,T8,T9,TA,TB,TC,TD,TE)    CFORTRAN_XCAT_(T0,_cfE) \
  CCF(LN,T1,1)  CCF(LN,T2,2)  CCF(LN,T3,3)  CCF(LN,T4,4)  CCF(LN,T5,5)          \
  CCF(LN,T6,6)  CCF(LN,T7,7)  CCF(LN,T8,8)  CCF(LN,T9,9)  CCF(LN,TA,10)         \
  CCF(LN,TB,11) CCF(LN,TC,12) CCF(LN,TD,13) CCF(LN,TE,14)    _Icf(3,G,T0,UN,LN) \
  CFARGT14(CCCF,JCF,ABSOFT_cf1(T0),T1,T2,T3,T4,T5,T6,T7,T8,T9,TA,TB,TC,TD,TE)); \
  WCF(T1,A1,1)   WCF(T2,A2,2)   WCF(T3,A3,3)   WCF(T4,A4,4)  WCF(T5,A5,5)       \
  WCF(T6,A6,6)   WCF(T7,A7,7)   WCF(T8,A8,8)   WCF(T9,A9,9)  WCF(TA,A10,10)     \
- WCF(TB,A11,11) WCF(TC,A12,12) WCF(TD,A13,13) WCF(TE,A14,14) _(T0,_cfX)}
+ WCF(TB,A11,11) WCF(TC,A12,12) WCF(TD,A13,13) WCF(TE,A14,14) CFORTRAN_XCAT_(T0,_cfX)}
 #else
 #define PROTOCCALLSFFUN14(T0,UN,LN,T1,T2,T3,T4,T5,T6,T7,T8,T9,TA,TB,TC,TD,TE)  \
- _(T0,_cfPU)(CFC_(UN,LN))(CF_NULL_PROTO); static _Icf(2,U,T0,CFFUN(UN),0)(     \
+ CFORTRAN_XCAT_(T0,_cfPU)(CFC_(UN,LN))(CF_NULL_PROTO); static _Icf(2,U,T0,CFFUN(UN),0)(     \
    CFARGT14FS(UUCF,HHCF,_Z,T1,T2,T3,T4,T5,T6,T7,T8,T9,TA,TB,TC,TD,TE) )        \
  CFARGT14FS(UUUCF,HHHCF,_Z,T1,T2,T3,T4,T5,T6,T7,T8,T9,TA,TB,TC,TD,TE) ;        \
-{       CFARGT14S(VCF,T1,T2,T3,T4,T5,T6,T7,T8,T9,TA,TB,TC,TD,TE)    _(T0,_cfE) \
+{       CFARGT14S(VCF,T1,T2,T3,T4,T5,T6,T7,T8,T9,TA,TB,TC,TD,TE)    CFORTRAN_XCAT_(T0,_cfE) \
  CCF(LN,T1,1)  CCF(LN,T2,2)  CCF(LN,T3,3)  CCF(LN,T4,4)  CCF(LN,T5,5)          \
  CCF(LN,T6,6)  CCF(LN,T7,7)  CCF(LN,T8,8)  CCF(LN,T9,9)  CCF(LN,TA,10)         \
  CCF(LN,TB,11) CCF(LN,TC,12) CCF(LN,TD,13) CCF(LN,TE,14)    _Icf(3,G,T0,UN,LN) \
  CFARGT14(CCCF,JCF,ABSOFT_cf1(T0),T1,T2,T3,T4,T5,T6,T7,T8,T9,TA,TB,TC,TD,TE)); \
  WCF(T1,A1,1)   WCF(T2,A2,2)   WCF(T3,A3,3)   WCF(T4,A4,4)   WCF(T5,A5,5)      \
  WCF(T6,A6,6)   WCF(T7,A7,7)   WCF(T8,A8,8)   WCF(T9,A9,9)   WCF(TA,A10,10)    \
- WCF(TB,A11,11) WCF(TC,A12,12) WCF(TD,A13,13) WCF(TE,A14,14) _(T0,_cfX)}
+ WCF(TB,A11,11) WCF(TC,A12,12) WCF(TD,A13,13) WCF(TE,A14,14) CFORTRAN_XCAT_(T0,_cfX)}
 #endif
 
 /*-------------------------------------------------------------------------*/
@@ -2077,11 +2077,11 @@ static _Icf(2,U,F,CFFUN(UN),0)() {_(F,_cfE) _Icf(3,GZ,F,UN,LN) ABSOFT_cf1(F));_(
 #define DDDCF(TN,I)        HHHCF(TN,I)
 #endif
 
-#define QCF(TN,I)       _(TN,_cfSTR)(1,Q,_(B,I), 0,0,0,0)
+#define QCF(TN,I)       CFORTRAN_XCAT_(TN,_cfSTR)(1,Q, CFORTRAN_XCAT_(B,I), 0,0,0,0) 
 #define  DEFAULT_cfQ(B)
 #define  LOGICAL_cfQ(B)
 #define PLOGICAL_cfQ(B)
-#define  STRINGV_cfQ(B) char *B; unsigned int _(B,N);
+#define  STRINGV_cfQ(B) char *B; unsigned int CFORTRAN_XCAT_(B,N);
 #define   STRING_cfQ(B) char *B=NULL;
 #define  PSTRING_cfQ(B) char *B=NULL;
 #define PSTRINGV_cfQ(B) STRINGV_cfQ(B)
@@ -2122,7 +2122,7 @@ static _Icf(2,U,F,CFFUN(UN),0)() {_(F,_cfE) _Icf(3,GZ,F,UN,LN) ABSOFT_cf1(F));_(
 #define ROUTINE_26    ROUTINE_orig   
 #define ROUTINE_27    ROUTINE_orig   
 
-#define TCF(NAME,TN,I,M)              _SEP_(TN,M,cfCOMMA) _(TN,_cfT)(NAME,I,_(A,I),_(B,I),_(C,I))
+#define TCF(NAME,TN,I,M)              _SEP_(TN,M,cfCOMMA) CFORTRAN_XCAT_(TN,_cfT)(NAME,I, CFORTRAN_XCAT_(A,I), CFORTRAN_XCAT_(B,I), CFORTRAN_XCAT_(C,I))   
 #define           BYTE_cfT(M,I,A,B,D) *A
 #define         DOUBLE_cfT(M,I,A,B,D) *A
 #define          FLOAT_cfT(M,I,A,B,D) *A
@@ -2197,9 +2197,9 @@ static _Icf(2,U,F,CFFUN(UN),0)() {_(F,_cfE) _Icf(3,GZ,F,UN,LN) ABSOFT_cf1(F));_(
 #define         PSHORT_cfT(M,I,A,B,D)  A
 #define          PVOID_cfT(M,I,A,B,D)  A
 #if defined(apolloFortran) || defined(hpuxFortran800) || defined(AbsoftUNIXFortran)
-#define        ROUTINE_cfT(M,I,A,B,D)  _(ROUTINE_,I)  (*A)
+#define        ROUTINE_cfT(M,I,A,B,D)  CFORTRAN_XCAT_(ROUTINE_,I)  (*A)
 #else
-#define        ROUTINE_cfT(M,I,A,B,D)  _(ROUTINE_,I)    A
+#define        ROUTINE_cfT(M,I,A,B,D)  CFORTRAN_XCAT_(ROUTINE_,I)    A
 #endif
 /* A == pointer to the characters
    D == length of the string, or of an element in an array of strings
@@ -2208,8 +2208,8 @@ static _Icf(2,U,F,CFFUN(UN),0)() {_(F,_cfE) _Icf(3,GZ,F,UN,LN) ABSOFT_cf1(F));_(
            ((B=_cf_malloc(D+1))[D]='\0', memcpy(B,A,D), kill_trailing(B,' '))
 #define TTTTSTR(  A,B,D)   (!(D<4||A[0]||A[1]||A[2]||A[3]))?NULL:              \
                             memchr(A,'\0',D)                 ?A   : TTSTR(A,B,D)
-#define TTTTSTRV( A,B,D,E) (_(B,N)=E,B=_cf_malloc(_(B,N)*(D+1)), (void *)      \
-  vkill_trailing(f2cstrv(A,B,D+1, _(B,N)*(D+1)), D+1,_(B,N)*(D+1),' '))
+#define TTTTSTRV( A,B,D,E) ( CFORTRAN_XCAT_(B,N)=E,B=_cf_malloc( CFORTRAN_XCAT_(B,N)*(D+1)), (void *)      \
+  vkill_trailing(f2cstrv(A,B,D+1, CFORTRAN_XCAT_(B,N)*(D+1)), D+1, CFORTRAN_XCAT_(B,N)*(D+1),' ')) 
 #ifdef vmsFortran
 #define         STRING_cfT(M,I,A,B,D)  TTTTSTR( A->dsc$a_pointer,B,A->dsc$w_length)
 #define        STRINGV_cfT(M,I,A,B,D)  TTTTSTRV(A->dsc$a_pointer, B,           \
@@ -2234,7 +2234,7 @@ static _Icf(2,U,F,CFFUN(UN),0)() {_(F,_cfE) _Icf(3,GZ,F,UN,LN) ABSOFT_cf1(F));_(
 #define       PSTRINGV_cfT(M,I,A,B,D)   STRINGV_cfT(M,I,A,B,D)
 #define           CF_0_cfT(M,I,A,B,D)
 
-#define RCF(TN,I)           _(TN,_cfSTR)(3,R,_(A,I),_(B,I),_(C,I),0,0)
+#define RCF(TN,I)           CFORTRAN_XCAT_(TN,_cfSTR)(3,R, CFORTRAN_XCAT_(A,I), CFORTRAN_XCAT_(B,I), CFORTRAN_XCAT_(C,I),0,0)   
 #define  DEFAULT_cfR(A,B,D)
 #define  LOGICAL_cfR(A,B,D)
 #define PLOGICAL_cfR(A,B,D) *A=C2FLOGICAL(*A);
@@ -2243,7 +2243,7 @@ static _Icf(2,U,F,CFFUN(UN),0)() {_(F,_cfE) _Icf(3,GZ,F,UN,LN) ABSOFT_cf1(F));_(
 /* A and D as defined above for TSTRING(V) */
 #define RRRRPSTR( A,B,D)    if (B) memcpy(A,B, _cfMIN(strlen(B),D)),           \
                   (D>strlen(B)?memset(A+strlen(B),' ', D-strlen(B)):0), _cf_free(B);
-#define RRRRPSTRV(A,B,D)    c2fstrv(B,A,D+1,(D+1)*_(B,N)), _cf_free(B);
+#define RRRRPSTRV(A,B,D)    c2fstrv(B,A,D+1,(D+1)* CFORTRAN_XCAT_(B,N)), _cf_free(B);
 #ifdef vmsFortran
 #define  PSTRING_cfR(A,B,D) RRRRPSTR( A->dsc$a_pointer,B,A->dsc$w_length)
 #define PSTRINGV_cfR(A,B,D) RRRRPSTRV(A->dsc$a_pointer,B,A->dsc$w_length)
@@ -2503,21 +2503,21 @@ string. */
 
 
 #ifndef __CF__KnR
-#define FCALLSCFUN0(T0,CN,UN,LN) CFextern _(T0,_cfFZ)(UN,LN) ABSOFT_cf2(T0))   \
-        {_Icf(2,UU,T0,A0,0); _Icf(0,L,T0,0,0) CN(); _Icf(0,K,T0,0,0) _(T0,_cfI)}
+#define FCALLSCFUN0(T0,CN,UN,LN) CFextern CFORTRAN_XCAT_(T0,_cfFZ)(UN,LN) ABSOFT_cf2(T0))   \
+        {_Icf(2,UU,T0,A0,0); _Icf(0,L,T0,0,0) CN(); _Icf(0,K,T0,0,0) CFORTRAN_XCAT_(T0,_cfI)}
 
 #define FCALLSCFUN14(T0,CN,UN,LN,T1,T2,T3,T4,T5,T6,T7,T8,T9,TA,TB,TC,TD,TE)    \
-                                 CFextern _(T0,_cfF)(UN,LN)                    \
+                                 CFextern CFORTRAN_XCAT_(T0,_cfF)(UN,LN)                    \
  CFARGT14(NCF,DCF,ABSOFT_cf2(T0),T1,T2,T3,T4,T5,T6,T7,T8,T9,TA,TB,TC,TD,TE) )  \
  {                 CFARGT14S(QCF,T1,T2,T3,T4,T5,T6,T7,T8,T9,TA,TB,TC,TD,TE)    \
   _Icf(2,UU,T0,A0,0); _Icf(0,L,T0,0,0)      CN(    TCF(LN,T1,1,0)  TCF(LN,T2,2,1) \
     TCF(LN,T3,3,1)  TCF(LN,T4,4,1) TCF(LN,T5,5,1)  TCF(LN,T6,6,1)  TCF(LN,T7,7,1) \
     TCF(LN,T8,8,1)  TCF(LN,T9,9,1) TCF(LN,TA,10,1) TCF(LN,TB,11,1) TCF(LN,TC,12,1) \
     TCF(LN,TD,13,1) TCF(LN,TE,14,1) );                          _Icf(0,K,T0,0,0) \
-                   CFARGT14S(RCF,T1,T2,T3,T4,T5,T6,T7,T8,T9,TA,TB,TC,TD,TE)  _(T0,_cfI) }
+                   CFARGT14S(RCF,T1,T2,T3,T4,T5,T6,T7,T8,T9,TA,TB,TC,TD,TE)  CFORTRAN_XCAT_(T0,_cfI) }
 
 #define FCALLSCFUN27(T0,CN,UN,LN,T1,T2,T3,T4,T5,T6,T7,T8,T9,TA,TB,TC,TD,TE,TF,TG,TH,TI,TJ,TK,TL,TM,TN,TO,TP,TQ,TR)   \
-                                 CFextern _(T0,_cfF)(UN,LN)                    \
+                                 CFextern CFORTRAN_XCAT_(T0,_cfF)(UN,LN)                    \
  CFARGT27(NCF,DCF,ABSOFT_cf2(T0),T1,T2,T3,T4,T5,T6,T7,T8,T9,TA,TB,TC,TD,TE,TF,TG,TH,TI,TJ,TK,TL,TM,TN,TO,TP,TQ,TR) ) \
  {                 CFARGT27S(QCF,T1,T2,T3,T4,T5,T6,T7,T8,T9,TA,TB,TC,TD,TE,TF,TG,TH,TI,TJ,TK,TL,TM,TN,TO,TP,TQ,TR)   \
   _Icf(2,UU,T0,A0,0); _Icf(0,L,T0,0,0)      CN(     TCF(LN,T1,1,0)  TCF(LN,T2,2,1)  \
@@ -2526,14 +2526,14 @@ string. */
     TCF(LN,TD,13,1) TCF(LN,TE,14,1) TCF(LN,TF,15,1) TCF(LN,TG,16,1) TCF(LN,TH,17,1) \
     TCF(LN,TI,18,1) TCF(LN,TJ,19,1) TCF(LN,TK,20,1) TCF(LN,TL,21,1) TCF(LN,TM,22,1) \
     TCF(LN,TN,23,1) TCF(LN,TO,24,1) TCF(LN,TP,25,1) TCF(LN,TQ,26,1) TCF(LN,TR,27,1) ); _Icf(0,K,T0,0,0) \
-                   CFARGT27S(RCF,T1,T2,T3,T4,T5,T6,T7,T8,T9,TA,TB,TC,TD,TE,TF,TG,TH,TI,TJ,TK,TL,TM,TN,TO,TP,TQ,TR)  _(T0,_cfI) }
+                   CFARGT27S(RCF,T1,T2,T3,T4,T5,T6,T7,T8,T9,TA,TB,TC,TD,TE,TF,TG,TH,TI,TJ,TK,TL,TM,TN,TO,TP,TQ,TR)  CFORTRAN_XCAT_(T0,_cfI) }
 
 #else
-#define FCALLSCFUN0(T0,CN,UN,LN) CFextern _(T0,_cfFZ)(UN,LN) ABSOFT_cf3(T0)) _Icf(0,FF,T0,0,0)\
-        {_Icf(2,UU,T0,A0,0); _Icf(0,L,T0,0,0) CN(); _Icf(0,K,T0,0,0) _(T0,_cfI)}
+#define FCALLSCFUN0(T0,CN,UN,LN) CFextern CFORTRAN_XCAT_(T0,_cfFZ)(UN,LN) ABSOFT_cf3(T0)) _Icf(0,FF,T0,0,0)\
+        {_Icf(2,UU,T0,A0,0); _Icf(0,L,T0,0,0) CN(); _Icf(0,K,T0,0,0) CFORTRAN_XCAT_(T0,_cfI)}
 
 #define FCALLSCFUN14(T0,CN,UN,LN,T1,T2,T3,T4,T5,T6,T7,T8,T9,TA,TB,TC,TD,TE)    \
-                                 CFextern _(T0,_cfF)(UN,LN)                    \
+                                 CFextern CFORTRAN_XCAT_(T0,_cfF)(UN,LN)                    \
  CFARGT14(NNCF,DDCF,ABSOFT_cf3(T0),T1,T2,T3,T4,T5,T6,T7,T8,T9,TA,TB,TC,TD,TE)) _Icf(0,FF,T0,0,0) \
        CFARGT14FS(NNNCF,DDDCF,_Z,T1,T2,T3,T4,T5,T6,T7,T8,T9,TA,TB,TC,TD,TE);   \
  {                 CFARGT14S(QCF,T1,T2,T3,T4,T5,T6,T7,T8,T9,TA,TB,TC,TD,TE)    \
@@ -2541,10 +2541,10 @@ string. */
     TCF(LN,T3,3,1) TCF(LN,T4,4,1) TCF(LN,T5,5,1) TCF(LN,T6,6,1) TCF(LN,T7,7,1) \
     TCF(LN,T8,8,1) TCF(LN,T9,9,1) TCF(LN,TA,10,1) TCF(LN,TB,11,1) TCF(LN,TC,12,1) \
     TCF(LN,TD,13,1) TCF(LN,TE,14,1) );                          _Icf(0,K,T0,0,0) \
-                   CFARGT14S(RCF,T1,T2,T3,T4,T5,T6,T7,T8,T9,TA,TB,TC,TD,TE)  _(T0,_cfI)}
+                   CFARGT14S(RCF,T1,T2,T3,T4,T5,T6,T7,T8,T9,TA,TB,TC,TD,TE)  CFORTRAN_XCAT_(T0,_cfI)}
 
 #define FCALLSCFUN27(T0,CN,UN,LN,T1,T2,T3,T4,T5,T6,T7,T8,T9,TA,TB,TC,TD,TE,TF,TG,TH,TI,TJ,TK,TL,TM,TN,TO,TP,TQ,TR)  \
-                                 CFextern _(T0,_cfF)(UN,LN)                    \
+                                 CFextern CFORTRAN_XCAT_(T0,_cfF)(UN,LN)                    \
  CFARGT27(NNCF,DDCF,ABSOFT_cf3(T0),T1,T2,T3,T4,T5,T6,T7,T8,T9,TA,TB,TC,TD,TE,TF,TG,TH,TI,TJ,TK,TL,TM,TN,TO,TP,TQ,TR)) _Icf(0,FF,T0,0,0) \
        CFARGT27FS(NNNCF,DDDCF,_Z,T1,T2,T3,T4,T5,T6,T7,T8,T9,TA,TB,TC,TD,TE,TF,TG,TH,TI,TJ,TK,TL,TM,TN,TO,TP,TQ,TR); \
  {                 CFARGT27S(QCF,T1,T2,T3,T4,T5,T6,T7,T8,T9,TA,TB,TC,TD,TE,TF,TG,TH,TI,TJ,TK,TL,TM,TN,TO,TP,TQ,TR)  \
@@ -2554,7 +2554,7 @@ string. */
     TCF(LN,TD,13,1) TCF(LN,TE,14,1) TCF(LN,TF,15,1) TCF(LN,TG,16,1) TCF(LN,TH,17,1) \
     TCF(LN,TI,18,1) TCF(LN,TJ,19,1) TCF(LN,TK,20,1) TCF(LN,TL,21,1) TCF(LN,TM,22,1) \
     TCF(LN,TN,23,1) TCF(LN,TO,24,1) TCF(LN,TP,25,1) TCF(LN,TQ,26,1) TCF(LN,TR,27,1) ); _Icf(0,K,T0,0,0) \
-                   CFARGT27S(RCF,T1,T2,T3,T4,T5,T6,T7,T8,T9,TA,TB,TC,TD,TE,TF,TG,TH,TI,TJ,TK,TL,TM,TN,TO,TP,TQ,TR)  _(T0,_cfI)}
+                   CFARGT27S(RCF,T1,T2,T3,T4,T5,T6,T7,T8,T9,TA,TB,TC,TD,TE,TF,TG,TH,TI,TJ,TK,TL,TM,TN,TO,TP,TQ,TR)  CFORTRAN_XCAT_(T0,_cfI)}
 
 #endif
 

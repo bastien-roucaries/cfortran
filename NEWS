@@ -1,0 +1,7 @@
+cfortran (20110620) unstable; urgency=low
+
+  * Drop support of VAX (no release since 1995)
+  * apollo/DomainOS (not supported since 2001)
+
+ --
+

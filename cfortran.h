@@ -154,9 +154,6 @@ FOR ANY SUPPORT OR SERVICE OF THE CFORTRAN.H PACKAGE.
 
 /* First prepare for the C compiler. */
 
-#if (defined(vax)&&defined(unix)) || (defined(__vax__)&&defined(__unix__))
-#define VAXUltrix
-#endif
 
 #include <stdio.h>     /* NULL [in all machines stdio.h]                      */
 #include <string.h>    /* strlen, memset, memcpy, memchr.                     */
@@ -164,9 +161,6 @@ FOR ANY SUPPORT OR SERVICE OF THE CFORTRAN.H PACKAGE.
 #include <stdlib.h>    /* malloc,free                                         */
 #else
 #include <malloc.h>    /* Had to be removed for DomainOS h105 10.4 sys5.3 425t*/
-#ifdef apollo
-#define __CF__APOLLO67 /* __STDCPP__ is in Apollo 6.8 (i.e. ANSI) and onwards */
-#endif
 #endif
 
 #if !defined(__GNUC__) && !defined(__sun) && (defined(sun)||defined(VAXUltrix)||defined(lynx))
@@ -231,9 +225,6 @@ only C calling FORTRAN subroutines will work using K&R style.*/
 #endif
 #if defined(__hpux)             /* 921107: Use __hpux instead of __hp9000s300 */
 #define       hpuxFortran       /*         Should also allow hp9000s7/800 use.*/
-#endif
-#if       defined(apollo)
-#define           apolloFortran /* __CF__APOLLO67 also defines some behavior. */
 #endif
 #if          defined(sun) || defined(__sun) 
 #define              sunFortran
@@ -411,21 +402,8 @@ only C calling FORTRAN subroutines will work using K&R style.*/
  */
 #endif
 
-#ifndef apolloFortran
 #define COMMON_BLOCK_DEF(DEFINITION, NAME) extern DEFINITION NAME
 #define CF_NULL_PROTO
-#else                                         /* HP doesn't understand #elif. */
-/* Without ANSI prototyping, Apollo promotes float functions to double.    */
-/* Note that VAX/VMS, IBM, Mips choke on 'type function(...);' prototypes. */
-#define CF_NULL_PROTO ...
-#ifndef __CF__APOLLO67
-#define COMMON_BLOCK_DEF(DEFINITION, NAME) \
- DEFINITION NAME __attribute((__section(NAME)))
-#else
-#define COMMON_BLOCK_DEF(DEFINITION, NAME) \
- DEFINITION NAME #attribute[section(NAME)]
-#endif
-#endif
 
 #ifdef __cplusplus
 #undef  CF_NULL_PROTO
@@ -498,10 +476,6 @@ Apollo                                           : neg.   = TRUE, else FALSE.
 #define F2CLOGICALV(A,I) \
  do {int __i; for(__i=0;__i<I;__i++) A[__i]=F2CLOGICAL(A[__i]); } while (0)
 
-#if defined(apolloFortran)
-#define C2FLOGICAL(L) ((L)?-1:(L)&~((unsigned)1<<sizeof(int)*8-1))
-#define F2CLOGICAL(L) ((L)<0?(L):0) 
-#else
 #if defined(CRAYFortran)
 #define C2FLOGICAL(L) _btol(L)
 #define F2CLOGICAL(L) _ltob(&(L))     /* Strangely _ltob() expects a pointer. */
@@ -526,7 +500,6 @@ Apollo                                           : neg.   = TRUE, else FALSE.
 #endif  /* CONVEXFortran || All Others        */
 #endif  /* IBMR2Fortran vmsFortran DECFortran AbsoftUNIXFortran */
 #endif  /* CRAYFortran                        */
-#endif  /* apolloFortran                      */
 
 /* 970514 - In addition to CRAY, there may be other machines
             for which LOGICAL_STRICT makes no sense. */

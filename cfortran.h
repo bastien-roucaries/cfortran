@@ -9,7 +9,7 @@
 
 
 /* cfortran version year month day */
-#if !(defined __STDC__ || defined __cplusplus)
+#if !(defined(__STDC__) || defined(__cplusplus))
 #error "cfortran need an AINSI C Compiler"
 #endif 
 
@@ -167,11 +167,7 @@ FOR ANY SUPPORT OR SERVICE OF THE CFORTRAN.H PACKAGE.
 
 #include <stdio.h>     /* NULL [in all machines stdio.h]                      */
 #include <string.h>    /* strlen, memset, memcpy, memchr.                     */
-#if !(defined(sun))
 #include <stdlib.h>    /* malloc,free                                         */
-#else
-#include <malloc.h>    /* Had to be removed for DomainOS h105 10.4 sys5.3 425t*/
-#endif
 
 /* Remainder of cfortran.h depends on the Fortran compiler. */
 

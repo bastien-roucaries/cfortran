@@ -9,12 +9,17 @@
 
 
 /* cfortran version year month day */
-#if defined __STDC__ || defined __cplusplus
-#define CFORTRAN_VERSION 20110615UL
-#else
+#if !(defined __STDC__ || defined __cplusplus)
 #error "cfortran need an AINSI C Compiler"
+#endif 
+
+#ifdef _MSC_VER
+#if _MSC_VER >= 1200
+#error "Need a least MS Visual > 7"
+#endif 
 #endif
 
+#define CFORTRAN_VERSION 20110615UL
 
 /* This file could be used under at your choice two license: */
 

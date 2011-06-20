@@ -528,12 +528,7 @@ Apollo                                           : neg.   = TRUE, else FALSE.
 #endif /* LOGICAL_STRICT */
 
 /* Convert a vector of C strings into FORTRAN strings. */
-#ifndef __CF__KnR
 static char *c2fstrv(char* cstr, char *fstr, int elem_len, int sizeofcstr)
-#else
-static char *c2fstrv(      cstr,       fstr,     elem_len,     sizeofcstr)
-                     char* cstr; char *fstr; int elem_len; int sizeofcstr;
-#endif
 { int i,j;
 /* elem_len includes \0 for C strings. Fortran strings don't have term. \0.
    Useful size of string must be the same in both languages. */
@@ -545,12 +540,7 @@ for (i=0; i<sizeofcstr/elem_len; i++) {
 return fstr-sizeofcstr+sizeofcstr/elem_len; }
 
 /* Convert a vector of FORTRAN strings into C strings. */
-#ifndef __CF__KnR
 static char *f2cstrv(char *fstr, char* cstr, int elem_len, int sizeofcstr)
-#else
-static char *f2cstrv(      fstr,       cstr,     elem_len,     sizeofcstr)
-                     char *fstr; char* cstr; int elem_len; int sizeofcstr; 
-#endif
 { int i,j;
 /* elem_len includes \0 for C strings. Fortran strings don't have term. \0.
    Useful size of string must be the same in both languages. */
@@ -562,11 +552,7 @@ for (i=0; i<sizeofcstr/elem_len; i++) {
 } return cstr; }
 
 /* kill the trailing char t's in string s. */
-#ifndef __CF__KnR
 static char *kill_trailing(char *s, char t)
-#else
-static char *kill_trailing(      s,      t) char *s; char t;
-#endif
 {char *e; 
 e = s + strlen(s);
 if (e>s) {                           /* Need this to handle NULL string.*/
@@ -578,11 +564,7 @@ if (e>s) {                           /* Need this to handle NULL string.*/
 points to the terminating '\0' of s, but may actually point to anywhere in s.
 s's new '\0' will be placed at e or earlier in order to remove any trailing t's.
 If e<s string s is left unchanged. */ 
-#ifndef __CF__KnR
 static char *kill_trailingn(char *s, char t, char *e)
-#else
-static char *kill_trailingn(      s,      t,       e) char *s; char t; char *e;
-#endif
 { 
 if (e==s) *e = '\0';                 /* Kill the string makes sense here.*/
 else if (e>s) {                      /* Watch out for neg. length string.*/
@@ -592,12 +574,7 @@ else if (e>s) {                      /* Watch out for neg. length string.*/
 
 /* Note the following assumes that any element which has t's to be chopped off,
 does indeed fill the entire element. */
-#ifndef __CF__KnR
 static char *vkill_trailing(char* cstr, int elem_len, int sizeofcstr, char t)
-#else
-static char *vkill_trailing(      cstr,     elem_len,     sizeofcstr,      t)
-                            char* cstr; int elem_len; int sizeofcstr; char t;
-#endif
 { int i;
 for (i=0; i<sizeofcstr/elem_len; i++) /* elem_len includes \0 for C strings. */
   kill_trailingn(cstr+elem_len*i,t,cstr+elem_len*(i+1)-1);
@@ -635,12 +612,7 @@ typedef DSC$DESCRIPTOR_A(1) fstringvector;
 #define NUM_ELEMS(A)    A,_NUM_ELEMS
 #define NUM_ELEM_ARG(B) *CFORTRAN_CAT_2(A,B),_NUM_ELEM_ARG
 #define TERM_CHARS(A,B) A,B
-#ifndef __CF__KnR
 static int num_elem(char *strv, unsigned elem_len, int term_char, int num_term)
-#else
-static int num_elem(      strv,          elem_len,     term_char,     num_term)
-                    char *strv; unsigned elem_len; int term_char; int num_term;
-#endif
 /* elem_len is the number of characters in each element of strv, the FORTRAN
 vector of strings. The last element of the vector must begin with at least
 num_term term_char characters, so that this routine can determine how 
@@ -729,11 +701,7 @@ return (int)num;
 /* _cfVCF table is directly mapped to _cfCCC table. */
 #define     BYTE_cfVCF(A,B)
 #define   DOUBLE_cfVCF(A,B)
-#if !defined(__CF__KnR)
 #define    FLOAT_cfVCF(A,B)
-#else
-#define    FLOAT_cfVCF(A,B) FORTRAN_REAL B = A;
-#endif
 #define      INT_cfVCF(A,B)
 #define  LOGICAL_cfVCF(A,B)
 #define     LONG_cfVCF(A,B)
@@ -1202,21 +1170,12 @@ typedef void (*cfCAST_FUNCTION)(CF_NULL_PROTO);
    #include-ing cfortran.h if calling the FORTRAN wrapper within the same 
    source code where the wrapper is created. */
 #define PROTOCCALLSFSUB0(UN,LN)     CFORTRAN_XCAT_(VOID,_cfPU)(CFC_(UN,LN))();
-#ifndef __CF__KnR
 #define PROTOCCALLSFSUB14(UN,LN,T1,T2,T3,T4,T5,T6,T7,T8,T9,TA,TB,TC,TD,TE) \
  CFORTRAN_XCAT_(VOID,_cfPU)(CFC_(UN,LN))( CFARGT14(NCF,KCF,_Z,T1,T2,T3,T4,T5,T6,T7,T8,T9,TA,TB,TC,TD,TE) );
 #define PROTOCCALLSFSUB20(UN,LN,T1,T2,T3,T4,T5,T6,T7,T8,T9,TA,TB,TC,TD,TE,TF,TG,TH,TI,TJ,TK)\
  CFORTRAN_XCAT_(VOID,_cfPU)(CFC_(UN,LN))( CFARGT20(NCF,KCF,_Z,T1,T2,T3,T4,T5,T6,T7,T8,T9,TA,TB,TC,TD,TE,TF,TG,TH,TI,TJ,TK) );
 #define PROTOCCALLSFSUB27(UN,LN,T1,T2,T3,T4,T5,T6,T7,T8,T9,TA,TB,TC,TD,TE,TF,TG,TH,TI,TJ,TK,TL,TM,TN,TO,TP,TQ,TR)\
  CFORTRAN_XCAT_(VOID,_cfPU)(CFC_(UN,LN))( CFARGT27(NCF,KCF,_Z,T1,T2,T3,T4,T5,T6,T7,T8,T9,TA,TB,TC,TD,TE,TF,TG,TH,TI,TJ,TK,TL,TM,TN,TO,TP,TQ,TR) );
-#else
-#define PROTOCCALLSFSUB14(UN,LN,T1,T2,T3,T4,T5,T6,T7,T8,T9,TA,TB,TC,TD,TE)     \
-         PROTOCCALLSFSUB0(UN,LN)
-#define PROTOCCALLSFSUB20(UN,LN,T1,T2,T3,T4,T5,T6,T7,T8,T9,TA,TB,TC,TD,TE,TF,TG,TH,TI,TJ,TK) \
-         PROTOCCALLSFSUB0(UN,LN)
-#define PROTOCCALLSFSUB27(UN,LN,T1,T2,T3,T4,T5,T6,T7,T8,T9,TA,TB,TC,TD,TE,TF,TG,TH,TI,TJ,TK,TL,TM,TN,TO,TP,TQ,TR) \
-         PROTOCCALLSFSUB0(UN,LN)
-#endif
 #endif
 
 
@@ -1840,12 +1799,8 @@ do{VVCF(T1,A1,B1)  VVCF(T2,A2,B2)  VVCF(T3,A3,B3)  VVCF(T4,A4,B4)  VVCF(T5,A5,B5
 
 #define     BYTE_cfCCC(A,B) &A
 #define   DOUBLE_cfCCC(A,B) &A
-#if !defined(__CF__KnR)
 #define    FLOAT_cfCCC(A,B) &A
                                /* Although the VAX doesn't, at least the      */
-#else                          /* HP and K&R mips promote float arg.'s of     */
-#define    FLOAT_cfCCC(A,B) &B /* unprototyped functions to double. Cannot    */
-#endif                         /* use A here to pass the argument to FORTRAN. */
 #define      INT_cfCCC(A,B) &A
 #define  LOGICAL_cfCCC(A,B) &A
 #define     LONG_cfCCC(A,B) &A
@@ -2007,7 +1962,6 @@ static _Icf(2,U,F,CFFUN(UN),0)() { CFORTRAN_XCAT_(F,_cfE) _Icf(3,GZ,F,UN,LN) ABS
 
 /* HP/UX 9.01 cc requires the blank between '_Icf(3,G,T0,UN,LN) CCCF(T1,1,0)' */
 
-#ifndef __CF__KnR
 #define PROTOCCALLSFFUN14(T0,UN,LN,T1,T2,T3,T4,T5,T6,T7,T8,T9,TA,TB,TC,TD,TE)  \
  CFORTRAN_XCAT_(T0,_cfPU)(CFC_(UN,LN))(CF_NULL_PROTO); static _Icf(2,U,T0,CFFUN(UN),0)(     \
    CFARGT14FS(UCF,HCF,_Z,T1,T2,T3,T4,T5,T6,T7,T8,T9,TA,TB,TC,TD,TE) )          \
@@ -2019,20 +1973,6 @@ static _Icf(2,U,F,CFFUN(UN),0)() { CFORTRAN_XCAT_(F,_cfE) _Icf(3,GZ,F,UN,LN) ABS
  WCF(T1,A1,1)   WCF(T2,A2,2)   WCF(T3,A3,3)   WCF(T4,A4,4)  WCF(T5,A5,5)       \
  WCF(T6,A6,6)   WCF(T7,A7,7)   WCF(T8,A8,8)   WCF(T9,A9,9)  WCF(TA,A10,10)     \
  WCF(TB,A11,11) WCF(TC,A12,12) WCF(TD,A13,13) WCF(TE,A14,14) CFORTRAN_XCAT_(T0,_cfX)}
-#else
-#define PROTOCCALLSFFUN14(T0,UN,LN,T1,T2,T3,T4,T5,T6,T7,T8,T9,TA,TB,TC,TD,TE)  \
- CFORTRAN_XCAT_(T0,_cfPU)(CFC_(UN,LN))(CF_NULL_PROTO); static _Icf(2,U,T0,CFFUN(UN),0)(     \
-   CFARGT14FS(UUCF,HHCF,_Z,T1,T2,T3,T4,T5,T6,T7,T8,T9,TA,TB,TC,TD,TE) )        \
- CFARGT14FS(UUUCF,HHHCF,_Z,T1,T2,T3,T4,T5,T6,T7,T8,T9,TA,TB,TC,TD,TE) ;        \
-{       CFARGT14S(VCF,T1,T2,T3,T4,T5,T6,T7,T8,T9,TA,TB,TC,TD,TE)    CFORTRAN_XCAT_(T0,_cfE) \
- CCF(LN,T1,1)  CCF(LN,T2,2)  CCF(LN,T3,3)  CCF(LN,T4,4)  CCF(LN,T5,5)          \
- CCF(LN,T6,6)  CCF(LN,T7,7)  CCF(LN,T8,8)  CCF(LN,T9,9)  CCF(LN,TA,10)         \
- CCF(LN,TB,11) CCF(LN,TC,12) CCF(LN,TD,13) CCF(LN,TE,14)    _Icf(3,G,T0,UN,LN) \
- CFARGT14(CCCF,JCF,ABSOFT_cf1(T0),T1,T2,T3,T4,T5,T6,T7,T8,T9,TA,TB,TC,TD,TE)); \
- WCF(T1,A1,1)   WCF(T2,A2,2)   WCF(T3,A3,3)   WCF(T4,A4,4)   WCF(T5,A5,5)      \
- WCF(T6,A6,6)   WCF(T7,A7,7)   WCF(T8,A8,8)   WCF(T9,A9,9)   WCF(TA,A10,10)    \
- WCF(TB,A11,11) WCF(TC,A12,12) WCF(TD,A13,13) WCF(TE,A14,14) CFORTRAN_XCAT_(T0,_cfX)}
-#endif
 
 /*-------------------------------------------------------------------------*/
 
@@ -2242,7 +2182,6 @@ static _Icf(2,U,F,CFFUN(UN),0)() { CFORTRAN_XCAT_(F,_cfE) _Icf(3,GZ,F,UN,LN) ABS
 #define LONGLONG_cfFZ(UN,LN) CFORTRAN_LONGLONG FCALLSC_QUALIFIER fcallsc(UN,LN)( /* added by MR December 2005 */
 #define   SHORT_cfFZ(UN,LN) short FCALLSC_QUALIFIER fcallsc(UN,LN)(
 #define    VOID_cfFZ(UN,LN) void  FCALLSC_QUALIFIER fcallsc(UN,LN)(
-#ifndef __CF__KnR
 /* The void is req'd by the Apollo, to make this an ANSI function declaration.
    The Apollo promotes K&R float functions to double. */
 #if defined (f2cFortran) && ! defined (gFortran)
@@ -2262,23 +2201,6 @@ static _Icf(2,U,F,CFFUN(UN),0)() { CFORTRAN_XCAT_(F,_cfE) _Icf(3,GZ,F,UN,LN) ABS
 #else
 #define  STRING_cfFZ(UN,LN) void  FCALLSC_QUALIFIER fcallsc(UN,LN)(char    *AS, unsigned D0
 #endif
-#endif
-#endif
-#else
-#if ! (defined(FLOATFUNCTIONTYPE)&&defined(ASSIGNFLOAT)&&defined(RETURNFLOAT))
-#if defined (f2cFortran) && ! defined (gFortran)
-/* f2c/g77 return double from FORTRAN REAL functions. (KMCCARTY, 2005/12/09) */
-#define   FLOAT_cfFZ(UN,LN) DOUBLE_PRECISION  FCALLSC_QUALIFIER fcallsc(UN,LN)(
-#else
-#define   FLOAT_cfFZ(UN,LN) FORTRAN_REAL      FCALLSC_QUALIFIER fcallsc(UN,LN)(
-#endif
-#else
-#define   FLOAT_cfFZ(UN,LN) FLOATFUNCTIONTYPE FCALLSC_QUALIFIER fcallsc(UN,LN)(
-#endif
-#if defined(vmsFortran) || defined(CRAYFortran) || defined(AbsoftUNIXFortran)
-#define  STRING_cfFZ(UN,LN) void  FCALLSC_QUALIFIER fcallsc(UN,LN)(AS
-#else
-#define  STRING_cfFZ(UN,LN) void  FCALLSC_QUALIFIER fcallsc(UN,LN)(AS, D0
 #endif
 #endif
 
@@ -2477,7 +2399,6 @@ string. */
         FCALLSCFUN27(T0,CN,UN,LN,T1,T2,T3,T4,T5,T6,T7,T8,T9,TA,TB,TC,TD,TE,TF,TG,TH,TI,TJ,TK,TL,TM,TN,TO,TP,TQ,CF_0)
 
 
-#ifndef __CF__KnR
 #define FCALLSCFUN0(T0,CN,UN,LN) CFextern CFORTRAN_XCAT_(T0,_cfFZ)(UN,LN) ABSOFT_cf2(T0))   \
         {_Icf(2,UU,T0,A0,0); _Icf(0,L,T0,0,0) CN(); _Icf(0,K,T0,0,0) CFORTRAN_XCAT_(T0,_cfI)}
 
@@ -2503,35 +2424,6 @@ string. */
     TCF(LN,TN,23,1) TCF(LN,TO,24,1) TCF(LN,TP,25,1) TCF(LN,TQ,26,1) TCF(LN,TR,27,1) ); _Icf(0,K,T0,0,0) \
                    CFARGT27S(RCF,T1,T2,T3,T4,T5,T6,T7,T8,T9,TA,TB,TC,TD,TE,TF,TG,TH,TI,TJ,TK,TL,TM,TN,TO,TP,TQ,TR)  CFORTRAN_XCAT_(T0,_cfI) }
 
-#else
-#define FCALLSCFUN0(T0,CN,UN,LN) CFextern CFORTRAN_XCAT_(T0,_cfFZ)(UN,LN) ABSOFT_cf3(T0)) _Icf(0,FF,T0,0,0)\
-        {_Icf(2,UU,T0,A0,0); _Icf(0,L,T0,0,0) CN(); _Icf(0,K,T0,0,0) CFORTRAN_XCAT_(T0,_cfI)}
-
-#define FCALLSCFUN14(T0,CN,UN,LN,T1,T2,T3,T4,T5,T6,T7,T8,T9,TA,TB,TC,TD,TE)    \
-                                 CFextern CFORTRAN_XCAT_(T0,_cfF)(UN,LN)                    \
- CFARGT14(NNCF,DDCF,ABSOFT_cf3(T0),T1,T2,T3,T4,T5,T6,T7,T8,T9,TA,TB,TC,TD,TE)) _Icf(0,FF,T0,0,0) \
-       CFARGT14FS(NNNCF,DDDCF,_Z,T1,T2,T3,T4,T5,T6,T7,T8,T9,TA,TB,TC,TD,TE);   \
- {                 CFARGT14S(QCF,T1,T2,T3,T4,T5,T6,T7,T8,T9,TA,TB,TC,TD,TE)    \
-  _Icf(2,UU,T0,A0,0); _Icf(0,L,T0,0,0)      CN(  TCF(LN,T1,1,0) TCF(LN,T2,2,1) \
-    TCF(LN,T3,3,1) TCF(LN,T4,4,1) TCF(LN,T5,5,1) TCF(LN,T6,6,1) TCF(LN,T7,7,1) \
-    TCF(LN,T8,8,1) TCF(LN,T9,9,1) TCF(LN,TA,10,1) TCF(LN,TB,11,1) TCF(LN,TC,12,1) \
-    TCF(LN,TD,13,1) TCF(LN,TE,14,1) );                          _Icf(0,K,T0,0,0) \
-                   CFARGT14S(RCF,T1,T2,T3,T4,T5,T6,T7,T8,T9,TA,TB,TC,TD,TE)  CFORTRAN_XCAT_(T0,_cfI)}
-
-#define FCALLSCFUN27(T0,CN,UN,LN,T1,T2,T3,T4,T5,T6,T7,T8,T9,TA,TB,TC,TD,TE,TF,TG,TH,TI,TJ,TK,TL,TM,TN,TO,TP,TQ,TR)  \
-                                 CFextern CFORTRAN_XCAT_(T0,_cfF)(UN,LN)                    \
- CFARGT27(NNCF,DDCF,ABSOFT_cf3(T0),T1,T2,T3,T4,T5,T6,T7,T8,T9,TA,TB,TC,TD,TE,TF,TG,TH,TI,TJ,TK,TL,TM,TN,TO,TP,TQ,TR)) _Icf(0,FF,T0,0,0) \
-       CFARGT27FS(NNNCF,DDDCF,_Z,T1,T2,T3,T4,T5,T6,T7,T8,T9,TA,TB,TC,TD,TE,TF,TG,TH,TI,TJ,TK,TL,TM,TN,TO,TP,TQ,TR); \
- {                 CFARGT27S(QCF,T1,T2,T3,T4,T5,T6,T7,T8,T9,TA,TB,TC,TD,TE,TF,TG,TH,TI,TJ,TK,TL,TM,TN,TO,TP,TQ,TR)  \
-  _Icf(2,UU,T0,A0,0); _Icf(0,L,T0,0,0)      CN(     TCF(LN,T1,1,0)  TCF(LN,T2,2,1)  \
-    TCF(LN,T3,3,1)  TCF(LN,T4,4,1)  TCF(LN,T5,5,1)  TCF(LN,T6,6,1)  TCF(LN,T7,7,1)  \
-    TCF(LN,T8,8,1)  TCF(LN,T9,9,1)  TCF(LN,TA,10,1) TCF(LN,TB,11,1) TCF(LN,TC,12,1) \
-    TCF(LN,TD,13,1) TCF(LN,TE,14,1) TCF(LN,TF,15,1) TCF(LN,TG,16,1) TCF(LN,TH,17,1) \
-    TCF(LN,TI,18,1) TCF(LN,TJ,19,1) TCF(LN,TK,20,1) TCF(LN,TL,21,1) TCF(LN,TM,22,1) \
-    TCF(LN,TN,23,1) TCF(LN,TO,24,1) TCF(LN,TP,25,1) TCF(LN,TQ,26,1) TCF(LN,TR,27,1) ); _Icf(0,K,T0,0,0) \
-                   CFARGT27S(RCF,T1,T2,T3,T4,T5,T6,T7,T8,T9,TA,TB,TC,TD,TE,TF,TG,TH,TI,TJ,TK,TL,TM,TN,TO,TP,TQ,TR)  CFORTRAN_XCAT_(T0,_cfI)}
-
-#endif
 
 
 #endif	 /* __CFORTRAN_LOADED */

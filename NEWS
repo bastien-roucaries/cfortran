@@ -1,7 +1,6 @@
-cfortran (20110620) unstable; urgency=low
+cfortran (20110621)
 
   * Drop support of VAX (no release since 1995)
-  * apollo/DomainOS (not supported since 2001)
-
- --
+  * Drop apollo/DomainOS (not supported since 2001)
+  * Drop K&R C support (dead since 1990)
 

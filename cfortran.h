@@ -3,19 +3,53 @@
 /* Copyright (C) 1990 - 2002 Burkhard Burow  burow@desy.de    */
 /* Copyright (C) 2011 Bastien ROUCARIÈS                       */
 
+/* THIS FILE IS PROPERTY OF BURKHARD BUROW. IF YOU ARE USING THIS FILE YOU
+   SHOULD ALSO HAVE ACCESS TO CFORTRAN.DOC WHICH PROVIDES TERMS FOR USING,
+   MODIFYING, COPYING AND DISTRIBUTING THE CFORTRAN.H PACKAGE.
+
+   THIS PACKAGE, I.E. CFORTRAN.H, THIS DOCUMENT, AND THE CFORTRAN.H EXAMPLE
+   PROGRAMS ARE PROPERTY OF THE AUTHOR WHO RESERVES ALL RIGHTS. THIS PACKAGE AND
+   THE CODE IT PRODUCES MAY BE FREELY DISTRIBUTED WITHOUT FEES, SUBJECT
+   (AT YOUR CHOICE) EITHER TO THE GNU LIBRARY GENERAL PUBLIC LICENSE
+   AT http://www.gnu.org/licenses/lgpl.html OR TO THE FOLLOWING RESTRICTIONS:
+   - YOU MUST ACCOMPANY ANY COPIES OR DISTRIBUTION WITH THIS (UNALTERED) NOTICE.
+   - YOU MAY NOT RECEIVE MONEY FOR THE DISTRIBUTION OR FOR ITS MEDIA 
+     (E.G. TAPE, DISK, COMPUTER, PAPER.)
+   - YOU MAY NOT PREVENT OTHERS FROM COPYING IT FREELY.
+   - YOU MAY NOT DISTRIBUTE MODIFIED VERSIONS WITHOUT CLEARLY DOCUMENTING YOUR
+     CHANGES AND NOTIFYING THE AUTHOR.
+   - YOU MAY NOT MISREPRESENTED THE ORIGIN OF THIS SOFTWARE, EITHER BY EXPLICIT
+     CLAIM OR BY OMISSION.
+
+   THE INTENT OF THE ABOVE TERMS IS TO ENSURE THAT THE CFORTRAN.H PACKAGE NOT BE
+   USED FOR PROFIT MAKING ACTIVITIES UNLESS SOME ROYALTY ARRANGEMENT IS ENTERED
+   INTO WITH ITS AUTHOR.
+              
+   THIS SOFTWARE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER
+   EXPRESSED OR IMPLIED. THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE
+   SOFTWARE IS WITH YOU. SHOULD THE SOFTWARE PROVE DEFECTIVE, YOU ASSUME THE COST
+   OF ALL NECESSARY SERVICING, REPAIR OR CORRECTION. THE AUTHOR IS NOT RESPONSIBLE
+   FOR ANY SUPPORT OR SERVICE OF THE CFORTRAN.H PACKAGE.
+
+                                              Burkhard Burow 
+                                              burow@desy.de
+*/
+
 #ifndef __CFORTRAN_LOADED
 #define __CFORTRAN_LOADED
 
 
 
-/* cfortran version year month day */
+/*********************/
+/* Obsolete bail out */
+/*********************/
 #if !(defined(__STDC__) || defined(__cplusplus))
 #error "cfortran need an AINSI C Compiler"
 #endif 
 
 #ifdef _MSC_VER
 #if _MSC_VER >= 1200
-#error "Need a least MS Visual > 7"
+#error "Need a least MS Visual > 6"
 #endif 
 #endif
 
@@ -29,116 +63,36 @@
 #error "Apollo/DomainOS is not supported anymore"
 #endif
 
+
+/***********/
+/* Version */
+/***********/
 #define CFORTRAN_VERSION 20110615UL
 
-/* This file could be used under at your choice two license: */
+/********************/
+/* type definition  */
+/********************/
+#if defined(_MSC_VER)   /* Microsoft Visual C++ */
+#if (_MSC_VER < 1300)   /* versions earlier than V7.0 do not have 'long long' */
+    typedef __int64 CFORTRAN_LONGLONG; 
+#endif
+#else
+    typedef long long CFORTRAN_LONGLONG; 
+#endif
 
-/* FIRST OPTION */
+/************/
+/* Includes */
+/************/
 
-/*
-   THIS FILE IS PROPERTY OF BURKHARD BUROW. IF YOU ARE USING THIS FILE YOU
-   SHOULD ALSO HAVE ACCESS TO CFORTRAN.DOC WHICH PROVIDES TERMS FOR USING,
-   MODIFYING, COPYING AND DISTRIBUTING THE CFORTRAN.H PACKAGE.
-*/
 
-/* THIS PACKAGE, I.E. CFORTRAN.H, THIS DOCUMENT, AND THE CFORTRAN.H EXAMPLE
-PROGRAMS ARE PROPERTY OF THE AUTHOR WHO RESERVES ALL RIGHTS. THIS PACKAGE AND
-THE CODE IT PRODUCES MAY BE FREELY DISTRIBUTED WITHOUT FEES, SUBJECT
-(AT YOUR CHOICE) EITHER TO THE GNU LIBRARY GENERAL PUBLIC LICENSE
-AT http://www.gnu.org/licenses/lgpl.html OR TO THE FOLLOWING RESTRICTIONS:
-- YOU MUST ACCOMPANY ANY COPIES OR DISTRIBUTION WITH THIS (UNALTERED) NOTICE.
-- YOU MAY NOT RECEIVE MONEY FOR THE DISTRIBUTION OR FOR ITS MEDIA 
-  (E.G. TAPE, DISK, COMPUTER, PAPER.)
-- YOU MAY NOT PREVENT OTHERS FROM COPYING IT FREELY.
-- YOU MAY NOT DISTRIBUTE MODIFIED VERSIONS WITHOUT CLEARLY DOCUMENTING YOUR
-  CHANGES AND NOTIFYING THE AUTHOR.
-- YOU MAY NOT MISREPRESENTED THE ORIGIN OF THIS SOFTWARE, EITHER BY EXPLICIT
-  CLAIM OR BY OMISSION.
+#include <stdio.h>     /* NULL [in all machines stdio.h]                      */
+#include <string.h>    /* strlen, memset, memcpy, memchr.                     */
+#include <stdlib.h>    /* malloc,free                                         */
 
-THE INTENT OF THE ABOVE TERMS IS TO ENSURE THAT THE CFORTRAN.H PACKAGE NOT BE
-USED FOR PROFIT MAKING ACTIVITIES UNLESS SOME ROYALTY ARRANGEMENT IS ENTERED
-INTO WITH ITS AUTHOR.
-              
-THIS SOFTWARE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER
-EXPRESSED OR IMPLIED. THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE
-SOFTWARE IS WITH YOU. SHOULD THE SOFTWARE PROVE DEFECTIVE, YOU ASSUME THE COST
-OF ALL NECESSARY SERVICING, REPAIR OR CORRECTION. THE AUTHOR IS NOT RESPONSIBLE
-FOR ANY SUPPORT OR SERVICE OF THE CFORTRAN.H PACKAGE.
 
-                                              Burkhard Burow 
-                                              burow@desy.de
-*/
-
-/* SECOND OPTION */
-
-/**********************************************************************************/
-/* This library is free software; you can redistribute it and/or		  */
-/* modify it under the terms of the GNU Library General Public			  */
-/* License as published by the Free Software Foundation; either			  */
-/* version 2 of the License, or (at your option) any later version.		  */
-/* 										  */
-/* This library is distributed in the hope that it will be useful,		  */
-/* but WITHOUT ANY WARRANTY; without even the implied warranty of		  */
-/* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU		  */
-/* Library General Public License for more details.				  */
-/* 										  */
-/* You should have received a copy of the GNU Library General Public		  */
-/* License along with this library; if not, write to the Free Software		  */
-/* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA */
-/**********************************************************************************/
-
-/* The following modifications were made by the authors of CFITSIO or by me. 
- * They are flagged below with CFITSIO, the author's initials, or KMCCARTY.
- * PDW = Peter Wilson
- * DM  = Doug Mink
- * LEB = Lee E Brotzman
- * MR  = Martin Reinecke
- * WDP = William D Pence
- * BR  = Bastien ROUCARIES
- * -- Kevin McCarty, for Debian (19 Dec. 2005) */
-
-/*******
-   Modifications:
-      Oct 1997: Changed symbol name extname to appendus (PDW/HSTX)
-                (Conflicted with a common variable name in FTOOLS)
-      Nov 1997: If g77Fortran defined, also define f2cFortran (PDW/HSTX)
-      Feb 1998: Let VMS see the NUM_ELEMS code. Lets programs treat
-                single strings as vectors with single elements
-      Nov 1999: If macintoxh defined, also define f2cfortran (for Mac OS-X)
-      Apr 2000: If WIN32 defined, also define PowerStationFortran and
-                VISUAL_CPLUSPLUS (Visual C++)
-      Jun 2000: If __GNUC__ and linux defined, also define f2cFortran
-                (linux/gcc environment detection)
-      Apr 2002: If __CYGWIN__ is defined, also define f2cFortran
-      Nov 2002: If __APPLE__ defined, also define f2cfortran (for Mac OS-X)
-
-      Nov 2003: If __INTEL_COMPILER or INTEL_COMPILER defined, also define
-                f2cFortran (KMCCARTY)
-      Dec 2005: If f2cFortran is defined, enforce REAL functions in FORTRAN
-                returning "double" in C.  This was one of the items on
-		Burkhard's TODO list. (KMCCARTY)
-      Dec 2005: Modifications to support 8-byte integers. (MR)
-		USE AT YOUR OWN RISK!
-      Feb 2006  Added logic to typedef the symbol 'LONGLONG' to an appropriate
-                intrinsic 8-byte integer datatype  (WDP)
-      Apr 2006: Modifications to support gfortran (and g77 with -fno-f2c flag)
-                since by default it returns "float" for FORTRAN REAL function.
-                (KMCCARTY)
-      May 2008: Revert commenting out of "extern" in COMMON_BLOCK_DEF macro.
-		Add braces around do-nothing ";" in 3 empty while blocks to
-		get rid of compiler warnings.  Thanks to ROOT developers
-		Jacek Holeczek and Rene Brun for these suggestions. (KMCCARTY)
-      Aug 2008: If __GNUC__ is defined and no FORTRAN compiler is specified
-		via a #define or -D, default to gfortran behavior rather than
-		g77 behavior. (KMCCARTY)
-      Oct 2009: Add warning if guessing default fortran. Move g77 above guessing bloc
- *******/
-
-/* 
-  Avoid symbols already used by compilers and system *.h:
-  __ - OSF1 zukal06 V3.0 347 alpha, cc -c -std1 cfortest.c
-
-*/
+/*********/
+/* TOOLS */
+/*********/
 
 /*! Concatenate two string */
 #define CFORTRAN_CAT_(A,B)   A##B
@@ -149,25 +103,7 @@ FOR ANY SUPPORT OR SERVICE OF THE CFORTRAN.H PACKAGE.
 /*! xcat but for three strings */
 #define CFORTRAN_XCAT_3(A,B,C) CFORTRAN_XCAT_(A, CFORTRAN_XCAT_(B,C)) 
 
-/* 
-   Determine what 8-byte integer data type is available.
-  'long long' is now supported by most compilers, but older
-  MS Visual C++ compilers before V7.0 use '__int64' instead. (WDP)
-*/
-#if defined(_MSC_VER)   /* Microsoft Visual C++ */
-#if (_MSC_VER < 1300)   /* versions earlier than V7.0 do not have 'long long' */
-    typedef __int64 CFORTRAN_LONGLONG;
-#endif
-#else
-    typedef long long CFORTRAN_LONGLONG; 
-#endif
 
-/* First prepare for the C compiler. */
-
-
-#include <stdio.h>     /* NULL [in all machines stdio.h]                      */
-#include <string.h>    /* strlen, memset, memcpy, memchr.                     */
-#include <stdlib.h>    /* malloc,free                                         */
 
 /* Remainder of cfortran.h depends on the Fortran compiler. */
 
@@ -181,45 +117,75 @@ FOR ANY SUPPORT OR SERVICE OF THE CFORTRAN.H PACKAGE.
 #define f2cFortran
 #endif
 
-/* VMS does not let us \-split long #if lines. */ 
+
+
+/*****************/
+/* Need guessing */
+/*****************/
+/* Vms does not let us \-split long #if lines. */ 
 /* Split #if into 2 because some HP-UX can't handle long #if */
 #if !(defined(NAGf90Fortran)||defined(f2cFortran)||defined(hpuxFortran)||defined(sunFortran)||defined(IBMR2Fortran)||defined(CRAYFortran))
-#if !(defined(mipsFortran)||defined(DECFortran)||defined(vmsFortran)||defined(CONVEXFortran)||defined(PowerStationFortran)||defined(AbsoftUNIXFortran)||defined(AbsoftProFortran)||defined(SXFortran))
+#if !(defined(mipsFortran)||defined(DECFortran)||defined(vmsFortran)||defined(CONVEXFortran)||defined(PowerStationFortran))
+#if !(defined(AbsoftUNIXFortran)||defined(AbsoftProFortran)||defined(SXFortran))
 /* If no Fortran compiler is given, we choose one for the machines we know.   */
+
+/* warm if guess is difficult */
 #if defined(__GNUC__)
 #if __GNUC__ == 3
 #warning "Please specify the fortran compiler using -D flags. Try to guess the compiler used"
 #endif
-#endif
-#if defined(WIN32) /* 10/2009 BR: warm if guess */
+#else
+#if defined(WIN32) &&  !defined(__CYGWIN__) 
 #warning "Please specify the fortran compiler using -D flags. Try to guess the compiler used"
 #endif
-#if defined(lynx)
-#define f2cFortran    /* Lynx:      Only support f2c at the moment.
-                           Support f2c or f77 with gcc, vcc with f2c. 
-                           f77 with vcc works, missing link magic for f77 I/O.*/
 #endif
+
+#define CFORTRAN_GUESS_COMPILER
+
+#endif /* ... fortran */
+#endif /* ... fortran */
+#endif /* ... fortran */
+
+
+/*******************/
+/* Guess selection */
+/*******************/
+
+#if defined(CFORTRAN_GUESS_COMPILER)
+
+/* Autodetect */
+#if defined(lynx)
+ /* Lynx:      Only support f2c at the moment.                          
+               Support f2c or f77 with gcc, vcc with f2c.
+               f77 with vcc works, missing link magic for f77 I/O.*/
+ #define f2cFortran   
+#endif
+
 /* 04/13/00 DM (CFITSIO): Add these lines for NT */
 /*   with PowerStationFortran and and Visual C++ */
 #if defined(WIN32) && !defined(__CYGWIN__)
-#define PowerStationFortran   
-#define VISUAL_CPLUSPLUS
+  #define PowerStationFortran   
+  #define VISUAL_CPLUSPLUS
 #endif
-#if        defined(__CYGWIN__)                 /* 04/11/02 LEB (CFITSIO) */
-#define       f2cFortran 
-#define	      gFortran /* 8/26/08 (KMCCARTY) */
+
+#if defined(__CYGWIN__)                 /* 04/11/02 LEB (CFITSIO) */
+  #define f2cFortran 
+  #define gFortran                      /* 8/26/08 (KMCCARTY) */
 #endif
-#if        defined(__GNUC__) && defined(linux) /* 06/21/00 PDW (CFITSIO) */
-#define       f2cFortran 
-#define	      gFortran /* 8/26/08 (KMCCARTY) */
+
+#if defined(__GNUC__) && defined(linux) /* 06/21/00 PDW (CFITSIO) */
+  #define f2cFortran 
+  #define gFortran /* 8/26/08 (KMCCARTY) */
 #endif
-#if defined(macintosh)                         /* 11/1999 (CFITSIO) */
-#define f2cFortran
-#define	      gFortran /* 8/26/08 (KMCCARTY) */
+
+#if defined(macintosh)                    /* 11/1999 (CFITSIO) */
+  #define f2cFortran
+  #define gFortran                        /* 8/26/08 (KMCCARTY) */
 #endif
-#if defined(__APPLE__)                         /* 11/2002 (CFITSIO) */
-#define f2cFortran
-#define	      gFortran /* 8/26/08 (KMCCARTY) */
+
+#if defined(__APPLE__)                   /* 11/2002 (CFITSIO) */
+  #define f2cFortran
+  #define gFortran                       /* 8/26/08 (KMCCARTY) */
 #endif
 #if defined(__hpux)             /* 921107: Use __hpux instead of __hp9000s300 */
 #define       hpuxFortran       /*         Should also allow hp9000s7/800 use.*/
@@ -251,12 +217,17 @@ FOR ANY SUPPORT OR SERVICE OF THE CFORTRAN.H PACKAGE.
 #if   defined(VISUAL_CPLUSPLUS)
 #define     PowerStationFortran
 #endif
-#endif /* ...Fortran */
-#endif /* ...Fortran */
+
+#endif /* Guess compiler */
+
+/********************************************/
+/* Error if compiler not found of not given */
+/********************************************/
 
 /* Split #if into 2 because some HP-UX can't handle long #if */
 #if !(defined(NAGf90Fortran)||defined(f2cFortran)||defined(hpuxFortran)||defined(sunFortran)||defined(IBMR2Fortran)||defined(CRAYFortran))
-#if !(defined(mipsFortran)||defined(DECFortran)||defined(vmsFortran)||defined(CONVEXFortran)||defined(PowerStationFortran)||defined(AbsoftUNIXFortran)||defined(AbsoftProFortran)||defined(SXFortran))
+#if !(defined(mipsFortran)||defined(DECFortran)||defined(vmsFortran)||defined(CONVEXFortran)||defined(PowerStationFortran))
+#if !(defined(AbsoftUNIXFortran)||defined(AbsoftProFortran)||defined(SXFortran))
 /* If your compiler barfs on ' #error', replace # with the trigraph for #     */
  #error "cfortran.h:  Can't find your environment among:\
     - GNU gcc (gfortran) on Linux.                                       \
@@ -282,7 +253,7 @@ FOR ANY SUPPORT OR SERVICE OF THE CFORTRAN.H PACKAGE.
 /* Compiler must throw us out at this point! */
 #endif
 #endif
-
+#endif
 
 
 /* Throughout cfortran.h we use: UN = Uppercase Name.  LN = Lowercase Name.   */

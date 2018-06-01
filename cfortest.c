@@ -50,7 +50,7 @@
  */
 
 /* Assume Version 2.0a(264) or more recent. */
-main(argc, argv) int argc; char *argv[];
+int main(argc, argv) int argc; char *argv[];
 {f90_init(argc,argv); f90_main(argc,argv); f90_finish(0); return EXIT_SUCCESS;}
 #define main f90_main
 
@@ -60,7 +60,7 @@ main(argc, argv) int argc; char *argv[];
                   PROTOCCALLSFSUB2(EASY,easy, PINT, INT)
 #define EASY(A,B)      CCALLSFSUB2(EASY,easy, PINT, INT, A, B)
 
-main() {
+int main() {
 int a;
 printf("\nEASY EXAMPLE\n");
 EASY(a,7);
@@ -109,7 +109,7 @@ return EXIT_SUCCESS;
 PROTOCCALLSFFUN3(STRING,FT,ft, PSTRINGV, STRINGV, FLOAT)
 #define FT(A,B,C) CCALLSFFUN3(FT,ft, PSTRINGV, STRINGV, FLOAT, A, B, C)
 
-main() {
+int main() {
 static char v[][5] = {"000 ", "1", "22", " "};
 static char w[][9]  = {" ", "bb","ccc ","dddd"};
 FORTRAN_REAL a = 10.0;
@@ -130,7 +130,7 @@ return EXIT_SUCCESS;
 PROTOCCALLSFFUN3(STRING,FZ,fz, PZTRINGV, ZTRINGV, INT)
 #define FZ(A,B,C) CCALLSFFUN3(FZ,fz, PZTRINGV, ZTRINGV, INT, A, B, C)
 
-main() {
+int main() {
 static char v[][7] = {"000 ", "1", "22", " "};
 static char w[][9]  = {" ", "bb","ccc ","dddd"};
 printf("FZ(v, w, a); returns:%s.\n",FZ(v, w, 4));
@@ -148,7 +148,7 @@ return EXIT_SUCCESS;
                        PROTOCCALLSFSUB1(FORSTR1,forstr1, PSTRING)
 #define FORSTR1(A1)         CCALLSFSUB1(FORSTR1,forstr1, PSTRING, A1)
 
-main() {
+int main() {
 static char b[] = "abcdefghij", forb[13] = "abcdefghijkl";
 SS1(b); FORSTR1(forb);
 printf("SS1(b) returns b = %s; FORSTR1(forb) = returns forb = %s;\n", b, forb);
@@ -160,7 +160,7 @@ return EXIT_SUCCESS;
                  PROTOCCALLSFSUB3(ABC,abc, STRING, PSTRING, PSTRING)
 #define ABC(A1,A2,A3) CCALLSFSUB3(ABC,abc, STRING, PSTRING, PSTRING, A1, A2, A3)
 
-main() {
+int main() {
 static char aa[] = "one  ", bb[] = "two  ", cc[] = "three"; int i; 
 for (i=0; i<10; i++) {printf("%s;%s;%s;\n",aa,bb,cc); ABC(aa,bb,cc);}
 return EXIT_SUCCESS;
@@ -175,7 +175,7 @@ PROTOCCALLSFFUN0(STRING,FORSTR2,forstr2)
 PROTOCCALLSFFUN1(STRING,FORSTR,forstr,STRING)
 #define FORSTR(A1)          CCALLSFFUN1(FORSTR,forstr, STRING, A1)
 
-main() {
+int main() {
 static char aa[] = "one";
 int rrr = 333;
 printf("RR(rrr=%d) returns int arg. as float:%f\n",rrr,RR(rrr));
@@ -194,7 +194,7 @@ return EXIT_SUCCESS;
                           PROTOCCALLSFSUB1(REV,rev, INTV)
 #define REV(A1)                CCALLSFSUB1(REV,rev, INTV, A1)
 
-main() {
+int main() {
 static int a[] = {1,2};
 printf("REV(a[0,1]=%d,%d) receives:",a[0],a[1]);
 REV(a); printf("a[0,1]=%d,%d\n",a[0],a[1]);
@@ -213,7 +213,7 @@ typedef struct { char v[13],w[4][13],x[2][3][13]; } FCB_DEF;
 COMMON_BLOCK_DEF(FCB_DEF,Fcb);
 FCB_DEF Fcb;
 
-main() {
+int main() {
 char cv[14];
 static char cw[4][14]    = {"C's w[0]", "C's w[1]", "C's w[2]", "C's w[3]"};
 static char cx[2][3][14] = {{"C's x[0][0]", "C's x[0][1]", "C's x[0][2]"}, 
@@ -268,7 +268,7 @@ typedef struct {
 COMMON_BLOCK_DEF(GCBANK_DEF,GCbank);
 GCBANK_DEF GCbank;
 
-main() {
+int main() {
 FEQ();
 printf("GCbank.nzebra       = %d.\n", GCbank.nzebra);
 printf("GCbank.gversn       = %f.\n", GCbank.gversn);
@@ -520,21 +520,21 @@ FCALLSCSUB27(Cf27,CF27,cf27, PINT,PINT,PINT,PINT,PINT,PINT,PINT,PINT,PINT,PINT,P
                           PROTOCCALLSFSUB0(FEXIST,fexist)
 #define FEXIST()               CCALLSFSUB0(FEXIST,fexist)
 
-main() {FEXIST(); return EXIT_SUCCESS;}
+int main() {FEXIST(); return EXIT_SUCCESS;}
 #endif
 
 #ifdef FA_SELECT
                         PROTOCCALLSFSUB1(FA,fa, INT)
 #define FA(A1)               CCALLSFSUB1(FA,fa, INT, A1)
 
-main() {FA(1234); return EXIT_SUCCESS;}
+int main() {FA(1234); return EXIT_SUCCESS;}
 #endif
 
 #ifdef FB_SELECT
                         PROTOCCALLSFSUB1(FB,fb, PINT)
 #define FB(A1)               CCALLSFSUB1(FB,fb, PINT, A1)
 
-main() 
+int main() 
 {int i,ii; i=ii=1234; 
  FB(ii); printf("MAIN: FB(i=%d) returns with i=%d.\n",i,ii);
  return EXIT_SUCCESS;
@@ -545,14 +545,14 @@ main()
                         PROTOCCALLSFSUB1(FC,fc, STRING)
 #define FC(A1)               CCALLSFSUB1(FC,fc, STRING, A1)
 
-main() {FC("hello"); return EXIT_SUCCESS;}
+int main() {FC("hello"); return EXIT_SUCCESS;}
 #endif
 
 #ifdef FD_SELECT
                         PROTOCCALLSFSUB1(FD,fd, PSTRING)
 #define FD(A1)               CCALLSFSUB1(FD,fd, PSTRING, A1)
 
-main() 
+int main() 
 {static char i[] = "happy     "; static char ii[] = "happy      "; 
  FD(ii); printf("MAIN: FD(i=%s) returns with i=%s.\n",i,ii);
  return EXIT_SUCCESS;
@@ -563,7 +563,7 @@ main()
                         PROTOCCALLSFSUB1(FE,fe, STRINGV)
 #define FE(A1)               CCALLSFSUB1(FE,fe, STRINGV, A1)
 
-main() 
+int main() 
 {static char v[][5] = {"0000", "1", "22", ""}; FE(v); return EXIT_SUCCESS;}
 #endif
 
@@ -571,7 +571,7 @@ main()
                         PROTOCCALLSFSUB2(FF,ff, STRINGV, INT)
 #define FF(A1,A2)            CCALLSFSUB2(FF,ff, STRINGV, INT, A1, A2)
 
-main() 
+int main() 
 {static char v[][5] = {"0000", "1", "22", ""}; 
  FF(v,sizeof(v)/sizeof v[0]);
  return EXIT_SUCCESS;
@@ -582,7 +582,7 @@ main()
 PROTOCCALLSFFUN0(INT,FG,fg)
 #define FG()               CCALLSFFUN0(FG,fg)
 
-main() 
+int main() 
 {printf("FG() returns %d.\n",FG()); return EXIT_SUCCESS;}
 #endif
 
@@ -590,7 +590,7 @@ main()
 PROTOCCALLSFFUN0(STRING,FH,fh)
 #define FH()               CCALLSFFUN0(FH,fh)
 
-main() 
+int main() 
 {printf("FH() returns %s.\n",FH()); return EXIT_SUCCESS;}
 #endif
 
@@ -598,7 +598,7 @@ main()
 PROTOCCALLSFFUN1(STRING,FI,fi,STRINGV)
 #define FI(A1)               CCALLSFFUN1(FI,fi, STRINGV, A1)
 
-main() 
+int main() 
 {static char v[][5] = {"0000", "1", "22", "333", "8", "9"}; 
  printf("FI(v) returns %s.\n",FI(v));
  return EXIT_SUCCESS;
@@ -609,7 +609,7 @@ main()
 PROTOCCALLSFFUN1(STRING,FJ,fj,INT)
 #define FJ(A1)               CCALLSFFUN1(FJ,fj, INT, A1)
 
-main() 
+int main() 
 { printf("FJ(2) returns %s.\n",FJ(2)); return EXIT_SUCCESS;}
 #endif
 
@@ -617,7 +617,7 @@ main()
 PROTOCCALLSFFUN0(FLOAT,FK,fk)
 #define FK()               CCALLSFFUN0(FK,fk)
 
-main() 
+int main() 
 {printf("FK() returns %f.\n",FK()); return EXIT_SUCCESS;}
 #endif
 
@@ -625,7 +625,7 @@ main()
 PROTOCCALLSFFUN0(DOUBLE,FL,fl)
 #define FL()               CCALLSFFUN0(FL,fl)
 
-main() 
+int main() 
 {printf("FL() returns %f.\n",(double)FL()); return EXIT_SUCCESS;}
 #endif                       /* ^- cast req.d for CRAY. */
 
@@ -633,7 +633,7 @@ main()
 PROTOCCALLSFFUN1(FLOAT,FM,fm,FLOAT) 
 #define FM(A)               CCALLSFFUN1(FM,fm, FLOAT, A)
 
-main() 
+int main() 
 {printf("FM(111.) returns %f.\n",FM(111.)); return EXIT_SUCCESS;}
 #endif
 
@@ -641,7 +641,7 @@ main()
 PROTOCCALLSFFUN2(DOUBLE,FN,fn,DOUBLE,DOUBLE)
 #define FN(A,B)             CCALLSFFUN2(FN,fn, DOUBLE, DOUBLE, A, B)
 
-main() 
+int main() 
 {printf("FN(1./3, 2./3) returns %f.\n",(double)FN(1./3, 2./3));
  return EXIT_SUCCESS;
 }
@@ -651,7 +651,7 @@ main()
              PROTOCCALLSFSUB3(VV,vv, DOUBLEVV, FLOATVV, INTVV)
 #define VV(D,F,I) CCALLSFSUB3(VV,vv, DOUBLEVV, FLOATVV, INTVV, D, F, I)
 
-main()
+int main()
 {
 DOUBLE_PRECISION d[2][2]; 
 FORTRAN_REAL     f[2][2];
@@ -676,7 +676,7 @@ return EXIT_SUCCESS;
 PROTOCCALLSFFUN1(DOUBLE,V7,v7,DOUBLEVVVVVVV)
 #define V7(D)               CCALLSFFUN1(V7,v7, DOUBLEVVVVVVV, D)
 
-main()
+int main()
 {
 /* Original d[2][3][5][7][11][13][17] died a SEGV on DECstation MIPS cc 2.10, 
    just like e.g.             main() {double d[2][3][5][7][11][13][17], t=0;} */
@@ -705,7 +705,7 @@ return EXIT_SUCCESS;
 PROTOCCALLSFFUN2(LOGICAL,FAND,fand,LOGICAL,LOGICAL)
 #define FAND(A,B)             CCALLSFFUN2(FAND,fand, LOGICAL, LOGICAL, A, B)
 
-main() 
+int main() 
 {printf("FAND(0, 1) returns %d.\n",FAND(0, 1)); return EXIT_SUCCESS;}
 #endif
 
@@ -713,7 +713,7 @@ main()
 PROTOCCALLSFFUN2(LOGICAL,FORR,forr,PLOGICAL,PLOGICAL)
 #define FORR(A,B)             CCALLSFFUN2(FORR,forr, PLOGICAL, PLOGICAL, A, B)
 
-main() 
+int main() 
 {int a=2, b=0; printf("Calling FORR(a=%d, b=%d).\n", a,b);
                printf("FORR() returned %d.\n", FORR(a, b));
                printf("With a=%d, b=%d.\n", a,b);
@@ -729,7 +729,7 @@ FCALLSCFUN2(STRING,strtok,CSTRTOK,cstrtok, STRING, STRING)
                   PROTOCCALLSFSUB0(FSTRTOK,fstrtok)
 #define FSTRTOK()      CCALLSFSUB0(FSTRTOK,fstrtok)
 
-main() {FSTRTOK(); return EXIT_SUCCESS;}
+int main() {FSTRTOK(); return EXIT_SUCCESS;}
 #endif
 
 #ifdef USER_SELECT
@@ -757,7 +757,7 @@ main() {FSTRTOK(); return EXIT_SUCCESS;}
                   PROTOCCALLSFSUB2(EASY,easy, USERINT, INT)
 #define EASY(A,B)      CCALLSFSUB2(EASY,easy, USERINT, INT, A, B)
 
-main() {
+int main() {
 int a;
 printf("\nUsing user defined USERINT argument type.\n");
 EASY(a,7);
@@ -776,7 +776,7 @@ FCALLSCFUN2(INT,Cadd,CADD,cadd, INT, INT)
 /* Want fadd to be prototyped, though don't need the wrapper that is created. */
 PROTOCCALLSFFUN2(INT,FADD,fadd,INT,INT)
 
-main() {
+int main() {
 
 printf("\nFUNADD(CADD,1,2) returns %d\n", 
        FUNADD(      C_FUNCTION(CADD,cadd),1,2) );
@@ -796,7 +796,7 @@ int Cfun(f,a,b) int (*f)(); int a; int b; {int c; f(&a,&b,&c); return c;}
 #define ROUTINE_1  (int (*)())
 FCALLSCFUN3(INT,Cfun,CFUN,cfun, ROUTINE, INT, INT)
 
-main() {
+int main() {
 int c;
 FUNARG(C_FUNCTION(CFUN,cfun),1,2,c);
 printf("\nFUNARG(CFUN,1,2,c) returns with c=%d\n",c);
@@ -817,7 +817,7 @@ FCALLSCSUB4(qsort,FQSORT,fqsort, PVOID, INT, INT, ROUTINE)
                         PROTOCCALLSFSUB1(FQSORTEX,fqsortex, INT)
 #define FQSORTEX(SIZEOF_INT) CCALLSFSUB1(FQSORTEX,fqsortex, INT, SIZEOF_INT)
 
-main() {
+int main() {
 #ifdef PowerStationFortran
 printf("\n\
         Apologies. As described in cfortran.doc, MSPS Fortran provides no\n\
@@ -847,7 +847,7 @@ return EXIT_SUCCESS;
 PROTOCCALLSFFUN2(VOID,EASY,easy,PINT,INT)
 #define EASY(A,B)      CCALLSFFUN2(EASY,easy, PINT, INT, A, B)
 
-main() {
+int main() {
 int a;
 printf("\nEASY (2) EXAMPLE\n");
 EASY(a,7);
@@ -860,7 +860,7 @@ return EXIT_SUCCESS;
                           PROTOCCALLSFSUB0(FSTR,fstr)
 #define FSTR()                 CCALLSFSUB0(FSTR,fstr)
 
-main() { FSTR(); return EXIT_SUCCESS;}
+int main() { FSTR(); return EXIT_SUCCESS;}
 #endif
 
 #ifdef CF14_SELECT
@@ -868,7 +868,7 @@ main() { FSTR(); return EXIT_SUCCESS;}
 #define F14(A,B,C,D,E,F,G,H,I,J,K,L,M,N) \
         CCALLSFSUB14(F14,f14, PINT, PINT, PINT, PINT, PINT, PINT, PINT, PINT, PINT, PINT, PINT, PINT, PINT, PINT, A, B, C, D, E, F, G, H, I, J, K, L, M, N)
 
-main()  {
+int main()  {
 int a=0, b=0, c=0, d=0, e=0, f=0, g=0, h=0, i=0, j=0, k=0, l=0, m=0, n=0;
 F14(   a,b,c,d,e,f,g,h,i,j,k,l,m,n);
 printf("CF14: %3d%3d%3d%3d%3d%3d%3d%3d%3d%3d%3d%3d%3d%3d.\n",
@@ -883,7 +883,7 @@ return EXIT_SUCCESS;
 #define F20(A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T) \
         CCALLSFSUB20(F20,f20, PINT, PINT, PINT, PINT, PINT, PINT, PINT, PINT, PINT, PINT, PINT, PINT, PINT, PINT, PINT, PINT, PINT, PINT, PINT, PINT, A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T)
 
-main()  {
+int main()  {
 int a=0, b=0, c=0, d=0, e=0, f=0, g=0, h=0, i=0, j=0, k=0, l=0, m=0, n=0,
     o=0, p=0, q=0, r=0, s=0, t=0;
 F20(   a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t);
@@ -892,7 +892,7 @@ printf(" F20: %3d%3d%3d%3d%3d%3d%3d%3d%3d%3d%3d%3d%3d%3d%3d%3d%3d%3d%3d%3d.\n",
 return EXIT_SUCCESS;
 }
 #else
-main()  {
+int main()  {
 printf("Sorry 14 argument max. via cfortran.h for this C preprocessor or for CFSUBASFUN.\n");
 return EXIT_SUCCESS;
 }
@@ -906,7 +906,7 @@ return EXIT_SUCCESS;
 #define F27(A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,AA) \
         CCALLSFSUB27(F27,f27, PINT, PINT, PINT, PINT, PINT, PINT, PINT, PINT, PINT, PINT, PINT, PINT, PINT, PINT, PINT, PINT, PINT, PINT, PINT, PINT, PINT, PINT, PINT, PINT, PINT, PINT, PINT, A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z, AA)
 
-main()  {
+int main()  {
 int a=0, b=0, c=0, d=0, e=0, f=0, g=0, h=0, i=0, j=0, k=0, l=0, m=0, n=0,
     o=0, p=0, q=0, r=0, s=0, t=0, u=0, v=0, w=0, x=0, y=0, z=0, aa=0;
 F27(   a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z,aa);
@@ -915,7 +915,7 @@ printf(" F27: %3d%3d%3d%3d%3d%3d%3d%3d%3d%3d%3d%3d%3d%3d%3d%3d%3d%3d%3d%3d%3d%3d
 return EXIT_SUCCESS;
 }
 #else
-main()  {
+int main()  {
 printf("Sorry 14 argument max. via cfortran.h for this C preprocessor or for CFSUBASFUN.\n");
 return EXIT_SUCCESS;
 }

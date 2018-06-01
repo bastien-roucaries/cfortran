@@ -35,7 +35,7 @@ C Recall cfortran.h kills all trailing blanks. i.e. FORTRAN ' ' -> C "".
       print *,cstrtok(NULL, ' ')
 
 C Further calls return nothing.
-      print *,cstrtok(NULL, ' ')
+C      print *,cstrtok(NULL, ' ')
 
       return
       end

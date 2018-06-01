@@ -45,7 +45,7 @@ typedef struct {
 COMMON_BLOCK_DEF(GCBANK_DEF,GCbank);
 GCBANK_DEF GCbank;
 
-main() {
+int main() {
 FEQ();
 printf("GCbank.nzebra       = %d.\n", GCbank.nzebra);
 printf("GCbank.gversn       = %f.\n", GCbank.gversn);

@@ -27,7 +27,7 @@ FCALLSCFUN1(DOUBLE,Cv7,CV7,cv7, DOUBLEVVVVVVV)
 PROTOCCALLSFFUN1(DOUBLE,V7,v7,DOUBLEVVVVVVV)
 #define V7(D)               CCALLSFFUN1(V7,v7, DOUBLEVVVVVVV, D)
 
-main()
+int main()
 {
 /* Original d[2][3][5][7][11][13][17] died a SEGV on DECstation MIPS cc 2.10, 
    just like e.g.             main() {double d[2][3][5][7][11][13][17], t=0;} */

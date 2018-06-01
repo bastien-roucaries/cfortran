@@ -24,7 +24,7 @@ FCALLSCSUB1(cb,CB,cb, PINT)
                         PROTOCCALLSFSUB1(FB,fb, PINT)
 #define FB(A1)               CCALLSFSUB1(FB,fb, PINT, A1)
 
-main() 
+int main() 
 {int i,ii; i=ii=1234; 
  FB(ii); printf("MAIN: FB(i=%d) returns with i=%d.\n",i,ii);
  return EXIT_SUCCESS;

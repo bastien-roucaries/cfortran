@@ -15,5 +15,5 @@ FCALLSCSUB1(Ce,CE,ce, STRINGV)
                         PROTOCCALLSFSUB1(FE,fe, STRINGV)
 #define FE(A1)               CCALLSFSUB1(FE,fe, STRINGV, A1)
 
-main() 
+int main() 
 {static char v[][5] = {"0000", "1", "22", ""}; FE(v); return EXIT_SUCCESS;}

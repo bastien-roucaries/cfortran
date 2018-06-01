@@ -30,7 +30,7 @@
                   PROTOCCALLSFSUB2(EASY,easy, USERINT, INT)
 #define EASY(A,B)      CCALLSFSUB2(EASY,easy, USERINT, INT, A, B)
 
-main() {
+int main() {
 int a;
 printf("\nUsing user defined USERINT argument type.\n");
 EASY(a,7);

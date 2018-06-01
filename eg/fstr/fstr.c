@@ -35,4 +35,4 @@ FCALLSCSUB1(Pstr,PPSTR,ppstr, PPSTRING)
                           PROTOCCALLSFSUB0(FSTR,fstr)
 #define FSTR()                 CCALLSFSUB0(FSTR,fstr)
 
-main() { FSTR(); return EXIT_SUCCESS;}
+int main() { FSTR(); return EXIT_SUCCESS;}

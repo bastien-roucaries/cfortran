@@ -10,7 +10,7 @@
 PROTOCCALLSFFUN2(VOID,EASY,easy,PINT,INT)
 #define EASY(A,B)      CCALLSFFUN2(EASY,easy, PINT, INT, A, B)
 
-main() {
+int main() {
 int a;
 printf("\nEASY (2) EXAMPLE\n");
 EASY(a,7);

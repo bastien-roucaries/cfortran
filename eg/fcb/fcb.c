@@ -18,7 +18,7 @@ typedef struct { char v[13],w[4][13],x[2][3][13]; } FCB_DEF;
 COMMON_BLOCK_DEF(FCB_DEF,Fcb);
 FCB_DEF Fcb;
 
-main() {
+int main() {
 char cv[14];
 static char cw[4][14]    = { "C's w[0]", "C's w[1]", "C's w[2]", "C's w[3]"};
 static char cx[2][3][14] = {{"C's x[0][0]", "C's x[0][1]", "C's x[0][2]"}, 

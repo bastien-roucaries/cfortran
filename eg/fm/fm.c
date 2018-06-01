@@ -15,5 +15,5 @@ FCALLSCFUN1(FLOAT,Cm,CM,cm, FLOAT)
 PROTOCCALLSFFUN1(FLOAT,FM,fm,FLOAT) 
 #define FM(A)               CCALLSFFUN1(FM,fm, FLOAT, A)
 
-main() 
+int main() 
 {printf("FM(111.) returns %f.\n",FM(111.)); return EXIT_SUCCESS;}

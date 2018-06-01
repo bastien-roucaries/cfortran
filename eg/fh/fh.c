@@ -13,5 +13,5 @@ FCALLSCFUN0(STRING,Cch,CCH,cch)
 PROTOCCALLSFFUN0(STRING,FH,fh)
 #define FH()               CCALLSFFUN0(FH,fh)
 
-main() 
+int main() 
 {printf("FH() returns %s.\n",FH()); return EXIT_SUCCESS;}

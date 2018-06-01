@@ -21,7 +21,7 @@ int Cfun(int (*f)(Ellipsis), int a, int b) {int c; f(&a,&b,&c); return c;}
 #define ROUTINE_1  (int (*)(Ellipsis))
 FCALLSCFUN3(INT,Cfun,CFUN,cfun, ROUTINE, INT, INT)
 
-main() {
+int main() {
 int c;
 FUNARG(C_FUNCTION(CFUN,cfun),1,2,c);
 printf("\nFUNARG(CFUN,1,2,c) returns with c=%d\n",c);

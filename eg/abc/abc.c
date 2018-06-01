@@ -13,7 +13,7 @@
                  PROTOCCALLSFSUB3(ABC,abc, STRING, PSTRING, PSTRING)
 #define ABC(A1,A2,A3) CCALLSFSUB3(ABC,abc, STRING, PSTRING, PSTRING, A1, A2, A3)
 
-main() {
+int main() {
 static char aa[] = "one  ", bb[] = "two  ", cc[] = "three"; int i; 
 for (i=0; i<10; i++) {printf("%s;%s;%s;\n",aa,bb,cc); ABC(aa,bb,cc);}
 return EXIT_SUCCESS;

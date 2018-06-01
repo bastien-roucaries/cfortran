@@ -23,4 +23,4 @@ FCALLSCSUB1(cc,CC,cc, STRING)
                         PROTOCCALLSFSUB1(FC,fc, STRING)
 #define FC(A1)               CCALLSFSUB1(FC,fc, STRING, A1)
 
-main() {FC("hello"); return EXIT_SUCCESS;}
+int main() {FC("hello"); return EXIT_SUCCESS;}

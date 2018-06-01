@@ -17,7 +17,7 @@ PROTOCCALLSFFUN0(STRING,FORSTR2,forstr2)
 PROTOCCALLSFFUN1(STRING,FORSTR,forstr,STRING)
 #define FORSTR(A1)          CCALLSFFUN1(FORSTR,forstr, STRING, A1)
 
-main() {
+int main() {
 static char aa[] = "one";
 int rrr = 333;
 printf("RR(rrr=%d) returns int arg. as float:%f\n",rrr,RR(rrr));

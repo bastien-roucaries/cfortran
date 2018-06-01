@@ -13,7 +13,7 @@
                   PROTOCCALLSFSUB2(EASY,easy, PINT, INT)
 #define EASY(A,B)      CCALLSFSUB2(EASY,easy, PINT, INT, A, B)
 
-main() {
+int main() {
 int a;
 EASY(a,7);
 printf("The FORTRAN routine EASY(a,7) returns a = %d\n", a);

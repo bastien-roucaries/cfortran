@@ -15,5 +15,5 @@ FCALLSCFUN0(FLOAT,Ck,CK,ck)
 PROTOCCALLSFFUN0(FLOAT,FK,fk)
 #define FK()               CCALLSFFUN0(FK,fk)
 
-main() 
+int main() 
 {printf("FK() returns %f.\n",FK()); return EXIT_SUCCESS;}

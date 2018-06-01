@@ -17,4 +17,4 @@ FCALLSCSUB0(Exist,EXIST,exist)
                           PROTOCCALLSFSUB0(FEXIST,fexist)
 #define FEXIST()               CCALLSFSUB0(FEXIST,fexist)
 
-main() {FEXIST(); return EXIT_SUCCESS;}
+int main() {FEXIST(); return EXIT_SUCCESS;}

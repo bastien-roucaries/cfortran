@@ -19,7 +19,7 @@ FCALLSCSUB4(qsort,FQSORT,fqsort, PVOID, INT, INT, ROUTINE)
                         PROTOCCALLSFSUB1(FQSORTEX,fqsortex, INT)
 #define FQSORTEX(SIZEOF_INT) CCALLSFSUB1(FQSORTEX,fqsortex, INT, SIZEOF_INT)
 
-main() {
+int main() {
 #ifdef PowerStationFortran
 printf("\n\
         Apologies. As described in cfortran.doc, MSPS Fortran provides no\n\

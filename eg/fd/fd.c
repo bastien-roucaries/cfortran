@@ -25,7 +25,7 @@ FCALLSCSUB1(cd,CD,cd, PSTRING)
                         PROTOCCALLSFSUB1(FD,fd, PSTRING)
 #define FD(A1)               CCALLSFSUB1(FD,fd, PSTRING, A1)
 
-main() 
+int main() 
 {static char i[] = "happy         "; static char ii[] = "happy          "; 
  FD(ii); printf("MAIN: FD(i=%s) returns with i=%s.\n",i,ii);
  return EXIT_SUCCESS;

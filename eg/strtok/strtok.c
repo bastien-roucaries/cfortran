@@ -14,4 +14,4 @@ FCALLSCFUN2(STRING,strtok,CSTRTOK,cstrtok, STRING, STRING)
                   PROTOCCALLSFSUB0(FSTRTOK,fstrtok)
 #define FSTRTOK()      CCALLSFSUB0(FSTRTOK,fstrtok)
 
-main() {FSTRTOK(); return EXIT_SUCCESS;}
+int main() {FSTRTOK(); return EXIT_SUCCESS;}

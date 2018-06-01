@@ -15,7 +15,7 @@
                        PROTOCCALLSFSUB1(FORSTR1,forstr1, PSTRING)
 #define FORSTR1(A1)         CCALLSFSUB1(FORSTR1,forstr1, PSTRING, A1)
 
-main() {
+int main() {
 static char b[] = "abcdefghij", forb[13] = "abcdefghijkl";
 SS1(b); FORSTR1(forb);
 printf("SS1(b) returns b = %s; FORSTR1(forb) = returns forb = %s;\n", b, forb);

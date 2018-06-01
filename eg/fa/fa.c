@@ -20,4 +20,4 @@ FCALLSCSUB1(ca,CFORTRANCA,cfortranca, INT)
                         PROTOCCALLSFSUB1(FA,fa, INT)
 #define FA(A1)               CCALLSFSUB1(FA,fa, INT, A1)
 
-main() {FA(1234); return EXIT_SUCCESS;}
+int main() {FA(1234); return EXIT_SUCCESS;}

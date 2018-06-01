@@ -15,7 +15,7 @@ FCALLSCFUN2(DOUBLE,Cn,CN,cn, DOUBLE, DOUBLE)
 PROTOCCALLSFFUN2(DOUBLE,FN,fn,DOUBLE,DOUBLE)
 #define FN(A,B)             CCALLSFFUN2(FN,fn, DOUBLE, DOUBLE, A, B)
 
-main() 
+int main() 
 {printf("FN(1./3, 2./3) returns %f.\n",(double)FN(1./3, 2./3));
  return EXIT_SUCCESS;
 }

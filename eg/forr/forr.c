@@ -13,7 +13,7 @@ FCALLSCFUN2(LOGICAL,Cor,COR,cor, PLOGICAL, PLOGICAL)
 PROTOCCALLSFFUN2(LOGICAL,FORR,forr,PLOGICAL,PLOGICAL)
 #define FORR(A,B)             CCALLSFFUN2(FORR,forr, PLOGICAL, PLOGICAL, A, B)
 
-main() 
+int main() 
 {int a=2, b=0; printf("Calling FORR(a=%d, b=%d).\n", a,b);
                printf("FORR() returned %d.\n", FORR(a, b));
                printf("With a=%d, b=%d.\n", a,b);

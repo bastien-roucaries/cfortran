@@ -17,7 +17,7 @@
 PROTOCCALLSFFUN3(STRING,FZ,fz, PZTRINGV, ZTRINGV, INT)
 #define FZ(A,B,C) CCALLSFFUN3(FZ,fz, PZTRINGV, ZTRINGV, INT, A, B, C)
 
-main() {
+int main() {
 static char v[][7] = {"000 ", "1", "22", " "};
 static char w[][9]  = {" ", "bb","ccc ","dddd"};
 printf("FZ(v, w, a); returns:%s.\n",FZ(v, w, 4));

@@ -13,5 +13,5 @@ FCALLSCFUN1(STRING,Cj,CJ,cj, INT)
 PROTOCCALLSFFUN1(STRING,FJ,fj,INT)
 #define FJ(A1)               CCALLSFFUN1(FJ,fj, INT, A1)
 
-main() 
+int main() 
 { printf("FJ(2) returns %s.\n",FJ(2)); return EXIT_SUCCESS;}

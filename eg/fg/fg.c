@@ -12,5 +12,5 @@ FCALLSCFUN0(INT,Ccg,CCG,ccg)
 PROTOCCALLSFFUN0(INT,FG,fg)
 #define FG()               CCALLSFFUN0(FG,fg)
 
-main() 
+int main() 
 {printf("FG() returns %d.\n",FG()); return EXIT_SUCCESS;}

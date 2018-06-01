@@ -13,5 +13,5 @@ FCALLSCFUN2(LOGICAL,Cand,CAND,cand, LOGICAL, LOGICAL)
 PROTOCCALLSFFUN2(LOGICAL,FAND,fand,LOGICAL,LOGICAL)
 #define FAND(A,B)             CCALLSFFUN2(FAND,fand, LOGICAL, LOGICAL, A, B)
 
-main() 
+int main() 
 {printf("FAND(0, 1) returns %d.\n",FAND(0, 1)); return EXIT_SUCCESS;}

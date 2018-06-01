@@ -17,7 +17,7 @@ FCALLSCSUB14(Cf14,CF14,cf14, PINT,PINT,PINT,PINT,PINT,PINT,PINT,PINT,PINT,PINT,P
 #define F14(A,B,C,D,E,F,G,H,I,J,K,L,M,N) \
         CCALLSFSUB14(F14,f14, PINT, PINT, PINT, PINT, PINT, PINT, PINT, PINT, PINT, PINT, PINT, PINT, PINT, PINT, A, B, C, D, E, F, G, H, I, J, K, L, M, N)
 
-main()  {
+int main()  {
 int a=0, b=0, c=0, d=0, e=0, f=0, g=0, h=0, i=0, j=0, k=0, l=0, m=0, n=0;
 F14(   a,b,c,d,e,f,g,h,i,j,k,l,m,n);
 printf("CF14: %3d%3d%3d%3d%3d%3d%3d%3d%3d%3d%3d%3d%3d%3d.\n",

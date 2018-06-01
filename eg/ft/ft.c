@@ -14,7 +14,7 @@
 PROTOCCALLSFFUN3(STRING,FT,ft, PSTRINGV, STRINGV, FLOAT)
 #define FT(A,B,C) CCALLSFFUN3(FT,ft, PSTRINGV, STRINGV, FLOAT, A, B, C)
 
-main() {
+int main() {
 static char v[][5] = {"000 ", "1", "22", " "};
 static char w[][9]  = {" ", "bb","ccc ","dddd"};
 FORTRAN_REAL a = 10.0;

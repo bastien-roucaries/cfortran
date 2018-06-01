@@ -15,5 +15,5 @@ FCALLSCFUN0(DOUBLE,Cl,CL,cl)
 PROTOCCALLSFFUN0(DOUBLE,FL,fl)
 #define FL()               CCALLSFFUN0(FL,fl)
 
-main() 
+int main() 
 {printf("FL() returns %f.\n",(double)FL()); return EXIT_SUCCESS;}

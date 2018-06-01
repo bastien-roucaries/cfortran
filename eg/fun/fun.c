@@ -15,7 +15,7 @@ FCALLSCFUN2(INT,Cadd,CADD,cadd, INT, INT)
 /* Want fadd to be prototyped, though don't need the wrapper that is created. */
 PROTOCCALLSFFUN2(INT,FADD,fadd,INT,INT)
 
-main() {
+int main() {
 
 printf("\nFUNADD(CADD,1,2) returns %d\n", 
        FUNADD(      C_FUNCTION(CADD,cadd),1,2) );

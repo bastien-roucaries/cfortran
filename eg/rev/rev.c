@@ -15,7 +15,7 @@
                           PROTOCCALLSFSUB1(REV,rev, INTV)
 #define REV(A1)                CCALLSFSUB1(REV,rev, INTV, A1)
 
-main() {
+int main() {
 static int a[] = {1,2};
 printf("REV(a[0,1]=%d,%d) receives:",a[0],a[1]);
 REV(a); printf("a[0,1]=%d,%d\n",a[0],a[1]);

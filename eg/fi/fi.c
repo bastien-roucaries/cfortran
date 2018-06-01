@@ -14,7 +14,7 @@ FCALLSCFUN1(STRING,Ci,CI,ci, STRINGV)
 PROTOCCALLSFFUN1(STRING,FI,fi,STRINGV)
 #define FI(A1)               CCALLSFFUN1(FI,fi, STRINGV, A1)
 
-main() 
+int main() 
 {static char v[][5] = {"0000", "1", "22", "333", "8", "9"}; 
  printf("FI(v) returns %s.\n",FI(v));
  return EXIT_SUCCESS;

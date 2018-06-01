@@ -18,7 +18,7 @@ FCALLSCSUB2(Ccff,CCFF,ccff, STRINGV, INT)
                         PROTOCCALLSFSUB2(FF,ff, STRINGV, INT)
 #define FF(A1,A2)            CCALLSFSUB2(FF,ff, STRINGV, INT, A1, A2)
 
-main() 
+int main() 
 {static char v[][5] = {"0000", "1", "22", ""}; 
  FF(v,sizeof(v)/sizeof v[0]);
  return EXIT_SUCCESS;

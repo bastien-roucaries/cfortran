@@ -22,7 +22,7 @@ FCALLSCSUB27(Cf27,CF27,cf27, PINT,PINT,PINT,PINT,PINT,PINT,PINT,PINT,PINT,PINT,P
 #define F27(A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,AA) \
         CCALLSFSUB27(F27,f27, PINT, PINT, PINT, PINT, PINT, PINT, PINT, PINT, PINT, PINT, PINT, PINT, PINT, PINT, PINT, PINT, PINT, PINT, PINT, PINT, PINT, PINT, PINT, PINT, PINT, PINT, PINT, A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z, AA)
 
-main()  {
+int main()  {
 int a=0, b=0, c=0, d=0, e=0, f=0, g=0, h=0, i=0, j=0, k=0, l=0, m=0, n=0,
     o=0, p=0, q=0, r=0, s=0, t=0, u=0, v=0, w=0, x=0, y=0, z=0, aa=0;
 F27(   a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z,aa);
@@ -31,7 +31,7 @@ printf(" F27: %3d%3d%3d%3d%3d%3d%3d%3d%3d%3d%3d%3d%3d%3d%3d%3d%3d%3d%3d%3d%3d%3d
 return EXIT_SUCCESS;
 }
 #else
-main()  {
+int main()  {
 printf("Sorry 14 argument max. via cfortran.h for this C preprocessor or for CFSUBASFUN.\n");
 return EXIT_SUCCESS;
 }

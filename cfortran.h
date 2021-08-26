@@ -196,9 +196,6 @@
 #if       defined(_IBMR2)
 #define            IBMR2Fortran
 #endif
-#if        defined(_CRAY)
-#define             CRAYFortran /*       _CRAYT3E also defines some behavior. */
-#endif
 #if        defined(_SX)
 #define               SXFortran
 #endif
@@ -264,11 +261,7 @@
 #define orig_fcallsc(UN,LN)    CFC_(UN,LN)
 #else 
 #if defined(CRAYFortran) || defined(PowerStationFortran) || defined(AbsoftProFortran)
-#ifdef _CRAY          /* (UN), not UN, circumvents CRAY preprocessor bug.     */
-#define CFC_(UN,LN)            (UN)         /* Uppercase FORTRAN symbols.     */
-#else                 /* At least VISUAL_CPLUSPLUS barfs on (UN), so need UN. */
 #define CFC_(UN,LN)            UN           /* Uppercase FORTRAN symbols.     */
-#endif
 #define orig_fcallsc(UN,LN)    CFC_(UN,LN)  /* CRAY insists on arg.'s here.   */
 #else  /* For following machines one may wish to change the fcallsc default.  */
 #define CF_SAME_NAMESPACE
@@ -308,35 +301,15 @@
 #endif  /* COMMON_BLOCK */
 
 #ifndef DOUBLE_PRECISION
-#if defined(CRAYFortran) && !defined(_CRAYT3E)
-#define DOUBLE_PRECISION long double
-#else
 #define DOUBLE_PRECISION double
-#endif
 #endif
 
 #ifndef FORTRAN_REAL
-#if defined(CRAYFortran) &&  defined(_CRAYT3E)
-#define FORTRAN_REAL double
-#else
 #define FORTRAN_REAL float
 #endif
-#endif
 
-#ifdef CRAYFortran
-#ifdef _CRAY
-#include <fortran.h>
-#else
-#include "fortran.h"  /* i.e. if crosscompiling assume user has file. */
-#endif
-#define FLOATVVVVVVV_cfPP (FORTRAN_REAL *)   /* Used for C calls FORTRAN.     */
-/* CRAY's double==float but CRAY says pointers to doubles and floats are diff.*/
-#define VOIDP  (void *)  /* When FORTRAN calls C, we don't know if C routine 
-                            arg.'s have been declared float *, or double *.   */
-#else
 #define FLOATVVVVVVV_cfPP
 #define VOIDP
-#endif
 
 #ifdef vmsFortran
 #if    defined(vms) || defined(__vms)
@@ -430,10 +403,6 @@ Absoft Unix Fortran, IBM RS/6000 xlf             : LS Bit = 0/1 = TRUE/FALSE.
 #define F2CLOGICALV(A,I) \
  do {int __i; for(__i=0;__i<I;__i++) A[__i]=F2CLOGICAL(A[__i]); } while (0)
 
-#if defined(CRAYFortran)
-#define C2FLOGICAL(L) _btol(L)
-#define F2CLOGICAL(L) _ltob(&(L))     /* Strangely _ltob() expects a pointer. */
-#else
 #if defined(IBMR2Fortran) || defined(vmsFortran) || defined(DECFortran) || defined(AbsoftUNIXFortran)
 /* How come no AbsoftProFortran ? */
 #define C2FLOGICAL(L) ((L)?(L)|1:(L)&~(int)1)
@@ -453,7 +422,6 @@ Absoft Unix Fortran, IBM RS/6000 xlf             : LS Bit = 0/1 = TRUE/FALSE.
 #endif  /* LOGICAL_STRICT                     */
 #endif  /* CONVEXFortran || All Others        */
 #endif  /* IBMR2Fortran vmsFortran DECFortran AbsoftUNIXFortran */
-#endif  /* CRAYFortran                        */
 
 /* 970514 - In addition to CRAY, there may be other machines
             for which LOGICAL_STRICT makes no sense. */
@@ -758,11 +726,7 @@ typedef void (*cfCAST_FUNCTION)(CF_NULL_PROTO);
 #ifdef vmsFortran
 #define    STRINGV_cfAA(T,A,B) &B
 #else
-#ifdef CRAYFortran
-#define    STRINGV_cfAA(T,A,B) _cptofcd(B.fs,B.flen)
-#else
 #define    STRINGV_cfAA(T,A,B) B.fs
-#endif
 #endif
 #define   PSTRINGV_cfAA(T,A,B) STRINGV_cfAA(T,A,B)
 #define    ZTRINGV_cfAA(T,A,B) STRINGV_cfAA(T,A,B)
@@ -846,13 +810,8 @@ typedef void (*cfCAST_FUNCTION)(CF_NULL_PROTO);
 #define     STRING_cfN(T,A) fstring *             A
 #define    STRINGV_cfN(T,A) fstringvector *       A
 #else
-#ifdef CRAYFortran
-#define     STRING_cfN(T,A) _fcd                  A
-#define    STRINGV_cfN(T,A) _fcd                  A
-#else
 #define     STRING_cfN(T,A) char *                A
 #define    STRINGV_cfN(T,A) char *                A
-#endif
 #endif
 #define    PSTRING_cfN(T,A)   STRING_cfN(T,A) /* CRAY insists on arg.'s here. */
 #define   PNSTRING_cfN(T,A)   STRING_cfN(T,A) /* CRAY insists on arg.'s here. */
@@ -1516,19 +1475,12 @@ do{VVCF(T1,A1,B1)  VVCF(T2,A2,B2)  VVCF(T3,A3,B3)  VVCF(T4,A4,B4)  VVCF(T5,A5,B5
                memset(AA0, CFORTRAN_NON_CHAR, MAX_LEN_FORTRAN_FUNCTION_STRING);\
                                     *(AA0+MAX_LEN_FORTRAN_FUNCTION_STRING)='\0';
 #else
-#ifdef CRAYFortran
-#define  STRING_cfE static char AA0[1+MAX_LEN_FORTRAN_FUNCTION_STRING];        \
-                   static _fcd A0; *(AA0+MAX_LEN_FORTRAN_FUNCTION_STRING)='\0';\
-                memset(AA0,CFORTRAN_NON_CHAR, MAX_LEN_FORTRAN_FUNCTION_STRING);\
-                            A0 = _cptofcd(AA0,MAX_LEN_FORTRAN_FUNCTION_STRING);
-#else
 /* 'cc: SC3.0.1 13 Jul 1994' barfs on char A0[0x4FE+1]; 
  * char A0[0x4FE +1]; char A0[1+0x4FE]; are both OK.     */
 #define STRING_cfE static char A0[1+MAX_LEN_FORTRAN_FUNCTION_STRING];          \
                        memset(A0, CFORTRAN_NON_CHAR,                           \
                               MAX_LEN_FORTRAN_FUNCTION_STRING);                \
                        *(A0+MAX_LEN_FORTRAN_FUNCTION_STRING)='\0';
-#endif
 #endif
 /* ESTRING must use static char. array which is guaranteed to exist after
    function returns.                                                     */
@@ -1773,17 +1725,10 @@ do{VVCF(T1,A1,B1)  VVCF(T2,A2,B2)  VVCF(T3,A3,B3)  VVCF(T4,A4,B4)  VVCF(T5,A5,B5
 #define    PSTRING_cfCC(T,A,B) &B
 #define   PSTRINGV_cfCC(T,A,B) &B
 #else
-#ifdef CRAYFortran
-#define     STRING_cfCC(T,A,B) _cptofcd(A,B.flen)
-#define    STRINGV_cfCC(T,A,B) _cptofcd(B.s,B.flen)
-#define    PSTRING_cfCC(T,A,B) _cptofcd(A,B)
-#define   PSTRINGV_cfCC(T,A,B) _cptofcd(A,B.flen)
-#else
 #define     STRING_cfCC(T,A,B)  A
 #define    STRINGV_cfCC(T,A,B)  B.fs
 #define    PSTRING_cfCC(T,A,B)  A
 #define   PSTRINGV_cfCC(T,A,B)  B.fs
-#endif
 #endif
 #define    ZTRINGV_cfCC(T,A,B)   STRINGV_cfCC(T,A,B)
 #define   PZTRINGV_cfCC(T,A,B)  PSTRINGV_cfCC(T,A,B)
@@ -2063,18 +2008,10 @@ static _Icf(2,U,F,CFFUN(UN),0)() { CFORTRAN_XCAT_(F,_cfE) _Icf(3,GZ,F,UN,LN) ABS
 #define        PSTRING_cfT(M,I,A,B,D)    TTSTR( A->dsc$a_pointer,B,A->dsc$w_length)
 #define       PPSTRING_cfT(M,I,A,B,D)           A->dsc$a_pointer
 #else
-#ifdef CRAYFortran
-#define         STRING_cfT(M,I,A,B,D)  TTTTSTR( _fcdtocp(A),B,_fcdlen(A))
-#define        STRINGV_cfT(M,I,A,B,D)  TTTTSTRV(_fcdtocp(A),B,_fcdlen(A),      \
-                              num_elem(_fcdtocp(A),_fcdlen(A),CFORTRAN_XCAT_3(M,_STRV_A,I)))
-#define        PSTRING_cfT(M,I,A,B,D)    TTSTR( _fcdtocp(A),B,_fcdlen(A))
-#define       PPSTRING_cfT(M,I,A,B,D)           _fcdtocp(A)
-#else
 #define         STRING_cfT(M,I,A,B,D)  TTTTSTR( A,B,D)
 #define        STRINGV_cfT(M,I,A,B,D)  TTTTSTRV(A,B,D, num_elem(A,D,CFORTRAN_XCAT_3(M,_STRV_A,I)))
 #define        PSTRING_cfT(M,I,A,B,D)    TTSTR( A,B,D)
 #define       PPSTRING_cfT(M,I,A,B,D)           ((void)D, A)
-#endif
 #endif
 #define       PNSTRING_cfT(M,I,A,B,D)    STRING_cfT(M,I,A,B,D)
 #define       PSTRINGV_cfT(M,I,A,B,D)   STRINGV_cfT(M,I,A,B,D)
@@ -2094,13 +2031,8 @@ static _Icf(2,U,F,CFFUN(UN),0)() { CFORTRAN_XCAT_(F,_cfE) _Icf(3,GZ,F,UN,LN) ABS
 #define  PSTRING_cfR(A,B,D) RRRRPSTR( A->dsc$a_pointer,B,A->dsc$w_length)
 #define PSTRINGV_cfR(A,B,D) RRRRPSTRV(A->dsc$a_pointer,B,A->dsc$w_length)
 #else
-#ifdef CRAYFortran
-#define  PSTRING_cfR(A,B,D) RRRRPSTR( _fcdtocp(A),B,_fcdlen(A))
-#define PSTRINGV_cfR(A,B,D) RRRRPSTRV(_fcdtocp(A),B,_fcdlen(A))
-#else
 #define  PSTRING_cfR(A,B,D) RRRRPSTR( A,B,D)
 #define PSTRINGV_cfR(A,B,D) RRRRPSTRV(A,B,D)
-#endif
 #endif
 #define PNSTRING_cfR(A,B,D) PSTRING_cfR(A,B,D)
 #define PPSTRING_cfR(A,B,D)
@@ -2124,14 +2056,10 @@ static _Icf(2,U,F,CFFUN(UN),0)() { CFORTRAN_XCAT_(F,_cfE) _Icf(3,GZ,F,UN,LN) ABS
 #ifdef vmsFortran
 #define  STRING_cfFZ(UN,LN) void  FCALLSC_QUALIFIER fcallsc(UN,LN)(fstring *AS
 #else
-#ifdef CRAYFortran
-#define  STRING_cfFZ(UN,LN) void  FCALLSC_QUALIFIER fcallsc(UN,LN)(_fcd     AS
-#else
 #if  defined(AbsoftUNIXFortran) || defined(AbsoftProFortran)
 #define  STRING_cfFZ(UN,LN) void  FCALLSC_QUALIFIER fcallsc(UN,LN)(char    *AS
 #else
 #define  STRING_cfFZ(UN,LN) void  FCALLSC_QUALIFIER fcallsc(UN,LN)(char    *AS, unsigned D0
-#endif
 #endif
 #endif
 
@@ -2160,11 +2088,7 @@ static _Icf(2,U,F,CFFUN(UN),0)() { CFORTRAN_XCAT_(F,_cfE) _Icf(3,GZ,F,UN,LN) ABS
 #ifdef vmsFortran
 #define  STRING_cfFF           fstring *AS; 
 #else
-#ifdef CRAYFortran
-#define  STRING_cfFF           _fcd     AS;
-#else
 #define  STRING_cfFF           char    *AS; unsigned D0;
-#endif
 #endif
 
 #define     INT_cfL            A0=
@@ -2181,17 +2105,9 @@ static _Icf(2,U,F,CFFUN(UN),0)() { CFORTRAN_XCAT_(F,_cfE) _Icf(3,GZ,F,UN,LN) ABS
   memset(AS->dsc$a_pointer+(A0==NULL?0:strlen(A0)),' ',                        \
          AS->dsc$w_length-(A0==NULL?0:strlen(A0))):0;
 #else
-#ifdef CRAYFortran
-#define STRING_cfK                                                             \
- memcpy(_fcdtocp(AS),A0, _cfMIN(_fcdlen(AS),(A0==NULL?0:strlen(A0))) );        \
- _fcdlen(AS)>(A0==NULL?0:strlen(A0))?                                          \
-  memset(_fcdtocp(AS)+(A0==NULL?0:strlen(A0)),' ',                             \
-         _fcdlen(AS)-(A0==NULL?0:strlen(A0))):0;
-#else
 #define STRING_cfK         memcpy(AS,A0, _cfMIN(D0,(A0==NULL?0:strlen(A0))) ); \
                  D0>(A0==NULL?0:strlen(A0))?memset(AS+(A0==NULL?0:strlen(A0)), \
                                             ' ', D0-(A0==NULL?0:strlen(A0))):0;
-#endif
 #endif
 
 /* Note that K.. and I.. can't be combined since K.. has to access data before

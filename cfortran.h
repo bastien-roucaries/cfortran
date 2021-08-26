@@ -53,17 +53,6 @@
 #endif 
 #endif
 
-/* obsolete plateform VAXULTRIX is not supported anymore */
-#if (defined(vax)&&defined(unix)) || (defined(__vax__)&&defined(__unix__))
-#error "VAXULTRIX is not supported anymore"
-#endif
-
-/* obsolete plateform apollo/DomainOS is not supported anymore */
-#ifdef apollo
-#error "Apollo/DomainOS is not supported anymore"
-#endif
-
-
 /***********/
 /* Version */
 /***********/

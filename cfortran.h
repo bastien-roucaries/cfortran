@@ -1,4 +1,4 @@
-/* cfortran.h  4.4 */
+/* cfortran.h  20210827 */
 /* http://www-zeus.desy.de/~burow/cfortran/                   */
 /* Copyright (C) 1990 - 2002 Burkhard Burow  burow@desy.de    */
 /* Copyright (C) 2011 Bastien ROUCARIÈS                       */
@@ -56,7 +56,7 @@
 /***********/
 /* Version */
 /***********/
-#define CFORTRAN_VERSION 20110615UL
+#define CFORTRAN_VERSION 20210827UL
 
 /********************/
 /* type definition  */

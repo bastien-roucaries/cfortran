@@ -1,4 +1,4 @@
-C cfortex.f 4.3
+C cfortex.f 20210827
 C http://www-zeus.desy.de/~burow/cfortran/
 C Burkhard Burow  burow@desy.de                 1990 - 2001.
 

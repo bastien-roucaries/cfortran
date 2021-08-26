@@ -1,3 +1,6 @@
+cfortran (20210827)
+  * Drop CRAY support
+
 cfortran (20110621)
 
   * Drop support of VAX (no release since 1995)

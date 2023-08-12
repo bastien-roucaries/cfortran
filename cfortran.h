@@ -500,7 +500,7 @@ struct {                                                                       \
     unsigned dsc$v_fl_redim    : 1;       unsigned dsc$v_fl_column   : 1;      \
     unsigned dsc$v_fl_coeff    : 1;       unsigned dsc$v_fl_bounds   : 1;      \
   } dsc$b_aflags;	                                                       \
-  unsigned char	 dsc$b_dimct;	        unsigned long	 dsc$l_arsize;	       \
+  unsigned char	 dsc$b_dimct;	        size_t	 dsc$l_arsize;	       \
            char	*dsc$a_a0;	                 long	 dsc$l_m [DIMCT];      \
   struct {                                                                     \
     long dsc$l_l;                         long dsc$l_u;                        \
@@ -520,13 +520,21 @@ typedef DSC$DESCRIPTOR_A(1) fstringvector;
 #define NUM_ELEMS(A)    A,_NUM_ELEMS
 #define NUM_ELEM_ARG(B) *CFORTRAN_CAT_2(A,B),_NUM_ELEM_ARG
 #define TERM_CHARS(A,B) A,B
+#if defined(gFortran) && defined(CERNLIB_QMLXIA64)
+static int num_elem(char *strv, size_t elem_len, long term_char, long num_term)
+#else
 static int num_elem(char *strv, unsigned elem_len, int term_char, int num_term)
+#endif
 /* elem_len is the number of characters in each element of strv, the FORTRAN
 vector of strings. The last element of the vector must begin with at least
 num_term term_char characters, so that this routine can determine how 
 many elements are in the vector. */
 {
+#if defined(gFortran) && defined(CERNLIB_QMLXIA64)
+size_t num,i;
+#else
 unsigned num,i;
+#endif
 if (num_term == _NUM_ELEMS || num_term == _NUM_ELEM_ARG) 
   return term_char;
 if (num_term <=0) num_term = (int)elem_len;
@@ -646,10 +654,17 @@ typedef void (*cfCAST_FUNCTION)(CF_NULL_PROTO);
 #define   PSTRINGV_cfV(T,A,B,F) static fstringvector B =                       \
           {0,DSC$K_DTYPE_T,DSC$K_CLASS_A,NULL,0,0,{0,0,1,1,1},1,0,NULL,0,{1,0}};
 #else
+#if defined(gFortran) && defined(CERNLIB_QMLXIA64)
+#define     STRING_cfV(T,A,B,F) struct {size_t clen, flen; char *nombre;} B;
+#define    STRINGV_cfV(T,A,B,F) struct {char *s, *fs; size_t flen; char *nombre;} B;
+#define    PSTRING_cfV(T,A,B,F) int     B;
+#define   PSTRINGV_cfV(T,A,B,F) struct{char *fs; size_t sizeofA,flen;}B;
+#else
 #define     STRING_cfV(T,A,B,F) struct {unsigned int clen, flen; char *nombre;} B;
 #define    STRINGV_cfV(T,A,B,F) struct {char *s, *fs; unsigned flen; char *nombre;} B;
 #define    PSTRING_cfV(T,A,B,F) int     B;
 #define   PSTRINGV_cfV(T,A,B,F) struct{char *fs; unsigned int sizeofA,flen;}B;
+#endif
 #endif
 #define    ZTRINGV_cfV(T,A,B,F)  STRINGV_cfV(T,A,B,F)
 #define   PZTRINGV_cfV(T,A,B,F) PSTRINGV_cfV(T,A,B,F)
@@ -749,7 +764,11 @@ typedef void (*cfCAST_FUNCTION)(CF_NULL_PROTO);
 #endif
 #define  LOGICAL_cfKK(B) DEFAULT_cfKK(B)
 #define PLOGICAL_cfKK(B) DEFAULT_cfKK(B)
+#if defined(gFortran) && defined(CERNLIB_QMLXIA64)
+#define   STRING_cfKK(B) , size_t B
+#else
 #define   STRING_cfKK(B) , unsigned B
+#endif
 #define  PSTRING_cfKK(B) STRING_cfKK(B)
 #define  STRINGV_cfKK(B) STRING_cfKK(B)
 #define PSTRINGV_cfKK(B) STRING_cfKK(B)
@@ -1658,9 +1677,15 @@ do{VVCF(T1,A1,B1)  VVCF(T2,A2,B2)  VVCF(T3,A3,B3)  VVCF(T4,A4,B4)  VVCF(T5,A5,B5
              B.dsc$w_length=strlen(A):  (A[C-1]='\0',B.dsc$w_length=strlen(A), \
        memset((A)+B.dsc$w_length,' ',C-B.dsc$w_length-1), B.dsc$w_length=C-1));
 #else
+#if defined(gFortran) && defined(CERNLIB_QMLXIA64)
+#define   STRING_cfC(M,I,A,B,C) (B.nombre=A,B.clen=strlen(A),                             \
+                C==sizeof(char*)||C==(size_t)(B.clen+1)?B.flen=B.clen:       \
+                        (memset(B.nombre+B.clen,' ',C-B.clen-1),B.nombre[B.flen=C-1]='\0'));
+#else
 #define   STRING_cfC(M,I,A,B,C) (B.nombre=A,B.clen=strlen(A),                             \
                 C==sizeof(char*)||C==(unsigned)(B.clen+1)?B.flen=B.clen:       \
                         (memset(B.nombre+B.clen,' ',C-B.clen-1),B.nombre[B.flen=C-1]='\0'));
+#endif
 #define  PSTRING_cfC(M,I,A,B,C) (C==sizeof(char*)? B=strlen(A):                \
                     (A[C-1]='\0',B=strlen(A),memset((A)+B,' ',C-B-1),B=C-1));
 #endif
@@ -1861,7 +1886,11 @@ static _Icf(2,U,F,CFFUN(UN),0)() { CFORTRAN_XCAT_(F,_cfE) _Icf(3,GZ,F,UN,LN) ABS
 #define  DEFAULT_cfQ(B)
 #define  LOGICAL_cfQ(B)
 #define PLOGICAL_cfQ(B)
+#if defined(gFortran) && defined(CERNLIB_QMLXIA64)
+#define  STRINGV_cfQ(B) char *B; size_t _(B,N);
+#else
 #define  STRINGV_cfQ(B) char *B; unsigned int CFORTRAN_XCAT_(B,N);
+#endif
 #define   STRING_cfQ(B) char *B=NULL;
 #define  PSTRING_cfQ(B) char *B=NULL;
 #define PSTRINGV_cfQ(B) STRINGV_cfQ(B)
@@ -2048,7 +2077,11 @@ static _Icf(2,U,F,CFFUN(UN),0)() { CFORTRAN_XCAT_(F,_cfE) _Icf(3,GZ,F,UN,LN) ABS
 #if  defined(AbsoftUNIXFortran) || defined(AbsoftProFortran)
 #define  STRING_cfFZ(UN,LN) void  FCALLSC_QUALIFIER fcallsc(UN,LN)(char    *AS
 #else
+#if defined(gFortran) && defined(CERNLIB_QMLXIA64)
+#define  STRING_cfFZ(UN,LN) void  FCALLSC_QUALIFIER fcallsc(UN,LN)(char    *AS, size_t D0
+#else
 #define  STRING_cfFZ(UN,LN) void  FCALLSC_QUALIFIER fcallsc(UN,LN)(char    *AS, unsigned D0
+#endif
 #endif
 #endif
 
@@ -2077,7 +2110,11 @@ static _Icf(2,U,F,CFFUN(UN),0)() { CFORTRAN_XCAT_(F,_cfE) _Icf(3,GZ,F,UN,LN) ABS
 #ifdef vmsFortran
 #define  STRING_cfFF           fstring *AS; 
 #else
+#if defined(gFortran) && defined(CERNLIB_QMLXIA64)
+#define  STRING_cfFF           char    *AS; size_t D0;
+#else
 #define  STRING_cfFF           char    *AS; unsigned D0;
+#endif
 #endif
 
 #define     INT_cfL            A0=

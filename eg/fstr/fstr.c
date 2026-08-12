@@ -18,7 +18,7 @@ int ls, lsave;
 if (!s || !save) { save=s; return; }
 ls    = strlen(s   );
 lsave = strlen(save);
-temp = (char *)malloc(ls>lsave?ls:lsave);
+temp = (char *)malloc((ls>lsave?ls:lsave) + 1);
 /* Switch contents of argument with contents of saved string. */
 strcpy(temp,save);
 strcpy(save,s   );
